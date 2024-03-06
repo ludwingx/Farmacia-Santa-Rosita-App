@@ -1,0 +1,107 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h4>Filtros de busqueda</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5">
+            <div class="form-group">
+                <label for="">Buscar:</label>
+                <div class="input-group">
+                    <input type="search" placeholder="Escribe el nombre o codigo del producto" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+                    <div class="input-group-append">
+                    <button id="button-addon1" type="submit" class="btn btn-link text-success"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- filtro por prooveedor -->
+        <div class="col-2 fProveedor" >
+        <label for="">Proveedor:</label>
+        <select class="form-select" aria-label="Default select example" name="" id="">
+                <option selected>Proveedores</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+        </div>
+        <!-- filtro por Usuario -->
+        <div class="col-2">
+            <div class="form-group">
+                <label for="userFilter">Usuario:</label>
+                <select class="form-select" aria-label="Default select example" name="" id="">
+                    <option selected>Usuario</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+        </div>
+        <!-- filtro por estado -->
+        <div class="col-2">
+            <div class="form-group">
+                <label for="stateFilter">Estado:</label>
+                <select class="form-select" aria-label="Default select example" name="" id="">
+                    <option selected>Estado</option>
+                    <option value="1">Activo</option>
+                    <option value="2">Inactivo</option>
+                </select>
+            </div>
+        </div>
+        <!-- filtro por fecha de caducidad -->
+        <div class="col-2">
+            <div class="form-group">
+            <label for="expirationDateFilter">Fecha de Caducidad:</label>
+            <input type="date" class="form-control" id="expirationDateFilter">
+            </div>
+        </div>
+        <!-- filtro por ultima actualizacion -->
+        <div class="col-2">
+            <div class="form-group">
+                <label for="lastUpdateFilter">Ultima actualizacion:</label>
+                <input type="date" class="form-control" id="lastUpdateFilter">
+            </div>
+        </div>        
+        <!-- filtro por categoria -->
+        <div class="col-2">
+            <div class="form-group">
+                <label for="categoryFilter">Categoría:</label>
+                <select class="form-select" aria-label="Default select example" name="" id="">
+                    <option selected>Categoría</option>
+                    <option value="1">Medicamento sin receta</option>
+                    <option value="2">Medicamento con receta</option>
+                    <option value="3">Cuidado Personal</option>
+                    <option value="4">Salud Femenimna</option>
+                    <option value="5">Cuidado infantil</option>
+                    <option value="6">Bienestar y Salud Mental</option>
+                    <option value="7">Aparatos y suministros medico</option>
+                </select>
+            </div>
+        </div>
+        <!-- filtro por stock bajo -->
+        <div class="col-2">
+            <div class="form-group">
+                <label for="stockInput">Stock Bajo:</label>
+                <input type="number" class="form-control" id="stockInput"  placeholder="Ingrese el stock mínimo">
+            </div>
+        </div>
+    
+        <!-- filtro por precio -->
+        <div class="col-2">
+            <div class="form-group">
+                <label for="priceFilter">Precio:</label>
+                <input type="number" class="form-control" id="priceFilter"  placeholder="Ingrese el precio">
+            </div>
+        </div>
+        
+        <!-- filtro por lote -->
+        <div class="col-2">
+            <div class="form-group">
+                <label for="lotFilter">Lote:</label>
+                <input type="text" class="form-control" id="lotFilter"  placeholder="Ingrese el lote">
+            </div>
+        </div>
+    </div>
+</div>

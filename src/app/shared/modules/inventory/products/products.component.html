@@ -1,0 +1,48 @@
+<div class="continer">
+    <div class="row">
+        <div class="col-12">
+            <h4>Listado de productos</h4>
+        </div>
+    </div>
+    <table class="table table-bordered border border-dark-subtle">
+        <thead class="table-green" >
+          <tr>
+            <th>ID</th>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Código de Producto</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock Actual</th>
+            <th>Fecha de Caducidad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+            @for (product of products; track product.id) {
+                <tr >
+                    <td>{{ product.id }}</td>
+                    <td><img class="imgProduct" src="{{ product.image }}" alt="product.name"></td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.product_code }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.price | currency }}</td>
+                    <td>{{ product.current_stock }}</td>
+                    <td>{{ product.expiration_date | date:'shortDate' }}</td> 
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              Configuraciones
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Editar <i class="fa-solid fa-pen"></i></a></li>
+                              <li><a class="dropdown-item" href="#">Eliminar <i class="fa-solid fa-trash"></i></a></li>
+                              <li><a class="dropdown-item" href="#">Stock</a></li>
+                            </ul>
+                          </div>
+                    </td>
+                  </tr>
+            }
+        </tbody>
+      </table>
+</div>
