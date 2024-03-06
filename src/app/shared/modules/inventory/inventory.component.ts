@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FiltersProductsComponent } from './filters-products/filters-products.component';
 import { ProductsComponent } from './products/products.component';
+
 @Component({
   selector: 'app-inventory',
   standalone: true,
@@ -9,5 +10,5 @@ import { ProductsComponent } from './products/products.component';
   styleUrl: './inventory.component.scss'
 })
 export class InventoryComponent {
-
+  
 }

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { OpenmenuService } from '../../../core/services/openmenu.service';
 
 
 @Component({
@@ -11,10 +10,5 @@ import { OpenmenuService } from '../../../core/services/openmenu.service';
 })
 export class HeaderComponent {
 
-  constructor(private openmenuService: OpenmenuService) {}
-
-  toggleMenu() {
-    this.openmenuService.toggleMenu();
-  }
-  }
+}
 
