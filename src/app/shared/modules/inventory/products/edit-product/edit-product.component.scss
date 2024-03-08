@@ -1,0 +1,29 @@
+.mb-2{
+  background-color: rgb(225, 255, 233);
+}
+.textEditProduct{
+    color: var(--first-color);
+
+}
+.breadcrumb-link{
+    color: var(--first-color) !important;
+}
+
+.image-container {
+    width: 500px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .img-thumbnail {
+    width: 250px;  // Ajusta el ancho según tu preferencia
+    height: 250px;  // Ajusta la altura según tu preferencia
+    object-fit: contain;
+    object-position: center;
+    border-radius: 10px;
+    transition: opacity 0.3s ease;
+  }

@@ -1,7 +1,7 @@
 import { Component, Inject} from '@angular/core';
 
 import { DOCUMENT, NgClass } from '@angular/common';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import {  NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 
@@ -19,30 +19,35 @@ export class SidebarComponent {
   currentRoute: string = '';
   ngOnInit() {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        // La navegación ha terminado, ahora verifica la ruta actual
-        this.checkActiveLinks();
-      });
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe(() => {
+      this.currentRoute = this.getActiveRoute(this.router.url);
+      this.checkActiveLinks();
+    });
   }
-  
+  getActiveRoute(url: string): string {
+    // Lógica para obtener la parte de la ruta que quieres destacar
+    // Puedes personalizar esto según tu estructura de URL
+    const parts = url.split('/');
+    return parts[parts.length - 1];
+  }
 
   isLinkActive(route: string): boolean {
-    // Comprueba si la ruta actual incluye la ruta proporcionada
-    return this.router.url.includes(route);
+    return this.currentRoute === route;
   }
 
   loadProducts(): void {
+    // Navegación programática
     this.router.navigate(['/inventory']);
-    
   }
+
   checkActiveLinks(): void {
     const links = this.document.querySelectorAll('.nav_link');
-  
+
     if (links && typeof links.forEach === 'function') {
       links.forEach(link => {
-        const route = link.getAttribute('routerLink');
-        if (route && this.router.url.includes(route)) {
+        const route = link.getAttribute('data-route');
+        if (route && this.isLinkActive(route)) {
           link.classList.add('active');
         } else {
           link.classList.remove('active');
@@ -50,6 +55,7 @@ export class SidebarComponent {
       });
     }
   }
+
 
 
 }

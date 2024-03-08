@@ -3,3 +3,16 @@
     font-size: 2rem;
     font-weight: bold;
 }
+.breadcrumb-link{
+    color: var(--first-color) !important;
+}
+.btn {
+    &.newProduct{
+        background-color: var(--first-color);
+        color:white;
+    }
+    &.generatePDF{
+
+        color:white;
+    }
+}

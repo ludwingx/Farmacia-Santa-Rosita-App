@@ -11,5 +11,5 @@ import { ProductsComponent } from './products/products.component';
   styleUrl: './inventory.component.scss'
 })
 export class InventoryComponent {
-
+  
 }

@@ -1,23 +1,124 @@
 <div class="container">
-    <h2>Editar Producto</h2>
-    <h4>{{product.name}}</h4>
-    <form id="editarProductoForm">
-        <div class="mb-3">
+  <!-- BREADCRUM -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a class="breadcrumb-link" href="dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a type="button" class="breadcrumb-link" (click)="goToProductList()">Inventario</a>
+      </li>
+      <li class="breadcrumb-item">Editar Producto</li>
+    </ol>
+  </nav>
+  <h2 class="textEditProduct"><a type="button" (click)="goToProductList()"><i class="fa-solid fa-arrow-left"></i></a>
+    Editar Producto</h2>
+  <h4>{{product.name}}</h4>
+  <form id="editarProductoForm">
+    <div class="row">
+      <h5>Información Básica del Producto:</h5>
+      <div class="col-lg-6 col-md-12 ">
+        <div class="mb-2">
           <label for="editProductName" class="form-label">Nombre del Producto</label>
           <input type="text" class="form-control" id="editProductName" name="editProductName" value="{{product.name}}">
         </div>
-        <div class="mb-3">
-          <label for="editProductCode" class="form-label">Codigo de Producto</label>
+        <div class="mb-2">
+          <label for="editProductCode" class="form-label">Código del Producto</label>
           <input type="text" class="form-control" id="editProductCode" name="editProductCode" value="{{product.product_code}}">
         </div>
-        <div class="mb-3">
+    
+        <div class="mb-2">
           <label for="editProductDescription" class="form-label">Descripción</label>
-          <input type="text" class="form-control" id="editProductDescription" name="editProductDescription" value="{{product.description}}">
+          <input type="text" class="form-control" id="editProductDescription" name="editProductDescription"
+            value="{{product.description}}">
         </div>
-        <div class="mb-3">
+        <div class="mb-2">
           <label for="editProductPrice" class="form-label">Precio</label>
-          <input type="text" class="form-control" id="editProductPrice" name="editProductPrice" value="{{product.price}}">
+          <div class="input-group">
+            <span class="input-group-text">Bs.</span>
+            <input type="number" class="form-control" id="editProductPrice" name="editProductPrice" value="{{product.price}}"  step="0.01">
+          </div>
         </div>
-      </form>
-      
+        <hr>
+        <h5>Inventario y Seguimiento:</h5>
+        <div class="mb-2">
+          <label for="editProductCurrentStock" class="form-label">Stock Actual</label>
+          <input type="number" class="form-control" id="editProductCurrentStock" name="editProductCurrentStock" value="{{product.current_stock}}">
+        </div>
+        <div class="mb-2">
+          <label for="editProductExpirationDate" class="form-label">Fecha de Caducidad</label>
+          <input type="date" class="form-control" id="editProductExpirationDate" name="editProductExpirationDate" value="{{product.expiration_date}}">
+        </div>
+        <hr>
+        <h5>Proveedores y Logística:</h5>
+        <div class="mb-2">
+          <label for="editProductSupplier" class="form-label">Proveedor</label>
+          <!-- Agrega el campo de selección de proveedor si es necesario -->
+          <!-- Ejemplo: -->
+          <select class="form-control form-select" id="editProductSupplier" name="editProductSupplier">
+            <option value="{{product.supplier_id}}">{{product.supplier_id}}</option>
+            <option value="2">Proveedor 2</option>
+          </select>
+        </div>
+
+
+        <div class="mb-2">
+          <label for="editProductLotNumber" class="form-label">Numero de Lote</label>
+          <input type="text" class="form-control" id="editProductLotNumber" name="editProductLotNumber" value="{{product.lot_number}}">
+        </div>
+        <div class="mb-2">
+          <label for="editProductStorageLocation" class="form-label">Ubicación de Almacenamiento</label>
+          <input type="text" class="form-control" id="editProductStorageLocation" name="editProductStorageLocation" value="{{product.storage_location}}">
+        </div>
+        <hr>
+
+
+
+
+        <!-- price: number;
+        initial_stock: number;
+        expiration_date: Date;
+        supplier_id: number;
+        lot_number: string;
+        storage_location: string;
+        nutritional_information: string;
+        notes: string;
+        category_id: number;
+        current_stock: number;
+        created_at: Date;
+        updated_at: Date; -->
+      </div>
+
+      <div class="col-lg-6 col-md-12 imgEdit">
+
+
+        <div class="mb-2">
+          <label for="editProductCategory" class="form-label">Categoría</label>
+          <select class="form-select" name="" id="">
+            <option class="form-control" value="{{product.category_id}}">{{product.category_id}}</option>
+          </select>
+        </div>
+        
+        <div class="row">
+          <label for="editProductImage" class="form-label text-center">Imagen del Producto</label>
+          <div class="col-12 text-center imagen-container">
+            <img [src]="currentImageSource" alt="{{ product.name }}" id="currentProductImage" class="img-thumbnail">
+          </div>
+          <div class="col-12 p-2 ">
+            <input type="file" class="form-control" id="editProductImage" name="editProductImage"
+              (change)="onImageChange($event)">
+          </div>
+        </div>
+        <hr>
+        <h5>Informacion Adicional</h5>
+        <div class="mb-2">
+          <label for="editProductNotes" class="form-label">Notas</label>
+          <input type="text" class="form-control" id="editProductNotes" name="editProductNotes" value="{{product.notes}}">
+        </div>
+        <div class="mb-2">
+          <label for="editProductNutritionalInformation" class="form-label">Información Nutrimental</label>
+          <input type="text" class="form-control" id="editProductNutritionalInformation" name="editProductNutritionalInformation" value="{{product.nutritional_information}}">
+        </div>
+      </div>
+
+
+    </div>
+  </form>
 </div>

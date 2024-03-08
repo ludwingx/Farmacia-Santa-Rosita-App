@@ -1,4 +1,8 @@
-
+.titleProduct{
+    color: var(--first-color);
+    font-size: 1.8rem;
+    padding: 20px 10px 0px 10px;
+}
 /*Aqui agregaras los estilos para la imagen del producto dentro de la tabla Listado de productos*/
 .imgProduct {
     width: 80px;
@@ -7,7 +11,7 @@
     margin: 5px;
 }
 .dropdown-menu .dropdown-item{
-    
+
     cursor: pointer;
     &:active{
         background-color: var(--first-color);
@@ -25,11 +29,14 @@
 .dropdown-item {
     border-bottom: 1px solid #8b8e91; /* Borde entre cada item del menú desplegable */
 }
-.btn{
-    background-color: var(--first-color);
-    color: #ffffff; 
-    &:hover {
-        background-color: #dd2b66;
+
+.dropdown{
+    .btn{
+        background-color: var(--first-color);
+        color: #ffffff; 
+        &:hover {
+            background-color: #dd2b66;
+        }
     }
 }
 

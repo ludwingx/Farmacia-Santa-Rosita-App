@@ -1,7 +1,7 @@
 <div class="continer">
     <div class="row">
         <div class="col-12">
-            <h4>Listado de productos</h4>
+            <h4 class="titleProduct">Listado de productos</h4>
         </div>
     </div>
     <table class="table table-bordered border border-dark-subtle">
@@ -42,7 +42,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" (click)="openDeleteConfirmationModal(product)">
                                         Eliminar 
                                         <i class="fa-solid fa-trash"></i>
                                     </a>   
@@ -62,38 +62,22 @@
 </div>
 <br>
 <br>
-<div class="modal fade" id="exampleModalEditar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Editar Producto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form id="editarProductoForm">
-                <div class="mb-3">
-                  <label for="editProductName" class="form-label">Nombre del Producto</label>
-                  <input type="text" class="form-control" id="editProductName" name="editProductName">
-                </div>
-                <div class="mb-3">
-                  <label for="editProductCode" class="form-label">Codigo de Producto</label>
-                  <input type="text" class="form-control" id="editProductCode" name="editProductCode">
-                </div>
-                <div class="mb-3">
-                  <label for="editProductDescription" class="form-label">Descripción</label>
-                  <input type="text" class="form-control" id="editProductDescription" name="editProductDescription">
-                </div>
-                <div class="mb-3">
-                  <label for="editProductPrice" class="form-label">Precio</label>
-                  <input type="text" class="form-control" id="editProductPrice" name="editProductPrice">
-                </div>
-              </form>
-              
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary">Guardar Cambios</button>
-        </div>
+
+<!-- Modal de confirmación -->
+<div class="modal" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteConfirmationModalLabel">Eliminar Producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas eliminar  "{{ productToDelete?.name }}"?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">Eliminar</button>
       </div>
     </div>
   </div>
+</div>
