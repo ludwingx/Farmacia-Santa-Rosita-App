@@ -4,6 +4,7 @@ import { DOCUMENT, NgClass } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -24,14 +25,16 @@ export class SidebarComponent {
         this.checkActiveLinks();
       });
   }
+  
 
   isLinkActive(route: string): boolean {
     // Comprueba si la ruta actual incluye la ruta proporcionada
     return this.router.url.includes(route);
   }
-  onRouteChange(route: string): void {
-    // Actualiza la propiedad currentRoute con la ruta actual
-    this.currentRoute = route;
+
+  loadProducts(): void {
+    this.router.navigate(['/inventory']);
+    
   }
   checkActiveLinks(): void {
     const links = this.document.querySelectorAll('.nav_link');

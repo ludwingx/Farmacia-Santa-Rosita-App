@@ -24,19 +24,19 @@
                  
                 </a>
                 <div class="nav_list"> 
-                    <a href="#" class="nav_link" routerLink="dashboard" (click)="onRouteChange('dashboard')" [ngClass]="{'active': currentRoute === 'dashboard'}"> 
+                    <a href="#" class="nav_link" routerLink="dashboard" [ngClass]="{'active': currentRoute === 'dashboard'}"> 
                         <i class="fa-solid fa-chart-line"></i>
                         <span class="nav_name">Dashboard</span> 
                     </a> 
-                    <a class="nav_link" routerLink="inventory"(click)="onRouteChange('inventory')" [ngClass]="{'active': currentRoute === 'inventory'}" > 
+                    <a class="nav_link" type="button" (click)="loadProducts()" [ngClass]="{'active': currentRoute === 'inventory'}" > 
                         <i class="fa-solid fa-boxes-stacked"></i>
                         <span class="nav_name">Inventario</span> 
                     </a> 
-                    <a  class="nav_link" routerLink="sales"  (click)="onRouteChange('sales')" [ngClass]="{'active': currentRoute === 'sales'}" > 
+                    <a  class="nav_link" routerLink="sales"  [ngClass]="{'active': currentRoute === 'sales'}" > 
                         <i class="fa-solid fa-sack-dollar"></i>
                         <span class="nav_name">Ventas</span> 
                     </a> 
-                    <a href="#" class="nav_link" routerLink="reports" (click)="onRouteChange('reports')" [ngClass]="{'active': currentRoute === 'reports'}">
+                    <a href="#" class="nav_link" routerLink="reports" [ngClass]="{'active': currentRoute === 'reports'}">
                         <i class="fa-solid fa-pills"></i>
                             <span class="nav_name">Productos</span> 
                     </a> 

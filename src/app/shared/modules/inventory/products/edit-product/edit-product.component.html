@@ -1,0 +1,23 @@
+<div class="container">
+    <h2>Editar Producto</h2>
+    <h4>{{product.name}}</h4>
+    <form id="editarProductoForm">
+        <div class="mb-3">
+          <label for="editProductName" class="form-label">Nombre del Producto</label>
+          <input type="text" class="form-control" id="editProductName" name="editProductName" value="{{product.name}}">
+        </div>
+        <div class="mb-3">
+          <label for="editProductCode" class="form-label">Codigo de Producto</label>
+          <input type="text" class="form-control" id="editProductCode" name="editProductCode" value="{{product.product_code}}">
+        </div>
+        <div class="mb-3">
+          <label for="editProductDescription" class="form-label">Descripción</label>
+          <input type="text" class="form-control" id="editProductDescription" name="editProductDescription" value="{{product.description}}">
+        </div>
+        <div class="mb-3">
+          <label for="editProductPrice" class="form-label">Precio</label>
+          <input type="text" class="form-control" id="editProductPrice" name="editProductPrice" value="{{product.price}}">
+        </div>
+      </form>
+      
+</div>

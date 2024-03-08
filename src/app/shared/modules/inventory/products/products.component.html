@@ -26,7 +26,7 @@
                     <td>{{ product.name }}</td>
                     <td>{{ product.product_code }}</td>
                     <td>{{ product.description }}</td>
-                    <td>{{ product.price | currency }}</td>
+                    <td>{{ product.price | currency : 'Bs.' }}</td>
                     <td>{{ product.current_stock }}</td>
                     <td>{{ product.expiration_date | date:'shortDate' }}</td> 
                     <td>
@@ -36,8 +36,7 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" 
-                                        data-bs-target="#exampleModalEditar">
+                                    <a class="dropdown-item" (click)="editProduct(product)">
                                         Editar 
                                         <i class="fa-solid fa-pen"></i>
                                     </a>
@@ -61,7 +60,8 @@
         </tbody>
       </table>
 </div>
-
+<br>
+<br>
 <div class="modal fade" id="exampleModalEditar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
