@@ -20,23 +20,23 @@
 //     FOREIGN KEY (category_id) REFERENCES categories(id)
 // );
 export interface IProductsList {
-    id: number;
-    image: string;
-    name: string;
-    product_code: string;
-    description: string;
-    price: number;
-    initial_stock: number;
-    expiration_date: Date;
-    supplier_id: number;
-    lot_number: string;
-    storage_location: string;
-    nutritional_information: string;
-    notes: string;
-    category_id: number;
-    current_stock: number;
-    created_at: Date;
-    updated_at: Date;
+    id: number; //id product
+    image: string; //image
+    name: string; //nombre
+    product_code: string; //codigo del producto
+    description: string; //descripción
+    price: number; //precio
+    initial_stock: number; //stock inicial
+    expiration_date: Date; //fecha de caducidad
+    supplier_id: number; //referencia a la tabla de proveedores
+    lot_number: string; //lote
+    storage_location: string; //lugar de almacenamiento
+    nutritional_information: string; //información nutricional
+    notes: string; //notas
+    category_id: number; //referencia a la tabla de categorías
+    current_stock: number; //stock actual
+    created_at: Date; //fecha de creación
+    updated_at: Date; //fecha de actualización
 
     
 }

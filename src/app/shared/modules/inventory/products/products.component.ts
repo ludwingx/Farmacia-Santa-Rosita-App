@@ -17,9 +17,13 @@ export class ProductsComponent implements OnInit {
   constructor(private serviceProduct: ProductsApiService, private router: Router) {}
   products: IProductsList[] = [];
   productToDelete: IProductsList | null = null;
+  productStock: IProductsList | null = null;
+
   ngOnInit(): void {
     this.loadProducts();
-
+    this.serviceProduct.getProduct(1).subscribe((data: IProductsList | null) => {
+      this.productStock = data;
+    });
   }
 
   loadProducts(): void {
@@ -57,5 +61,25 @@ export class ProductsComponent implements OnInit {
 
     // Cierra el modal después de confirmar la eliminación
     this.closeDeleteConfirmationModal();
+  }
+  
+  openStockAdjustmentModal(product: IProductsList) {
+
+    // Muestra el modal de ajuste de stock  
+    this.productStock = { ...product };
+    
+  }
+
+  increaseStock(productStock: IProductsList) {
+    // Lógica para aumentar el stock
+    productStock.current_stock += 1;
+  }
+
+  decreaseStock(productStock: IProductsList) {
+    // Asegúrate de no disminuir el stock por debajo de cero
+    if (productStock.current_stock > 0) {
+      // Lógica para disminuir el stock
+      productStock.current_stock -= 1;
+    }
   }
 }

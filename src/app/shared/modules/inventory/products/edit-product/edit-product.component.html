@@ -53,8 +53,9 @@
           <!-- Agrega el campo de selección de proveedor si es necesario -->
           <!-- Ejemplo: -->
           <select class="form-control form-select" id="editProductSupplier" name="editProductSupplier">
-            <option value="{{product.supplier_id}}">{{product.supplier_id}}</option>
-            <option value="2">Proveedor 2</option>
+            @for(supplier of suppliers; track supplier.id){
+              <option  [value]="supplier.id">{{ supplier.name }}</option>
+            }
           </select>
         </div>
 
@@ -116,9 +117,12 @@
           <label for="editProductNutritionalInformation" class="form-label">Información Nutrimental</label>
           <input type="text" class="form-control" id="editProductNutritionalInformation" name="editProductNutritionalInformation" value="{{product.nutritional_information}}">
         </div>
+        <div class="text d-grid mt-5">
+          <button type="button" class="btn btn-primary btn-lg" (click)="updateProduct(product)" >Guardar</button>
+        </div>
       </div>
 
-
+     
     </div>
   </form>
 </div>

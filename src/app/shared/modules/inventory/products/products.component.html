@@ -14,6 +14,7 @@
             <th>Descripción</th>
             <th>Precio</th>
             <th>Stock Actual</th>
+            <th>Stock inicial</th>
             <th>Fecha de Caducidad</th>
             <th>Acciones</th>
           </tr>
@@ -28,6 +29,7 @@
                     <td>{{ product.description }}</td>
                     <td>{{ product.price | currency : 'Bs.' }}</td>
                     <td>{{ product.current_stock }}</td>
+                    <td>{{product.initial_stock}}</td>
                     <td>{{ product.expiration_date | date:'shortDate' }}</td> 
                     <td>
                         <div class="dropdown">
@@ -48,7 +50,7 @@
                                     </a>   
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#stockAdjustmentModal"   (click)="openStockAdjustmentModal(product)" >
                                         Stock
                                     </a>
                                 </li>
@@ -77,6 +79,48 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-danger" (click)="confirmDelete()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de ajuste de stock -->
+<div class="modal" id="stockAdjustmentModal" tabindex="-1" aria-labelledby="stockAdjustmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="stockAdjustmentModalLabel">Ajustar Stock</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      @if(productStock){
+        <div>
+          <div class="modal-body">
+            <div class="row justify-content-center">
+              <div class="col-2">  
+                <button type="button" class="btn btn-success" (click)="increaseStock(productStock)">+</button>
+              </div>
+              <div class="col-3">
+                <input class="form-control" type="number" value="{{ productStock.current_stock }}">
+              </div>
+              <div class="col-2">
+                <button type="button" class="btn btn-danger" (click)="decreaseStock(productStock)">-</button>
+              </div>
+            </div>
+          
+
+
+          </div>
+        </div>
+      } @else{
+        <div>
+          <p>Producto no encontrado.</p>
+        </div>
+      }
+      
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Guardar Cambios</button>
       </div>
     </div>
   </div>

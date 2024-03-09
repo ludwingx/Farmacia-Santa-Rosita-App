@@ -17,6 +17,7 @@ export class EditProductComponent {
   newImage!: File ; 
   previewImage: any = null;
   currentImageSource: any;
+  suppliers: any = [];
   constructor(
     private route: ActivatedRoute,
     private router: Router,
