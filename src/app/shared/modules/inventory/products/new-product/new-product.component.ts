@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ProductsApiService } from '../../../../../core/services/products/products-api.service';
+import { CategoriesService } from '../../../../../core/services/categories/categories.service';
+import { SuppliersService } from '../../../../../core/services/suppliers/suppliers.service';
+import { ISuppliers } from '../../../../../core/interfaces/suppliers.interface';
+import { ICategories } from '../../../../../core/interfaces/categories.interface';
 
 @Component({
   selector: 'app-new-product',
@@ -13,13 +17,43 @@ import { ProductsApiService } from '../../../../../core/services/products/produc
 export class NewProductComponent {
   newImage!: File ; 
   previewImage: any = null;
+  suppliers!: ISuppliers[];
+  categories!: ICategories[];
   currentImageSource: any;
   constructor(
-
+    private suppliersservice: SuppliersService, 
+    private categoriesservice:CategoriesService,
     private router: Router,
-    private productService: ProductsApiService,
+
     private sanitizer: DomSanitizer
   ) {}
+  ngOnInit(): void {
+    this.getSuppliers();
+    this.getCategories();
+  }
+  getSuppliers() {
+    this.suppliersservice.getSuppliers().subscribe(
+      (data) => {
+        this.suppliers = data;
+
+      },
+      (error) => {
+        console.error('Error al obtener los proveedores:', error);
+      }
+    );
+    
+  }
+  getCategories() {
+    this.categoriesservice.getCategories().subscribe(
+      (data) => {
+        this.categories = data;
+        console.log(this.categories);
+      },
+      (error) => {
+        console.error('Error al obtener las categorías:', error);
+      }
+    );
+  }
   goToProductList(): void {
     this.router.navigate(['inventory'])
   }

@@ -16,55 +16,56 @@
           <div class="col-lg-6 col-md-12 ">
             <div class="mb-2">
               <label for="editProductName" class="form-label">Nombre del Producto</label>
-              <input type="text" class="form-control" id="editProductName" name="editProductName">
+              <input type="text" class="form-control" placeholder="Ingrese el nombre" id="editProductName" name="editProductName">
             </div>
             <div class="mb-2">
               <label for="editProductCode" class="form-label">Código del Producto</label>
-              <input type="text" class="form-control" id="editProductCode" name="editProductCode" >
+              <input type="text" class="form-control" placeholder="Ingrese el Código" id="editProductCode" name="editProductCode" >
             </div>
         
             <div class="mb-2">
               <label for="editProductDescription" class="form-label">Descripción</label>
-              <input type="text" class="form-control" id="editProductDescription" name="editProductDescription"
+              <input type="text" class="form-control" placeholder="Ingrese la descripción" id="editProductDescription" name="editProductDescription"
                 >
             </div>
             <div class="mb-2">
               <label for="editProductPrice" class="form-label">Precio</label>
               <div class="input-group">
                 <span class="input-group-text">Bs.</span>
-                <input type="number" class="form-control" id="editProductPrice" name="editProductPrice"   step="0.01">
+                <input type="number" class="form-control" placeholder="Ingrese el precio" id="editProductPrice" name="editProductPrice"   step="0.01">
               </div>
             </div>
             <hr>
             <h5>Inventario y Seguimiento:</h5>
             <div class="mb-2">
-              <label for="editProductCurrentStock" class="form-label">Stock Actual</label>
-              <input type="number" class="form-control" id="editProductCurrentStock" name="editProductCurrentStock">
+              <label for="editProductCurrentStock" class="form-label">Stock Inicial</label>
+              <input type="number" class="form-control" placeholder="Ingrese el stock inicial" id="editProductCurrentStock" name="editProductCurrentStock">
             </div>
             <div class="mb-2">
               <label for="editProductExpirationDate" class="form-label">Fecha de Caducidad</label>
-              <input type="date" class="form-control" id="editProductExpirationDate" name="editProductExpirationDate" >
+              <input type="date" class="form-control" placeholder="Ingrese la fecha de caducidad" id="editProductExpirationDate" name="editProductExpirationDate" >
             </div>
             <hr>
             <h5>Proveedores y Logística:</h5>
             <div class="mb-2">
               <label for="editProductSupplier" class="form-label">Proveedor</label>
-              <!-- Agrega el campo de selección de proveedor si es necesario -->
-              <!-- Ejemplo: -->
-              <select class="form-control form-select" id="editProductSupplier" name="editProductSupplier">
-                <option ></option>
-                <option value="2">Proveedor 2</option>
+
+              <select class="form-control form-select" id="editProductSupplier"  name="editProductSupplier">
+                  <option >Selecione un proveedor</option>
+                @for(supplier of suppliers; track supplier.id){
+                  <option  [value]="supplier.id">{{ supplier.name }}</option>
+                }
               </select>
             </div>
     
     
             <div class="mb-2">
               <label for="editProductLotNumber" class="form-label">Numero de Lote</label>
-              <input type="text" class="form-control" id="editProductLotNumber" name="editProductLotNumber" >
+              <input type="text" class="form-control" placeholder="Ingrese el numero de lote" id="editProductLotNumber" name="editProductLotNumber" >
             </div>
             <div class="mb-2">
               <label for="editProductStorageLocation" class="form-label">Ubicación de Almacenamiento</label>
-              <input type="text" class="form-control" id="editProductStorageLocation" name="editProductStorageLocation" >
+              <input type="text" class="form-control" placeholder="Ingrese la ubicación de almacenamiento" id="editProductStorageLocation" name="editProductStorageLocation" >
             </div>
             <hr>
     
@@ -91,7 +92,10 @@
             <div class="mb-2">
               <label for="editProductCategory" class="form-label">Categoría</label>
               <select class="form-select" name="" id="">
-                <option class="form-control"></option>
+                <option value="">Seleccione una categoría</option>
+                @for(category of categories; track category.id){
+                  <option  [value]="category.id">{{ category.name }}</option>
+                }
               </select>
             </div>
             
@@ -108,15 +112,15 @@
             <hr>
             <h5>Informacion Adicional</h5>
             <div class="mb-2">
-              <label for="editProductNotes" class="form-label">Notas</label>
-              <input type="text" class="form-control" id="editProductNotes" name="editProductNotes" >
+              <label for="editProductNotes" class="form-label">Notas:</label>
+              <textarea class="form-control" placeholder="Ingrese alguna nota del producto (opcional)" id="editProductNotes" ></textarea>
             </div>
             <div class="mb-2">
               <label for="editProductNutritionalInformation" class="form-label">Información Nutrimental</label>
-              <input type="text" class="form-control" id="editProductNutritionalInformation" name="editProductNutritionalInformation" >
+              <input type="text" class="form-control" placeholder="Ingrese la información nutrimental" id="editProductNutritionalInformation" name="editProductNutritionalInformation" >
             </div>
-            <div class="mb-2">
-                <button type="submit" class="btn btn-primary">Guardar</button>
+            <div class="mb-2 d-grid">
+                <button type="submit" class="btn btn-primary btn-lg mt-5">Guardar cambios</button>
               </div>
           </div>
 

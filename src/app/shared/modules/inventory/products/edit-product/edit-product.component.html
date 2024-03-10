@@ -93,7 +93,10 @@
         <div class="mb-2">
           <label for="editProductCategory" class="form-label">Categoría</label>
           <select class="form-select" name="" id="">
-            <option class="form-control" value="{{product.category_id}}">{{product.category_id}}</option>
+            <option [value]="currentCategory" >{{ currentCategory }}</option>
+            @for(category of categories; track category.id){
+              <option  [value]="category.id">{{ category.name }}</option>
+            }
           </select>
         </div>
         
