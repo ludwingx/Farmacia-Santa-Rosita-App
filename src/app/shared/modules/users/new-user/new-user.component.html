@@ -1,0 +1,71 @@
+<div class="container">
+    <!-- BREADCRUM -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="dashboard">Dashboard</a></li>
+    <li class="breadcrumb-item"><a type="button" class="breadcrumb-link" (click)="goToUserList()">Usuarios</a>
+    </li>
+    <li class="breadcrumb-item">Nuevo Usuario</li>
+  </ol>
+</nav>
+<h2 class="textEditProduct"><a type="button" (click)="goToUserList()"><i class="fa-solid fa-arrow-left"></i></a>
+  Agregar Nuevo Usuario</h2>
+
+  <form id="editarProductoForm">
+      <div class="row">
+        <div class="col-lg-6 col-md-12 ">
+          <div class="mb-2">
+            <label for="editProductName" class="form-label">Nombre de Usuario</label>
+            <input type="text" class="form-control" placeholder="Ingrese el nombre de usuario" >
+          </div>
+          <div class="mb-2">
+            <label for="" class="form-label">Nombre Completo</label>
+            <input type="text" class="form-control" placeholder="Ingrese el nombre">
+          </div>
+          <div class="mb-2">
+            <label for="" class="form-label">Correo Electronico</label>
+            <input type="email" class="form-control" placeholder="Ingrese el correo">
+          </div>
+          <div class="mb-2">
+            <label for="" class="form-label">Cédula de Identidad (CI)</label>
+            <input type="text" class="form-control" placeholder="Ingrese el ci">
+          </div>
+          <div class="mb-2">
+            <label for="editProductCategory" class="form-label">Rol</label>
+            <select class="form-select" name="" id="">
+              <option value="">Seleccione un Rol</option>
+              @for(role of roles; track role.id){
+                <option  [value]="role.id">{{ role.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="mb-2">
+            <label for="" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" placeholder="Ingrese la contraseña">
+          </div>
+          <div class="mb-2">
+            <label for="" class="form-label">Confirmar Contraseña</label>
+            <input type="password" class="form-control" placeholder="Confirme la contraseña">
+          </div>
+
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <label for="editProductImage" class="form-label text-center">Foto de Perfil</label>
+                <div class="col-12 text-center imagen-container">
+                  <img [src]="currentImageSource"  id="currentProductImage" class="img-thumbnail">
+                </div>
+                <div class="col-12 p-2 ">
+                  <input type="file" class="form-control" id="editProductImage" name="editProductImage"
+                    (change)="onImageChange($event)">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success btn-large btn-block" (click)="createUser()">
+                <i class="fa-solid fa-floppy-disk"></i> Crear Usuario
+              </button>
+        </div>
+
+      </div>
+      <div>
+        <br><br><br>
+    </div>

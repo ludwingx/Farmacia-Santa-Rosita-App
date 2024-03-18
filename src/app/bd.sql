@@ -60,6 +60,7 @@ CREATE TABLE users (
     name VARCHAR(255), -- Nombre del usuario
     email VARCHAR(255), -- Correo electronico
     password VARCHAR(255), -- Contrasena
+    image VARCHAR(255), -- Imagen
     role_id INT, -- Referencia a la tabla de roles
     FOREIGN KEY (role_id) REFERENCES roles(id) -- Llave externa a la tabla de roles
 

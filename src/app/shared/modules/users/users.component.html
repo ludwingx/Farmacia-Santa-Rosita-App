@@ -1,0 +1,99 @@
+<div class="container">
+    <!-- BREADCRUM -->
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a class="breadcrumb-link" href="dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a>Usuarios</a></li>
+
+        </ol>
+      </nav>
+    <div class="row">
+        <div class="col -12">
+            <h3 class="titleInventory">
+                Gestionar Usuarios
+            </h3>
+        </div>
+        <div class="col-12 d-flex justify-content-end">
+            <button class="btn newProduct me-3" (click)="newUser()" ><i class="fa-solid fa-plus"></i>Crear Usuario</button>
+            <button class="btn btn-danger me-3"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+        </div>
+    </div>
+    <div class="continer">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="titleProduct">Listado de usuarios</h4>
+            </div>
+        </div>
+        <table class="table table-bordered border border-dark-subtle">
+            <thead class="table-green" >
+              <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Password</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+                @for (user of users; track user.id) {
+                    <tr >
+                        <td>{{ user.id }}</td>   
+                        <td>{{ user.username }}</td>               
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role.name}}</td>
+                        <td>{{ user.ci}}</td>
+                        <td>{{ user.password }}</td>
+                        <td> 
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                  Configuraciones
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" (click)="editUser(user)">
+                                            Editar 
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" (click)="openDeleteConfirmationModal(user)">
+                                            Eliminar 
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>   
+                                    </li>
+
+                                </ul>
+                              </div>
+                        </td>
+                      </tr>
+                }
+            </tbody>
+          </table>
+    </div>
+    <br>
+    <br>
+    
+    <!-- Modal de confirmación -->
+    <div class="modal" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteConfirmationModalLabel">Eliminar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de que deseas eliminar  "{{ userToDelete?.name }}"?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" (click)="confirmDelete()">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</div>

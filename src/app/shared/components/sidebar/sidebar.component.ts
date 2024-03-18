@@ -40,7 +40,9 @@ export class SidebarComponent {
     // Navegación programática
     this.router.navigate(['/inventory']);
   }
-
+  loadUsers(){
+    this.router.navigate(['/users']);
+  }
   checkActiveLinks(): void {
     const links = this.document.querySelectorAll('.nav_link');
 
