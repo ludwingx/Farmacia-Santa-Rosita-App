@@ -1,13 +1,18 @@
 export interface IUsers{
-    id: string;
+    id: number;
     username: string;
     ci: number;    
     name: string;
     email: string,
     password: string;
     image: string;
+    status: {
+        id: number;
+        name: string;
+    };
     role: {
-        name: string
+        id: number;
+        name: string;
     }
 
 }

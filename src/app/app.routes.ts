@@ -8,6 +8,8 @@ import { EditProductComponent } from './shared/modules/inventory/products/edit-p
 import { NewProductComponent } from './shared/modules/inventory/products/new-product/new-product.component';
 import { UsersComponent } from './shared/modules/users/users.component';
 import { NewUserComponent } from './shared/modules/users/new-user/new-user.component';
+import { EditUserComponent } from './shared/modules/users/edit-user/edit-user.component';
+
 export const routes: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
     {path: 'dashboard', component: DashboardComponent },
@@ -19,6 +21,6 @@ export const routes: Routes = [
     {path: 'inventory/products/new-product', component: NewProductComponent},
 
     {path: 'users', component: UsersComponent},
-    {path: 'users/new-user', component: NewUserComponent}
-
+    {path: 'users/new-user', component: NewUserComponent},
+    {path: 'users/edit-user/:id', component: EditUserComponent},
 ];

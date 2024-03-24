@@ -31,9 +31,9 @@
                 <th>ID</th>
                 <th>Usuario</th>
                 <th>Nombre</th>
-                <th>Email</th>
                 <th>Role</th>
-                <th>Password</th>
+                <th>Status</th>
+                <th>Ver perfil</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -43,31 +43,15 @@
                         <td>{{ user.id }}</td>   
                         <td>{{ user.username }}</td>               
                         <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
                         <td>{{ user.role.name}}</td>
-                        <td>{{ user.ci}}</td>
-                        <td>{{ user.password }}</td>
+                        <td> <button class="btn btn-{{ user.status.id === 1 ? 'success' : 'danger' }}" (click)="toggleUserStatus(user)">
+                          {{ user.status.id === 1 ? 'Activo' : 'Inactivo' }}
+                        </button></td>
+                        <td><Button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#verPerfilModal" (click)="openUserProfileModal(user)"><i class="fa-solid fa-eye"></i> Ver</Button></td>
                         <td> 
-                            <div class="dropdown">
-                                <button class="btn dropdown-toggle"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                  Configuraciones
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" (click)="editUser(user)">
-                                            Editar 
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" (click)="openDeleteConfirmationModal(user)">
-                                            Eliminar 
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>   
-                                    </li>
-
-                                </ul>
-                              </div>
+                          <button class="btn  btn-primary btn-sm me-3" (click)="editUser(user)"  type="button">
+                            <i class="fa-solid fa-pen"></i> Editar 
+                           </button>
                         </td>
                       </tr>
                 }
@@ -76,24 +60,62 @@
     </div>
     <br>
     <br>
-    
-    <!-- Modal de confirmación -->
-    <div class="modal" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteConfirmationModalLabel">Eliminar Producto</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            ¿Estás seguro de que deseas eliminar  "{{ userToDelete?.name }}"?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-danger" (click)="confirmDelete()">Eliminar</button>
-          </div>
-        </div>
+    <!-- Modal ver -->
+<div class="modal fade" id="verPerfilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 d-flex justify-content-end  " id="exampleModalLabel">Perfil de Usuario</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
       </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="row justify-content-center">
+             <div class="col-6 text-center mb-3"> <!--src="http://localhost:3003/images/pp.jpg"  -->
+                <img [src]="'http://localhost:3003/images' + selectedUser?.image" class="rounded-circle profile-picture"  alt="Profile Picture">  
+            </div>
+            <p class="text-center">http://localhost:3003/images' + {{selectedUser?.image}}</p>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <div class="col-12 text-center">
+                <h4>{{selectedUser?.name}}</h4>
+              </div>
+
+              <div class="col-12 text-center">
+                <label class="form-label"><span class="text-muted">{{selectedUser?.email}}</span></label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <label class="form-label">Username: <span class="text-muted">{{selectedUser?.username}}</span></label>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Rol: <span class="text-muted">{{selectedUser?.role?.name}}</span></label>
+
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <label class="form-label">CI: <span class="text-muted">{{selectedUser?.ci}}</span></label>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Productos Registrados: <span class="text-muted">0</span></label>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <label class="form-label">Status: <span 
+              [ngClass]="{'text-success': selectedUser?.status?.id === 1, 
+              'text-danger': selectedUser?.status?.id === 2}">
+              {{selectedUser?.status?.name}}</span>
+            </label>
+          </div>
+      </div>
+
     </div>
-    
+  </div>
+    </div>
+  </div>
 </div>
+

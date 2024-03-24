@@ -16,3 +16,20 @@
         color:white;
     }
 }
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+}
+
+.edit-profile-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(50%, 50%);
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+}

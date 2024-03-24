@@ -1,66 +1,105 @@
 <div class="container">
-    <!-- BREADCRUM -->
+  <!-- BREADCRUM -->
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a class="breadcrumb-link" href="dashboard">Dashboard</a></li>
-    <li class="breadcrumb-item"><a type="button" class="breadcrumb-link" (click)="goToUserList()">Usuarios</a>
-    </li>
-    <li class="breadcrumb-item">Nuevo Usuario</li>
-  </ol>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="dashboard">Dashboard</a></li>
+  <li class="breadcrumb-item"><a type="button" class="breadcrumb-link" (click)="goToUserList()">Inventario</a>
+  </li>
+  <li class="breadcrumb-item">Nuevo Producto</li>
+</ol>
 </nav>
 <h2 class="textEditProduct"><a type="button" (click)="goToUserList()"><i class="fa-solid fa-arrow-left"></i></a>
-  Agregar Nuevo Usuario</h2>
-
-  <form id="editarProductoForm">
-      <div class="row">
-        <div class="col-lg-6 col-md-12 ">
-          <div class="mb-2">
-            <label for="editProductName" class="form-label">Nombre de Usuario</label>
-            <input type="text" class="form-control" placeholder="Ingrese el nombre de usuario" >
-          </div>
-          <div class="mb-2">
-            <label for="" class="form-label">Nombre Completo</label>
-            <input type="text" class="form-control" placeholder="Ingrese el nombre">
-          </div>
-          <div class="mb-2">
-            <label for="" class="form-label">Correo Electronico</label>
-            <input type="email" class="form-control" placeholder="Ingrese el correo">
-          </div>
-          <div class="mb-2">
-            <label for="" class="form-label">Cédula de Identidad (CI)</label>
-            <input type="text" class="form-control" placeholder="Ingrese el ci">
-          </div>
-          <div class="mb-2">
-            <label for="editProductCategory" class="form-label">Rol</label>
-            <select class="form-select" name="" id="">
-              <option value="">Seleccione un Rol</option>
-              @for(role of roles; track role.id){
-                <option  [value]="role.id">{{ role.name }}</option>
-              }
-            </select>
+Agregar Nuevo Usuario</h2>
+<form [formGroup]="form" (ngSubmit)="createUser()" id="editarProductoForm">
+    <div class="row">
+      <div class="col-lg-6 col-md-12 ">
+        <div class="mb-2">
+          <label for="" class="form-label">Nombre del Usuario</label>
+          <input type="text" class="form-control" placeholder="Ingrese el nombre de Usuario" formControlName="username" >
+            @if(form.get('username')?.hasError('required')&&form.get('username')?.touched){
+              <div class="form-error">
+                <span class="text-danger">Escribe el nombre del producto*</span>
+              </div>
+            }
           </div>
           <div class="mb-2">
             <label for="" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" placeholder="Ingrese la contraseña">
-          </div>
+            <input type="password" class="form-control" placeholder="Ingrese la contraseña" formControlName="password" >
+              @if(form.get('password')?.hasError('required')&&form.get('password')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe la contraseña*</span>
+                </div>
+              }
+            </div>
           <div class="mb-2">
             <label for="" class="form-label">Confirmar Contraseña</label>
-            <input type="password" class="form-control" placeholder="Confirme la contraseña">
+            <input type="password" class="form-control" placeholder="Confirme la contraseña" formControlName="confirm_password" >
+              @if(form.get('confirm_password')?.hasError('required')&&form.get('confirm_password')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Confirme la contraseña*</span>
+                </div>
+              }
+          </div>
+          
+          <div class="mb-2">
+            <label for="editProductDescription" class="form-label">Rol</label>
+            <select class="form-select" formControlName="role_id" >
+              <option value="" >Selecione un rol</option>
+              @for (role of roles; track role.id) {
+                <option value="{{role.id}}">{{role.name}}</option>
+              }
+            </select>
+            @if(form.get('role_id')?.hasError('required')&&form.get('role_id')?.touched){
+              <div class="form-error">
+                <span class="text-danger">Selecione un rol*</span>
+              </div>
+            }
           </div>
 
+          <div class="mb-2">
+            <label for="editProductDescription" class="form-label">Email</label>
+            <input type="email" class="form-control" placeholder="Ingrese el email" formControlName="email" >
+              @if(form.get('email')?.hasError('required')&&form.get('email')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe el email*</span>
+                </div>
+              }
+          </div>
+          <div class="mb-2">
+            <label for="editProductDescription" class="form-label">Cédula de identidad (CI)</label>
+            <input type="text" class="form-control" placeholder="Ingrese la CI" formControlName="ci" >
+              @if(form.get('ci')?.hasError('required')&&form.get('ci')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe la CI*</span>
+                </div>
+              }
+          </div>
+
+          <div class="mb-2">
+            <label for="editProductDescription" class="form-label">Nombre Completo</label>
+            <input type="text" class="form-control" placeholder="Ingrese el nombre" formControlName="name" >
+              @if(form.get('name')?.hasError('required')&&form.get('name')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe el nombre*</span>
+                </div>
+              }
+          </div>
+          <div class="mb-2">
+            <p> Status :  </p>
+            <input type="number" value="2"  class="form-control" formControlName="status_id">
+          </div>
         </div>
         <div class="col-lg-6 col-md-12">
             <div class="row">
                 <label for="editProductImage" class="form-label text-center">Foto de Perfil</label>
                 <div class="col-12 text-center imagen-container">
-                  <img [src]="currentImageSource"  id="currentProductImage" class="img-thumbnail">
+                  <img [src]="currentImageSource" class="rounded-circle profile-picture" alt="Profile Picture">  
                 </div>
                 <div class="col-12 p-2 ">
-                  <input type="file" class="form-control" id="editProductImage" name="editProductImage"
-                    (change)="onImageChange($event)">
+                  <input type="file" class="form-control" id="profileImage" name="profileImage" (change)="onImageChange($event)">
                 </div>
               </div>
-              <button type="submit" class="btn btn-success btn-large btn-block" (click)="createUser()">
+              <button type="submit" class="btn btn-success btn-large btn-block" >
                 <i class="fa-solid fa-floppy-disk"></i> Crear Usuario
               </button>
         </div>

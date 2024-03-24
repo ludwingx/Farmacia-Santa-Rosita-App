@@ -10,102 +10,138 @@
   </nav>
   <h2 class="textEditProduct"><a type="button" (click)="goToProductList()"><i class="fa-solid fa-arrow-left"></i></a>
     Agregar Nuevo Producto</h2>
-    <form id="editarProductoForm">
+    <form [formGroup]="form" (ngSubmit)="create()" id="editarProductoForm">
         <div class="row">
           <h5>Información Básica del Producto:</h5>
           <div class="col-lg-6 col-md-12 ">
             <div class="mb-2">
               <label for="editProductName" class="form-label">Nombre del Producto</label>
-              <input type="text" class="form-control" placeholder="Ingrese el nombre" id="editProductName" name="editProductName">
+              <input type="text" class="form-control" placeholder="Ingrese el nombre" formControlName="name"  >
+                @if(form.get('name')?.hasError('required')&&form.get('name')?.touched){
+                  <div class="form-error">
+                    <span class="text-danger">Escribe el nombre del producto*</span>
+                  </div>
+                }
             </div>
             <div class="mb-2">
               <label for="editProductCode" class="form-label">Código del Producto</label>
-              <input type="text" class="form-control" placeholder="Ingrese el Código" id="editProductCode" name="editProductCode" >
+              <input type="text" class="form-control" placeholder="Ingrese el Código" formControlName="product_code" >
+              @if (form.get('product_code')?.hasError('required') && form.get('product_code')?.touched) {
+                <div class="form-error">
+                  <span class="text-danger">Escribe el Código del producto*</span>
+                </div>
+              }
             </div>
         
             <div class="mb-2">
               <label for="editProductDescription" class="form-label">Descripción</label>
-              <input type="text" class="form-control" placeholder="Ingrese la descripción" id="editProductDescription" name="editProductDescription"
-                >
+              <input type="text" class="form-control" placeholder="Ingrese la descripción" formControlName="description">
+              @if (form.get('description')?.hasError('required') && form.get('description')?.touched) {
+                <div class="form-error">
+                  <span class="text-danger">Escribe la descripción del Producto*</span>
+                </div>
+              }
             </div>
             <div class="mb-2">
               <label for="editProductPrice" class="form-label">Precio</label>
               <div class="input-group">
                 <span class="input-group-text">Bs.</span>
-                <input type="number" class="form-control" placeholder="Ingrese el precio" id="editProductPrice" name="editProductPrice"   step="0.01">
+                <input type="number" class="form-control" placeholder="Ingrese el precio" formControlName="price" step="0.01">
               </div>
+              @if(form.get('price')?.hasError('required') && form.get('price')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe el Precio del Producto*</span>
+                </div>
+              }
             </div>
             <hr>
             <h5>Inventario y Seguimiento:</h5>
             <div class="mb-2">
               <label for="editProductCurrentStock" class="form-label">Stock Inicial</label>
-              <input type="number" class="form-control" placeholder="Ingrese el stock inicial" id="editProductCurrentStock" name="editProductCurrentStock">
+              <input type="number" class="form-control" placeholder="Ingrese el stock inicial" formControlName="initial_stock" >
+              @if(form.get('initial_stock')?.hasError('required') && form.get('initial_stock')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe el Stock Inicial*</span>
+                </div>
+              }
             </div>
             <div class="mb-2">
               <label for="editProductExpirationDate" class="form-label">Fecha de Caducidad</label>
-              <input type="date" class="form-control" placeholder="Ingrese la fecha de caducidad" id="editProductExpirationDate" name="editProductExpirationDate" >
+              <input type="date" class="form-control" placeholder="Ingrese la fecha de caducidad" formControlName="expiration_date"  >
+              @if(form.get('expiration_date')?.hasError('required') && form.get('expiration_date')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe la Fecha de Caducidad*</span>
+                </div>
+              }
             </div>
             <hr>
             <h5>Proveedores y Logística:</h5>
             <div class="mb-2">
               <label for="editProductSupplier" class="form-label">Proveedor</label>
 
-              <select class="form-control form-select" id="editProductSupplier"  name="editProductSupplier">
-                  <option >Selecione un proveedor</option>
+              <select class="form-control form-select" formControlName="supplier_id" >
+                <option value="" >Selecione un proveedor</option>
                 @for(supplier of suppliers; track supplier.id){
                   <option  [value]="supplier.id">{{ supplier.name }}</option>
                 }
               </select>
+              @if(form.get('supplier_id')?.hasError('required') && form.get('supplier_id')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe el Proveedor*</span>
+                </div>
+              }
             </div>
     
     
             <div class="mb-2">
               <label for="editProductLotNumber" class="form-label">Numero de Lote</label>
-              <input type="text" class="form-control" placeholder="Ingrese el numero de lote" id="editProductLotNumber" name="editProductLotNumber" >
+              <input type="text" class="form-control" placeholder="Ingrese el numero de lote" formControlName="lot_number"  >
+              @if(form.get('lot_number')?.hasError('required') && form.get('lot_number')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe el Numero de Lote*</span>
+                </div>
+              }
             </div>
-            <div class="mb-2">
-              <label for="editProductStorageLocation" class="form-label">Ubicación de Almacenamiento</label>
-              <input type="text" class="form-control" placeholder="Ingrese la ubicación de almacenamiento" id="editProductStorageLocation" name="editProductStorageLocation" >
-            </div>
-            <hr>
-    
-    
-    
-    
-            <!-- price: number;
-            initial_stock: number;
-            expiration_date: Date;
-            supplier_id: number;
-            lot_number: string;
-            storage_location: string;
-            nutritional_information: string;
-            notes: string;
-            category_id: number;
-            current_stock: number;
-            created_at: Date;
-            updated_at: Date; -->
+
           </div>
-    
+  
           <div class="col-lg-6 col-md-12 imgEdit">
-    
-    
             <div class="mb-2">
               <label for="editProductCategory" class="form-label">Categoría</label>
-              <select class="form-select" name="" id="">
+              <select class="form-select" formControlName="category_id" >
                 <option value="">Seleccione una categoría</option>
                 @for(category of categories; track category.id){
                   <option  [value]="category.id">{{ category.name }}</option>
                 }
               </select>
+              @if(form.get('category_id')?.hasError('required') && form.get('category_id')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe la Categoría*</span>
+                </div>
+              }
             </div>
-            
+            <div class="mb-2">
+              <label for="" class="form-label">Ubicación</label>
+              <select class="form-control form-select" formControlName="storage_location_id">
+                <option value="" >Selecione la Ubicación del Producto</option>
+                @for(storage_location of storage_locations; track storage_location.id){
+                  <option  [value]="storage_location.id">{{ storage_location.location }}</option>
+                }
+              </select>
+              @if(form.get('location_id')?.hasError('required') && form.get('location_id')?.touched){
+                <div class="form-error">
+                  <span class="text-danger">Escribe la Ubicación*</span>
+                </div>
+              }
+            </div>
+            <hr>
             <div class="row">
               <label for="editProductImage" class="form-label text-center">Imagen del Producto</label>
               <div class="col-12 text-center imagen-container">
-                <img [src]="currentImageSource"  id="currentProductImage" class="img-thumbnail">
+                <img [src]="currentImageSource"   class="img-thumbnail">
               </div>
               <div class="col-12 p-2 ">
-                <input type="file" class="form-control" id="editProductImage" name="editProductImage"
+                <input type="file" class="form-control"  formControlName="image"
                   (change)="onImageChange($event)">
               </div>
             </div>
@@ -113,15 +149,16 @@
             <h5>Informacion Adicional</h5>
             <div class="mb-2">
               <label for="editProductNotes" class="form-label">Notas:</label>
-              <textarea class="form-control" placeholder="Ingrese alguna nota del producto (opcional)" id="editProductNotes" ></textarea>
+              <textarea class="form-control" placeholder="Ingrese alguna nota del producto (opcional)" formControlName="notes" ></textarea>
             </div>
             <div class="mb-2">
               <label for="editProductNutritionalInformation" class="form-label">Información Nutrimental</label>
-              <input type="text" class="form-control" placeholder="Ingrese la información nutrimental" id="editProductNutritionalInformation" name="editProductNutritionalInformation" >
+              <input type="text" class="form-control" placeholder="Ingrese la información nutrimental(opcional)" formControlName="nutritional_information"  >
             </div>
+            <hr>
             <div class="mb-2 d-grid">
-                <button type="submit" class="btn btn-primary btn-lg mt-5">Guardar cambios</button>
-              </div>
+              <button type="submit"  class="btn btn-primary btn-lg ">Guardar cambios</button>
+            </div>
           </div>
 
 
