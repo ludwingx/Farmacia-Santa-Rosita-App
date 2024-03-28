@@ -84,16 +84,13 @@ Agregar Nuevo Usuario</h2>
                 </div>
               }
           </div>
-          <div class="mb-2">
-            <p> Status :  </p>
-            <input type="number" value="2"  class="form-control" formControlName="status_id">
-          </div>
         </div>
         <div class="col-lg-6 col-md-12">
             <div class="row">
                 <label for="editProductImage" class="form-label text-center">Foto de Perfil</label>
-                <div class="col-12 text-center imagen-container">
-                  <img [src]="currentImageSource" class="rounded-circle profile-picture" alt="Profile Picture">  
+                <div class="col-12 imagen-container text-center">
+                  <img [src]="previewImage ? previewImage : currentImageSource"
+                  class="rounded-circle profile-picture" alt="Profile Picture"> 
                 </div>
                 <div class="col-12 p-2 ">
                   <input type="file" class="form-control" id="profileImage" name="profileImage" (change)="onImageChange($event)">

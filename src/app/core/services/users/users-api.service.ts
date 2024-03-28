@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { IUsers } from '../../interfaces/users.interface';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +10,12 @@ import { Observable } from 'rxjs';
 export class UsersApiService {
   private myAppUrl: string;
   private myApiUrl: string;
+  private myApiUrl2: string;
   
   constructor(private http: HttpClient) { 
     this.myAppUrl = environment.endpoint;
-    this.myApiUrl = '/api/users/'
+    this.myApiUrl = '/api/users/';
+    this.myApiUrl2 = '';
   }
     //
     getListUsers(): Observable<IUsers[]> {
@@ -21,13 +23,38 @@ export class UsersApiService {
     }
     //el siguiente metodo es para actualizar un usuario con id y toda la data del user
   // usar formDataToSend this.userService.updateUser(this.userId, formDataToSend).subscribe(
-  updateUser(id: number, formDataToSend: FormData): Observable<void> {
-    console.log('Nombre de la imagen:', formDataToSend.get('image'));
-    return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}`, formDataToSend);
-  }
+    updateUser(id: number, user: IUsers): Observable<void> {
+      return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}`, user);
+      
+    }
+    
+    uploadImage(id: number, imageData: FormData): Observable<any> {
+      const uploadUrl = `${this.myAppUrl}${this.myApiUrl}${id}/profile-image`; // Usar la ruta correspondiente
+      return this.http.post(uploadUrl, imageData).pipe(
+        catchError((error) => {
+          console.error('Error al subir la imagen:', error);
+          return throwError(() => error);
+        })
+      );
+    }
+    updateUserImage(userId: number,  user: IUsers, imageFile: File): Observable<any> {
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(user)); // Datos del usuario en formato JSON
+  
+      if (imageFile) {
+        formData.append('image', imageFile); // Agregar imagen al FormData si está presente
+      }
+      return this.http.put<any>(`${this.myApiUrl}/uploads/profile${userId}`, formData).pipe(
+        catchError((error) => {
+          console.error('Error al actualizar la imagen del usuario:', error);
+          return throwError(() => error);
+        })
+      )
+       
+    }
 
    //el siguiente metodo es para crear un nuevo usuario
-    createUser(user: IUsers): Observable<void> {
+    createUser(user: IUsers): Observable<any> {
       return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}`,user)
     }
     //el siguiente metodo es para obtener un solo usuario
@@ -40,9 +67,14 @@ export class UsersApiService {
       return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}/status`, statusUpdate);;
     }
 
-    uploadProfileImage(id: number, image: File): Observable<any> {
-      const formData: FormData = new FormData();
-      formData.append('profileImage', image, image.name);
-      return this.http.post<any>(`${this.myAppUrl}/${id}/upload-profile-image`, formData);
+    private handleError(error: HttpErrorResponse): Observable<never> {
+      let errorMessage = 'Error desconocido';
+      if (error.error instanceof ErrorEvent) {
+        errorMessage = `Error: ${error.error.message}`;
+      } else {
+        errorMessage = `Error código ${error.status}: ${error.message}`;
+      }
+      console.error(errorMessage);
+      return throwError(errorMessage);
     }
 }

@@ -5,6 +5,7 @@ import { RolesService } from '../../../../core/services/roles/roles.service';
 import { IRoles } from '../../../../core/interfaces/roles.interface';
 import { UsersApiService } from '../../../../core/services/users/users-api.service';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { IUsers } from '../../../../core/interfaces/users.interface';
 
 @Component({
   selector: 'app-new-user',
@@ -19,6 +20,7 @@ export class NewUserComponent {
   currentImageSource: any;
   roles: IRoles[] = [];
   form: FormGroup;
+  
   constructor(private router: Router, 
     private sanitizer: DomSanitizer,
     private rolesservices: RolesService,
@@ -33,7 +35,7 @@ export class NewUserComponent {
         password: [''],
         confirm_password: ['', [Validators.required, this.passwordMatchValidator.bind(this)]], 
         role_id: [''],
-        status_id: ['']
+        status_id: ['1']
       });
   }
   ngOnInit(){
@@ -58,9 +60,19 @@ export class NewUserComponent {
   onImageChange(event: any): void {
     const files = event.target.files;
     if (files.length > 0) {
-        this.newImage = files[0];
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        this.newImage = file;
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.previewImage = reader.result;
+        };
+        reader.readAsDataURL(this.newImage);
+      } else {
+        console.error('The selected file is not an image.');
+      }
     }
-}
+  }
   getRoleslist() {
     this.rolesservices.getRoles().subscribe(
       (data) => {
@@ -72,34 +84,39 @@ export class NewUserComponent {
     );
   }
   createUser() {
-    const formDataToSend: FormData = new FormData();
-    formDataToSend.append('username', this.form.get('username')!.value);
-    formDataToSend.append('ci', this.form.get('ci')!.value);
-    formDataToSend.append('name', this.form.get('name')!.value);
-    formDataToSend.append('email', this.form.get('email')!.value);
-    formDataToSend.append('password', this.form.get('password')!.value);
-    formDataToSend.append('role_id', this.form.get('role_id')!.value);
-    formDataToSend.append('status_id', this.form.get('status_id')!.value);
-
-    // Agregar otros campos del usuario al FormData
-
-  if (this.newImage) {
-      formDataToSend.append('profileImage', this.newImage, this.newImage.name);
+    if (this.form.valid) {
+      const userData = this.form.value;
+      const imageName = this.newImage ? this.newImage.name : '';
+      // Actualizar el valor de la imagen en userData
+      userData.image = imageName;
+      
+      this.usersServices.createUser(userData).subscribe(
+        (createdUser: IUsers) => {
+          console.log('Usuario creado:', createdUser);
+          if (this.newImage) {
+            this.uploadImage(createdUser);
+          } else {
+            this.goToUserList();
+          }
+        },
+        (error) => {
+          console.error('Error al crear el usuario:', error);
+        }
+      );
     }
-    const userData: any = {};
-    formDataToSend.forEach((value, key) => {
-      userData[key] = value;
-    });
+  } 
   
-    // Enviar el FormData al servicio para crear un nuevo usuario
-    this.usersServices.createUser(userData).subscribe(
+  uploadImage(user: IUsers) {
+    const formData = new FormData();
+    formData.append('image', this.newImage);
+    
+    this.usersServices.uploadImage(user.id, formData).subscribe(
       (data) => {
-        console.log('Usuario creado:', data);
-        // Mostrar mensaje de éxito al usuario
+        console.log('Imagen subida:', data);
+        this.goToUserList();
       },
       (error) => {
-        console.error('Error al crear el usuario:', error);
-        // Mostrar mensaje de error al usuario
+        console.error('Error al subir la imagen:', error);
       }
     );
   }

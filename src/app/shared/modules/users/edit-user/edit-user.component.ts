@@ -35,6 +35,7 @@ export class EditUserComponent {
     private sanitizer: DomSanitizer,
     private imageUserService: ImagenUserService,
   ){
+    this.userId = 0; 
     this.form = this.fb.group({
       username: ['', [Validators.required]],
       image: [''],
@@ -108,39 +109,61 @@ export class EditUserComponent {
       const file = files[0];
       if (file.type.startsWith('image/')) {
         this.newImage = file;
-        // Previsualizar la imagen cargada
-        this.previewImage = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.newImage));
-        // Actualizar la fuente de la imagen actual
-        this.currentImageSource = this.previewImage;
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.previewImage = reader.result;
+        };
+        reader.readAsDataURL(this.newImage);
       } else {
         console.error('El archivo seleccionado no es una imagen.');
       }
     }
   }
+
   updateUser() {
-    const formDataToSend = new FormData();
-    formDataToSend.append('username', this.form.get('username')!.value);
-    formDataToSend.append('password', this.form.get('password')!.value);
-    formDataToSend.append('confirm_password', this.form.get('confirm_password')!.value);
-    formDataToSend.append('name', this.form.get('name')!.value);
-    formDataToSend.append('ci', this.form.get('ci')!.value);
-    formDataToSend.append('email', this.form.get('email')!.value);
-    formDataToSend.append('role_id', this.form.get('role_id')!.value);
-    // Agregar la imagen al formulario
-    if (this.newImage) {
-      formDataToSend.append('image', this.newImage, this.newImage.name);
-    }
-    // Envía el formulario al backend utilizando una solicitud HTTP
-    this.userService.updateUser(this.userId, formDataToSend).subscribe(
-      (data) => {
-        this.goToUserList();
-        if (this.newImage) {
-          URL.revokeObjectURL(this.currentImageSource);
+    if (this.form.valid) {
+      const userData = this.form.value;
+      const imageName = this.newImage ? this.newImage.name : '';
+    // Actualizar el valor de la imagen en userData
+    userData.image = imageName;
+      this.userService.updateUser(this.userId, userData).subscribe(
+        (data) => {
+          console.log('Usuario actualizado:', data);
+          if (this.newImage) {
+            this.uploadImage(data);
+          } else {
+            this.goToUserList();
+          }
+        },
+        (error) => {
+          console.error('Error al actualizar el usuario:', error);
         }
-        console.log('Usuario actualizado:', data);
+      );
+    } else {
+      console.error('Formulario inválido. Revise los campos.');
+    }
+  }
+
+  uploadImage(userData: any) {
+    const formData = new FormData();
+    formData.append('image', this.newImage);
+    this.userService.uploadImage(this.userId, formData).subscribe(
+      (data) => {
+        console.log('Imagen subida:', data);
+        // Actualizar userData con el nombre de la imagen
+        userData.image = data.fileName; // Suponiendo que el nombre de la imagen devuelto por el servidor es fileName
+        this.userService.updateUser(this.userId, userData).subscribe(
+          (updatedUser) => {
+            console.log('Usuario actualizado con imagen:', updatedUser);
+            this.goToUserList();
+          },
+          (error) => {
+            console.error('Error al actualizar el usuario con imagen:', error);
+          }
+        );
       },
       (error) => {
-        console.error('Error al actualizar el usuario:', error);
+        console.error('Error al subir la imagen:', error);
       }
     );
   }

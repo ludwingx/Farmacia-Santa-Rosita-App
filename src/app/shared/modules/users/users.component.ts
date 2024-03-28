@@ -9,7 +9,7 @@ import { NgClass } from '@angular/common';
   selector: 'app-users',
   standalone: true,
   imports: [NgClass],
-  templateUrl: './users.component.html',
+  templateUrl:'./users.component.html',
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
@@ -32,10 +32,13 @@ export class UsersComponent {
   loadUsers(): void{
     this.usersService.getListUsers().subscribe(
       (data: IUsers[]) => {
-        this.users = data;
-
+        // Filtrar los usuarios por status_id igual a 1 o 2
+        this.users = data.filter(user => user.status_id === 1 || user.status_id === 2);
+      },
+      error => {
+        console.error('Error al cargar usuarios:', error);
+        // Manejar el error apropiadamente
       }
-
     );
   }
   newUser(){

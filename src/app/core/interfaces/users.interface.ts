@@ -6,6 +6,7 @@ export interface IUsers{
     email: string,
     password: string;
     image: string;
+    status_id : number;
     status: {
         id: number;
         name: string;
