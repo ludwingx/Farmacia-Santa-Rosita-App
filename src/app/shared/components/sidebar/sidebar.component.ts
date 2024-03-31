@@ -3,6 +3,9 @@ import { Component, Inject} from '@angular/core';
 import { DOCUMENT, NgClass } from '@angular/common';
 import {  NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { UsersApiService } from '../../../core/services/users/users-api.service';
+import { IUsers } from '../../../core/interfaces/users.interface';
 
 
 @Component({
@@ -13,8 +16,13 @@ import { filter } from 'rxjs/operators';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
-
-  constructor(private router: Router, @Inject(DOCUMENT) private document: Document) {}
+  isAuthenticated = false;
+  loggedInUser: IUsers | null = null;
+  constructor(private router: Router,
+     @Inject(DOCUMENT) private document: Document,
+     private authService : AuthService,
+     private userService : UsersApiService) {
+     }
 
   currentRoute: string = '';
   ngOnInit() {
@@ -24,6 +32,9 @@ export class SidebarComponent {
       this.currentRoute = this.getActiveRoute(this.router.url);
       this.checkActiveLinks();
     });
+    this.isAuthenticated = this.authService.isAuthenticated();
+    console.log('¿Está autenticado?', this.isAuthenticated);
+    this.getLoggedInUserData();
   }
   getActiveRoute(url: string): string {
     // Lógica para obtener la parte de la ruta que quieres destacar
@@ -58,6 +69,21 @@ export class SidebarComponent {
     }
   }
 
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']); // Redirige al componente de inicio de sesión
+  }
+  getLoggedInUserData(): void {
+    this.isAuthenticated = this.authService.isAuthenticated();
+    if (this.isAuthenticated) {
+      this.loggedInUser = this.authService.getLoggedInUser();
+      console.log('User:', this.loggedInUser);
+    } else {
+      console.log('Usuario no autenticado.');
+      // Aquí puedes manejar el caso de usuario no autenticado según tus necesidades
+    }
+  }
+  
 
 
 }

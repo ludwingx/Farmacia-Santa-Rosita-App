@@ -17,3 +17,10 @@ export interface IUsers{
     }
 
 }
+
+export interface IAuthUser{
+  username: string;
+  password: string;
+  token: string;
+  user: IUsers;
+}

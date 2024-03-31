@@ -10,24 +10,19 @@ import { Observable, catchError, throwError } from 'rxjs';
 export class UsersApiService {
   private myAppUrl: string;
   private myApiUrl: string;
-  private myApiUrl2: string;
+  private loggedInUser: any;
   
   constructor(private http: HttpClient) { 
     this.myAppUrl = environment.endpoint;
     this.myApiUrl = '/api/users/';
-    this.myApiUrl2 = '';
   }
-    //
     getListUsers(): Observable<IUsers[]> {
      return this.http.get<IUsers[]>(`${this.myAppUrl}${this.myApiUrl}`);
     }
-    //el siguiente metodo es para actualizar un usuario con id y toda la data del user
-  // usar formDataToSend this.userService.updateUser(this.userId, formDataToSend).subscribe(
     updateUser(id: number, user: IUsers): Observable<void> {
       return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}`, user);
       
     }
-    
     uploadImage(id: number, imageData: FormData): Observable<any> {
       const uploadUrl = `${this.myAppUrl}${this.myApiUrl}${id}/profile-image`; // Usar la ruta correspondiente
       return this.http.post(uploadUrl, imageData).pipe(
@@ -76,5 +71,21 @@ export class UsersApiService {
       }
       console.error(errorMessage);
       return throwError(errorMessage);
+    }
+
+    setLoggedInUser(user: any): void {
+      this.loggedInUser = user;
+    }
+  
+    getLoggedInUserName(): string {
+      return this.loggedInUser ? this.loggedInUser.username : '';
+    }
+
+    clearLoggedInUser(): void {
+      this.loggedInUser = null;
+    }
+    getUserById(id: number): Observable<IUsers> {
+      // Lógica para obtener la información del usuario por su ID desde el servidor
+      return this.http.get<IUsers>(`/api/users/${id}`);
     }
 }

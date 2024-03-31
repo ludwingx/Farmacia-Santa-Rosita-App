@@ -1,8 +1,13 @@
-<div id="body-pd" class="body">
+<div id="body-pd"  class="body">
     <header class="header" id="header">
         <div class="header_toggle"> <i class="bx bx-menu" id="header-toggle"></i> </div>
-
-        <div class="header_img"> <img src="https://i.imgur.com/hczKIze.jpg" alt=""> </div>
+        <div class="usernameloggeduser">
+            <p>{{loggedInUser?.name}}</p>
+        </div>
+        <div class="header_img">
+             <img src="https://i.imgur.com/hczKIze.jpg" alt=""> 
+        </div>
+        
     </header>
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
@@ -50,7 +55,7 @@
                     </a> 
                 </div>
             </div> 
-            <a href="#" class="nav_link"> 
+            <a class="nav_link" (click)="logout()"> 
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <span class="nav_name">SignOut</span> 
             </a>
@@ -59,5 +64,5 @@
     <!--Container Main start-->
     <div class="height-100 bg-light">
         <router-outlet></router-outlet>
-    </div>
+     </div>
     <!--Container Main end-->

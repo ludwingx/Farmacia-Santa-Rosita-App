@@ -6,7 +6,6 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { IRoles } from '../../../../core/interfaces/roles.interface';
 import { RolesService } from '../../../../core/services/roles/roles.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ImagenUserService } from '../../../../core/services/imagenUser/imagen-user.service';
 
 
 @Component({
@@ -32,8 +31,7 @@ export class EditUserComponent {
     private fb: FormBuilder,
 
     private rolesservices: RolesService,
-    private sanitizer: DomSanitizer,
-    private imageUserService: ImagenUserService,
+    private sanitizer: DomSanitizer
   ){
     this.userId = 0; 
     this.form = this.fb.group({

@@ -9,18 +9,24 @@ import { NewProductComponent } from './shared/modules/inventory/products/new-pro
 import { UsersComponent } from './shared/modules/users/users.component';
 import { NewUserComponent } from './shared/modules/users/new-user/new-user.component';
 import { EditUserComponent } from './shared/modules/users/edit-user/edit-user.component';
+import { authGuardGuard } from './core/guards/auth-guard.guard';
+import { LoginComponent } from './shared/modules/auth/login/login.component';
+import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 
 export const routes: Routes = [
-    {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
-    {path: 'dashboard', component: DashboardComponent },
-    {path: 'reports', component: ReportsComponent },
-    {path: 'sales', component: SalesComponent},
 
-    {path: 'inventory', component: InventoryComponent },
-    {path: 'inventory/products/edit-product/:id', component: EditProductComponent },
-    {path: 'inventory/products/new-product', component: NewProductComponent},
+    {path: 'dashboard', component: DashboardComponent, canActivate: [authGuardGuard]},
+    {path: 'reports', component: ReportsComponent,  },
+    {path: 'sales', component: SalesComponent,  },
+    {path: 'inventory', component: InventoryComponent,  },
+    {path: 'inventory/products/edit-product/:id', component: EditProductComponent,  },
+    {path: 'inventory/products/new-product', component: NewProductComponent,  },
 
-    {path: 'users', component: UsersComponent},
+    {path: 'users', component: UsersComponent,  },
     {path: 'users/new-user', component: NewUserComponent},
     {path: 'users/edit-user/:id', component: EditUserComponent},
-];
+
+    {path: 'login', component: LoginComponent},
+    {path: '**', redirectTo: 'login', pathMatch: 'full'},
+    { path: '', redirectTo: '/login', pathMatch: 'full' }
+]
