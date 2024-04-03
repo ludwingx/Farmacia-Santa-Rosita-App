@@ -1,5 +1,4 @@
 import { Component, Inject} from '@angular/core';
-
 import { DOCUMENT, NgClass } from '@angular/common';
 import {  NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -22,23 +21,31 @@ export class SidebarComponent {
      @Inject(DOCUMENT) private document: Document,
      private authService : AuthService,
      private userService : UsersApiService) {
-     }
-
+    
+  }
   currentRoute: string = '';
   ngOnInit() {
-    this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe(() => {
-      this.currentRoute = this.getActiveRoute(this.router.url);
-      this.checkActiveLinks();
-    });
     this.isAuthenticated = this.authService.isAuthenticated();
-    console.log('¿Está autenticado?', this.isAuthenticated);
-    this.getLoggedInUserData();
+    if (this.isAuthenticated) {
+      this.authService.getLoggedInUserData().subscribe(
+        user => {
+          this.loggedInUser = user;
+          console.log('User:', this.loggedInUser);
+        },
+        error => {
+          console.error('Error obteniendo datos del usuario:', error);
+        }
+      );
+    }
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.currentRoute = this.getActiveRoute(this.router.url);
+        this.checkActiveLinks();
+      });
   }
+
   getActiveRoute(url: string): string {
-    // Lógica para obtener la parte de la ruta que quieres destacar
-    // Puedes personalizar esto según tu estructura de URL
     const parts = url.split('/');
     return parts[parts.length - 1];
   }
@@ -48,11 +55,14 @@ export class SidebarComponent {
   }
 
   loadProducts(): void {
-    // Navegación programática
     this.router.navigate(['/inventory']);
   }
-  loadUsers(){
+
+  loadUsers() {
     this.router.navigate(['/users']);
+  }
+  loadProfile(){
+    this.router.navigate(['/profile']); // Navegar al componente de perfil
   }
   checkActiveLinks(): void {
     const links = this.document.querySelectorAll('.nav_link');
@@ -71,19 +81,6 @@ export class SidebarComponent {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']); // Redirige al componente de inicio de sesión
+    this.router.navigate(['/login']);
   }
-  getLoggedInUserData(): void {
-    this.isAuthenticated = this.authService.isAuthenticated();
-    if (this.isAuthenticated) {
-      this.loggedInUser = this.authService.getLoggedInUser();
-      console.log('User:', this.loggedInUser);
-    } else {
-      console.log('Usuario no autenticado.');
-      // Aquí puedes manejar el caso de usuario no autenticado según tus necesidades
-    }
-  }
-  
-
-
 }

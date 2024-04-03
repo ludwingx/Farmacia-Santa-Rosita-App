@@ -57,11 +57,13 @@ a {
   display: flex;
   justify-content: center;
   border-radius: 50%;
-  overflow: hidden
+  overflow: hidden;
+  margin-right: 25px;
 }
 
 .header_img img {
   width: 40px
+  
 }
 
 .l-navbar {
