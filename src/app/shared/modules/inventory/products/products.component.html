@@ -26,7 +26,7 @@
                     <td><img class="imgProduct" src="{{ product.image }}" alt="product.name"></td>
                     <td>{{ product.name }}</td>
                     <td>{{ product.product_code }}</td>
-                    <td>{{ product.description }}</td>
+                    <td>{{ product.user.name }}</td>
                     <td>{{ product.price | currency : 'Bs.' }}</td>
                     <td>{{ product.current_stock }}</td>
                     <td>{{product.initial_stock}}</td>

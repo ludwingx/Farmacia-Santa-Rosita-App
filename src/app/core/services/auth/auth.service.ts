@@ -80,9 +80,14 @@ export class AuthService {
   }
 
   logout(): void {
+
     console.log('Cerrando sesión...');
     localStorage.removeItem(this.authTokenKey); // Remove token from localStorage
-    this.router.navigate(['/login']); // Redirect to login page after logout
+    window.location.reload();
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }
+    ), 3000;
   }
 
   isLoggedIn(): boolean {

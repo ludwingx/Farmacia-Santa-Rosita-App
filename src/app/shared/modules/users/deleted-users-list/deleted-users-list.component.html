@@ -1,0 +1,113 @@
+<div class="container">
+    <!-- BREADCRUM -->
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="breadcrumb-link" href="dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a type="button" class="breadcrumb-link" (click)="goToUserList()">Usuarios</a>
+            </li> 
+            <li class="breadcrumb-item">Usuarios Eliminados</li>
+          </ol>
+      </nav>
+    <div class="row">
+        <div class="col -12">
+            <h3 class="titleInventory">
+                Usuarios Eliminados
+            </h3>
+        </div>
+    </div>
+    <div class="continer">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="titleProduct">Listado de usuarios</h4>
+            </div>
+        </div>
+        <table class="table table-bordered border border-dark-subtle">
+            <thead class="table-green" >
+              <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Ver perfil</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+                @for (user of users; track user.id) {
+                    <tr >
+                        <td>{{ user.id }}</td>   
+                        <td>{{ user.username }}</td>               
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.role.name}}</td>
+                        <td> <button class="btn btn-{{ user.status.id === 1 ? 'success' : 'danger' }}" (click)="toggleUserStatus(user)">
+                          {{ user.status.id === 1 ? 'Activo' : 'Inactivo' }}
+                        </button></td>
+                        <td><Button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#verPerfilModal" (click)="openUserProfileModal(user)"><i class="fa-solid fa-eye"></i> Ver</Button></td>
+                      </tr>
+                }
+            </tbody>
+          </table>
+    </div>
+    <br>
+    <br>
+    <!-- Modal ver -->
+<div class="modal fade" id="verPerfilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 d-flex justify-content-end  " id="exampleModalLabel">Perfil de Usuario</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="row justify-content-center">
+             <div class="col-6 text-center mb-3"> <!--src="http://localhost:3003/images/pp.jpg"  -->
+            
+
+              <img [src]="selectedUser?.image ? 'http://localhost:3003/' + selectedUser?.image : 'https://th.bing.com/th/id/OIP.B0i24_Lna8GxdB3yDClP3wHaHa?w=256&h=256&rs=1&pid=ImgDetMain' "
+               class="rounded-circle profile-picture" alt="Profile Picture">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-12 text-center">
+                <h4>{{selectedUser?.name}}</h4>
+              </div>
+
+              <div class="col-12 text-center">
+                <label class="form-label"><span class="text-muted">{{selectedUser?.email}}</span></label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <label class="form-label">Username: <span class="text-muted">{{selectedUser?.username}}</span></label>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Rol: <span class="text-muted">{{selectedUser?.role?.name}}</span></label>
+
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <label class="form-label">CI: <span class="text-muted">{{selectedUser?.ci}}</span></label>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Productos Registrados: <span class="text-muted">0</span></label>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <label class="form-label">Status: <span 
+              [ngClass]="{'text-success': selectedUser?.status?.id === 1, 
+              'text-danger': selectedUser?.status?.id === 2}">
+              {{selectedUser?.status?.name}}</span>
+            </label>
+          </div>
+      </div>
+
+    </div>
+  </div>
+    </div>
+  </div>
+</div>
+

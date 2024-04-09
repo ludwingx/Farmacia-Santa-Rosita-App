@@ -1,73 +1,81 @@
-<div id="body-pd"  class="body">
+<div id="body-pd" class="body">
     <header class="header" id="header">
         <div class="header_toggle"> <i class="bx bx-menu" id="header-toggle"></i> </div>
         <div class="usernameloggeduser">
-            
+
         </div>
         <div class="row">
             <div class="nameTextUserLogged col mt-2">
-                <a type="button" class="textNameUserLogged" (click)="loadProfile()">{{ loggedInUser?.name }} </a>
+                <a type="button" class="textNameUserLogged" (click)="loadProfile()">{{ loggedInUser?.name ?
+                    getFirstName(loggedInUser?.name!) : '' }}</a>
             </div>
             <div class="header_img col mr-2 mt-1">
-                 <img [src]="loggedInUser?.image ? 'http://localhost:3003/' + loggedInUser?.image : 'https://th.bing.com/th/id/OIP.B0i24_Lna8GxdB3yDClP3wHaHa?w=256&h=256&rs=1&pid=ImgDetMain'" > 
+                <img
+                    [src]="loggedInUser?.image ? 'http://localhost:3003/' + loggedInUser?.image : 'https://th.bing.com/th/id/OIP.B0i24_Lna8GxdB3yDClP3wHaHa?w=256&h=256&rs=1&pid=ImgDetMain'">
             </div>
         </div>
-        
+
     </header>
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
-            <div> 
-                <a href="#" class="nav_logo"> 
+            <div>
+                <a href="#" class="nav_logo">
                     <i class="fa-solid fa-fan" style="color: white;"></i>
                     <div class="row">
                         <div class="col-12">
-                            <span class="nav_logo-name">Farmacia  </span> 
-                            
+                            <span class="nav_logo-name">Farmacia </span>
+
                         </div>
                         <div class="col-12">
                             <span class="nav_logo-name">Santa</span>
-                            <span class="nav_logo-name"  style="color: #dd2b66;">Rosita</span>
-                            <span class="nav_logo-name"  style="color: #dd2b66; font-size: 1rem; position: relative; top: -5px; left: 5px;">App</span>
+                            <span class="nav_logo-name" style="color: #dd2b66;">Rosita</span>
+                            <span class="nav_logo-name"
+                                style="color: #dd2b66; font-size: 1rem; position: relative; top: -5px; left: 5px;">App</span>
                         </div>
 
                     </div>
-                 
+
                 </a>
-                <div class="nav_list"> 
-                    <a href="#" class="nav_link" routerLink="dashboard" [ngClass]="{'active': currentRoute === 'dashboard'}"> 
+                <div class="nav_list">
+                    <a href="#" class="nav_link" routerLink="dashboard"
+                        [ngClass]="{'active': currentRoute === 'dashboard'}">
                         <i class="fa-solid fa-chart-line"></i>
-                        <span class="nav_name">Dashboard</span> 
-                    </a> 
-                    <a class="nav_link" type="button" (click)="loadProducts()" [ngClass]="{'active': currentRoute === 'inventory'}" > 
-                        <i class="fa-solid fa-boxes-stacked"></i>
-                        <span class="nav_name">Inventario</span> 
-                    </a> 
-                    <a  class="nav_link" routerLink="sales"  [ngClass]="{'active': currentRoute === 'sales'}" > 
-                        <i class="fa-solid fa-sack-dollar"></i>
-                        <span class="nav_name">Ventas</span> 
-                    </a> 
-                    <a href="#" class="nav_link" routerLink="reports" [ngClass]="{'active': currentRoute === 'reports'}">
-                        <i class="fa-solid fa-pills"></i>
-                            <span class="nav_name">Productos</span> 
-                    </a> 
-                    <a href="#" class="nav_link"> 
-                        <i class="fa-solid fa-file-export"></i>
-                        <span class="nav_name">Reportes</span> 
+                        <span class="nav_name">Dashboard</span>
                     </a>
-                    <a  class="nav_link" (click)="loadUsers()"> 
-                        <i class="fa-solid fa-users"></i> 
-                        <span class="nav_name">Usuarios</span> 
-                    </a> 
+                    <a class="nav_link" type="button" (click)="loadProducts()"
+                        [ngClass]="{'active': currentRoute === 'inventory'}">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <span class="nav_name">Inventario</span>
+                    </a>
+                    <a class="nav_link" routerLink="sales" [ngClass]="{'active': currentRoute === 'sales'}">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                        <span class="nav_name">Ventas</span>
+                    </a>
+                    <a href="#" class="nav_link" routerLink="reports"
+                        [ngClass]="{'active': currentRoute === 'reports'}">
+                        <i class="fa-solid fa-pills"></i>
+                        <span class="nav_name">Productos</span>
+                    </a>
+                    <a href="#" class="nav_link">
+                        <i class="fa-solid fa-file-export"></i>
+                        <span class="nav_name">Reportes</span>
+                    </a>
+                    <a class="nav_link" (click)="loadUsers()">
+                        <i class="fa-solid fa-users"></i>
+                        <span class="nav_name">Usuarios</span>
+                    </a>
                 </div>
-            </div> 
-            <a class="nav_link" (click)="logout()"> 
+            </div>
+            <a class="nav_link" (click)="logout()">
                 <i class="fa-solid fa-right-from-bracket"></i>
-                <span class="nav_name">SignOut</span> 
+                <span class="nav_name">SignOut</span>
             </a>
         </nav>
     </div>
-    <!--Container Main start-->
+
+<!--Container Main start-->
     <div class="height-100 bg-light">
         <router-outlet></router-outlet>
-     </div>
-    <!--Container Main end-->
+    </div>
+<!--Container Main end-->
+</div>

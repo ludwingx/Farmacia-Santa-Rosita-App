@@ -41,7 +41,7 @@ export class EditProductComponent implements OnInit{
       this.productService.getProduct(this.productId).subscribe((product) => {
         this.product = product;
         this.currentImageSource = this.sanitizer.bypassSecurityTrustUrl(product.image);
-        this.currentCategory = product.category_id.toString();
+        this.currentCategory = product.category.toString();
 
         console.log('Current Category:', this.currentCategory);
       });
@@ -97,7 +97,7 @@ export class EditProductComponent implements OnInit{
     this.productService.getProduct(this.productId).subscribe(
       (data) => {
         this.product = data;
-        this.currentCategory = data.category_id.toString(); // Asignar la categoría actual
+        this.currentCategory = data.category.toString(); // Asignar la categoría actual
       },
       (error) => {
         console.error('Error al obtener el producto:', error);

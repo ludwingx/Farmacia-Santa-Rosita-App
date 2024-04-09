@@ -1,9 +1,14 @@
-@if (!hideSidebar) {
+@if (loading ) {
+  <app-loading></app-loading>
+}
+@if (!loading && !hideSidebar && isAuthenticated) {
   <div class="app-container">
     <app-sidebar></app-sidebar>
 
   </div>
 }
-@if (hideSidebar) {
-  <app-login></app-login>
-}
+@if(!loading && (hideSidebar || !isAuthenticated)) {  
+  <div class="app-container">
+    <app-login></app-login>
+    
+</div>}

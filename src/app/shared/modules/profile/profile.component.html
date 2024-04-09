@@ -5,6 +5,9 @@
           <li class="breadcrumb-item">Perfil</li>
         </ol>
     </nav>
+    <h3>Datos de la Cuenta:</h3>
+    <br>
+    <br>
 
     <div class="content">
         <div class="row">
@@ -22,16 +25,19 @@
                 <h3>{{loggedInUser?.name}}</h3>
             </div>
             <div class="col-12">
-                <p>Datos de la cuenta:</p>
+                <span class="text-muted">Usuario: </span><span>{{loggedInUser?.username}}</span>
             </div>
             <div class="col-12">
-                <span class="text-muted">Username: </span><span>{{loggedInUser?.username}}</span>
+                <span class="text-muted">Email: </span> <span>{{loggedInUser?.email}}</span>
             </div>
             <div class="col-12">
-                <p class="text-muted">{{loggedInUser?.email}}</p>
+                <span class="text-muted">CI: </span> <span>{{loggedInUser?.ci}}</span>
             </div>
             <div class="col-12">
-                <p class="text-muted">{{loggedInUser?.ci}}</p>
+              <span class="text-muted">Cargo: </span><span>{{ getRoleName(loggedInUser?.role_id || 0) }}</span>
+            </div>
+            <div class="col-12">
+              <span class="text-muted">Estado: </span><span>{{ getStatusName(loggedInUser?.status_id || 0) }}</span>
             </div>
            </div>
           </div>

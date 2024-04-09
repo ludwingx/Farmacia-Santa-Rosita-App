@@ -11,8 +11,8 @@ import { NewUserComponent } from './shared/modules/users/new-user/new-user.compo
 import { EditUserComponent } from './shared/modules/users/edit-user/edit-user.component';
 import { authGuardGuard } from './core/guards/auth-guard.guard';
 import { LoginComponent } from './shared/modules/auth/login/login.component';
-import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { ProfileComponent } from './shared/modules/profile/profile.component';
+import { DeletedUsersListComponent } from './shared/modules/users/deleted-users-list/deleted-users-list.component';
 
 export const routes: Routes = [
 
@@ -27,6 +27,7 @@ export const routes: Routes = [
     {path: 'users', component: UsersComponent, canActivate: [authGuardGuard]  },
     {path: 'users/new-user', component: NewUserComponent, canActivate: [authGuardGuard]},
     {path: 'users/edit-user/:id', component: EditUserComponent, canActivate: [authGuardGuard]},
+    {path: 'users/deleted-users-list', component: DeletedUsersListComponent, canActivate: [authGuardGuard]},
 
     {path: 'login', component: LoginComponent},
     {path: '**', redirectTo: 'login', pathMatch: 'full'},

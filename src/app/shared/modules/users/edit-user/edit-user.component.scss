@@ -10,3 +10,15 @@
     max-height: 100%; /* Para asegurar que la imagen no exceda la altura del contenedor */
     border-radius: 50%; /* Para hacer la imagen redonda */
   }
+
+  .breadcrumb-link{
+    color: var(--first-color) !important;
+}
+.textEditProduct{
+    color: var(--first-color);
+
+}
+.btn{
+    background-color: var(--first-color);
+    border: 0px;
+}

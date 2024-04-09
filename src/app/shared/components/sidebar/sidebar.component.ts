@@ -5,18 +5,20 @@ import { filter } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UsersApiService } from '../../../core/services/users/users-api.service';
 import { IUsers } from '../../../core/interfaces/users.interface';
+import { LoadingComponent } from '../loading/loading.component';
 
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [NgClass, RouterLink, RouterOutlet],
+  imports: [NgClass, RouterLink, RouterOutlet, LoadingComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
   isAuthenticated = false;
   loggedInUser: IUsers | null = null;
+  loading: boolean = true;
   constructor(private router: Router,
      @Inject(DOCUMENT) private document: Document,
      private authService : AuthService,
@@ -31,12 +33,15 @@ export class SidebarComponent {
         user => {
           this.loggedInUser = user;
           console.log('User:', this.loggedInUser);
+          this.loading = false;
         },
         error => {
           console.error('Error obteniendo datos del usuario:', error);
+          this.loading = false;
         }
       );
     }
+
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -78,9 +83,16 @@ export class SidebarComponent {
       });
     }
   }
-
+  getFirstName(fullName: string): string {
+    if (!fullName) {
+      return '';
+    }
+    return fullName.split(' ')[0];
+  }
   logout() {
+
     this.authService.logout();
-    this.router.navigate(['/login']);
+
+
   }
 }

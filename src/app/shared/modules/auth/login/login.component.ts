@@ -45,6 +45,7 @@ login() {
           console.log('Datos del usuario autenticado:', user);
           // Puedes redirigir a otra página aquí si es necesario
           this.router.navigate(['/dashboard']);
+          window.location.reload();
         },
         error => {
           console.error('Error al obtener datos del usuario autenticado:', error);

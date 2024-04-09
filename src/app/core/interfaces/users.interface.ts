@@ -11,13 +11,13 @@ export interface IUsers{
         id: number;
         name: string;
     };
-    role: {
-        id: number;
-        name: string;
-    }
+    role: Roles;
 
 }
-
+export interface Roles{
+    id: number;
+    name: string;
+}
 export interface IAuthUser{
   username: string;
   password: string;
