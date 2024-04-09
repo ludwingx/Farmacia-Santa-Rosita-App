@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { IAuthUser } from '../../../../core/interfaces/users.interface';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -14,7 +14,10 @@ export class LoginComponent {
   errorMessage = '';
   form: FormGroup;
   hidePassword: boolean = true;
-  constructor(private authService: AuthService, private router: Router, private fb: FormBuilder) {
+  constructor(private authService: AuthService,
+     private router: Router,
+      private fb: FormBuilder,
+    private toast : ToastrService) {
     this.form = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
@@ -30,12 +33,14 @@ export class LoginComponent {
 }
 login() {
   if (this.form.invalid) {
+    this.toast.error('Error','Por favor, completa todos los campos requeridos.');
     return;
   }
 
   this.authService.login(this.form.value).subscribe(
     (response: any) => {
       // Manejo de respuesta exitosa
+     
       // Almacenar el token de manera segura, por ejemplo, en sessionStorage
       sessionStorage.setItem('angular17TokenData', JSON.stringify(response.data));
 
@@ -46,11 +51,13 @@ login() {
           // Puedes redirigir a otra página aquí si es necesario
           this.router.navigate(['/dashboard']);
           window.location.reload();
+
         },
         error => {
           console.error('Error al obtener datos del usuario autenticado:', error);
           // Redirigir a la página de inicio si no se pueden obtener los datos del usuario
           this.router.navigate(['/']);
+
         }
       );
     },
@@ -58,6 +65,7 @@ login() {
       console.error('Error en la solicitud:', error); // Mostrar error completo en consola
       // Mostrar un mensaje de error al usuario
       this.errorMessage = 'Error al iniciar sesión. Verifica tus credenciales.';
+      this.toast.error('Error al iniciar sesión. Verifica los datos proporcionados','Error');
     }
   );
 }

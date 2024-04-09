@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IUsers } from '../../../core/interfaces/users.interface';
 import { NgClass } from '@angular/common';
 import jsPDF from 'jspdf';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-users',
@@ -24,6 +25,7 @@ export class UsersComponent {
   
   constructor(private usersService: UsersApiService,
     private router: Router,
+    private toaster : ToastrService
     ){
       
   }
@@ -63,6 +65,11 @@ export class UsersComponent {
       () => {
         // Actualizar la lista de usuarios o realizar cualquier otra acción necesaria
         this.loadUsers();
+        if (newStatusId === 2) {
+          this.toaster.warning('ya no podrá acceder al sistema', 'Deshabilitaste la cuenta de ' + user.name);
+        } else {
+          this.toaster.info('ya podrá acceder al sistema', 'Habilitaste la cuenta de ' + user.name);
+        }
         console.log('Usuario cambiado de estado exitosamente');
       },
       error => {
@@ -124,5 +131,6 @@ export class UsersComponent {
 
     // Mostrar el PDF
     doc.save('lista-usuarios-activos.pdf');
+    this.toaster.success('PDF generado exitosamente', 'Exito');
   }
 }

@@ -110,4 +110,14 @@ export class AuthService {
       return throwError('El objeto localStorage no está definido en este entorno.');
     }
   }
+  getUserId(): Observable<number> {
+    const userData = localStorage.getItem(this.loggedInUserKey);
+    if (userData) {
+      const user: IUsers = JSON.parse(userData);
+      return of(user.id);
+    } else {
+      console.error('No se encontraron datos del usuario en el almacenamiento local');
+      return throwError('No se encontraron datos del usuario en el almacenamiento local');
+    }
+  }
 }

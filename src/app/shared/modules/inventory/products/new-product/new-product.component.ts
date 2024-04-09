@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Iproduct } from '../../../../../core/interfaces/products.interface';
 import { IStorage_location } from '../../../../../core/interfaces/storage_location.interface';
 import { StorageLocationService } from '../../../../../core/services/storage_location/storage-location.service';
+import { AuthService } from '../../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-new-product',
@@ -27,6 +28,7 @@ export class NewProductComponent {
   currentImageSource: any;
   storage_locations: IStorage_location[] = [];
   form: FormGroup;
+  userId: number | undefined;
   constructor(
     private suppliersservice: SuppliersService,
     private categoriesservice: CategoriesService,
@@ -35,6 +37,7 @@ export class NewProductComponent {
     private fb: FormBuilder,
     private productService: ProductsApiService,
     private storagelocationService: StorageLocationService,
+    private authService: AuthService
   ) {
     this.form = this.fb.group({
       image: [''],
@@ -53,9 +56,11 @@ export class NewProductComponent {
       current_stock: [''],
       created_at: [new Date()],
       updated_at: [new Date()],
+      user_id: [''] 
     });
   }
   ngOnInit(): void {
+    this.getUserId();
     this.getSuppliers();
     this.getCategories();
     this.getStorageLocation();
@@ -67,6 +72,16 @@ export class NewProductComponent {
       },
       (error) => {
         console.error('Error al obtener los proveedores:', error);
+      }
+    );
+  }
+  getUserId(): void {
+    this.authService.getUserId().subscribe(
+      (userId: number) => {
+        this.userId = userId;
+      },
+      (error) => {
+        console.error('Error al obtener el ID del usuario:', error);
       }
     );
   }
