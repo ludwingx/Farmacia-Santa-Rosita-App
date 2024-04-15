@@ -33,7 +33,7 @@
           <label for="editProductPrice" class="form-label">Precio</label>
           <div class="input-group">
             <span class="input-group-text">Bs.</span>
-            <input type="number" class="form-control" id="editProductPrice" name="editProductPrice" value="{{product.price}}"  step="0.01">
+            <input type="number" class="form-control" id="editProductPrice" name="editProductPrice" value="{{product.selling_price}}"  step="0.01">
           </div>
         </div>
         <hr>
@@ -41,10 +41,6 @@
         <div class="mb-2">
           <label for="editProductCurrentStock" class="form-label">Stock Actual</label>
           <input type="number" class="form-control" id="editProductCurrentStock" name="editProductCurrentStock" value="{{product.current_stock}}">
-        </div>
-        <div class="mb-2">
-          <label for="editProductExpirationDate" class="form-label">Fecha de Caducidad</label>
-          <input type="date" class="form-control" id="editProductExpirationDate" name="editProductExpirationDate" value="{{product.expiration_date}}">
         </div>
         <hr>
         <h5>Proveedores y Logística:</h5>
@@ -58,33 +54,11 @@
             }
           </select>
         </div>
-
-
-        <div class="mb-2">
-          <label for="editProductLotNumber" class="form-label">Numero de Lote</label>
-          <input type="text" class="form-control" id="editProductLotNumber" name="editProductLotNumber" value="{{product.lot_number}}">
-        </div>
         <div class="mb-2">
           <label for="editProductStorageLocation" class="form-label">Ubicación de Almacenamiento</label>
-          <input type="text" class="form-control" id="editProductStorageLocation" name="editProductStorageLocation" value="{{product.storage_location}}">
+          <input type="text" class="form-control" id="editProductStorageLocation" name="editProductStorageLocation" value="{{product.storage_location.location}}">
         </div>
         <hr>
-
-
-
-
-        <!-- price: number;
-        initial_stock: number;
-        expiration_date: Date;
-        supplier_id: number;
-        lot_number: string;
-        storage_location: string;
-        nutritional_information: string;
-        notes: string;
-        category_id: number;
-        current_stock: number;
-        created_at: Date;
-        updated_at: Date; -->
       </div>
 
       <div class="col-lg-6 col-md-12 imgEdit">

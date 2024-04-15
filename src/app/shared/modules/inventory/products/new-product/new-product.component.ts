@@ -7,7 +7,7 @@ import { SuppliersService } from '../../../../../core/services/suppliers/supplie
 import { ISuppliers } from '../../../../../core/interfaces/suppliers.interface';
 import { ICategories } from '../../../../../core/interfaces/categories.interface';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Iproduct } from '../../../../../core/interfaces/products.interface';
+import { IProductsList } from '../../../../../core/interfaces/products.interface';
 import { IStorage_location } from '../../../../../core/interfaces/storage_location.interface';
 import { StorageLocationService } from '../../../../../core/services/storage_location/storage-location.service';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
@@ -24,7 +24,7 @@ export class NewProductComponent {
   previewImage: any = null;
   suppliers: ISuppliers[] = [];
   categories: ICategories[] = [];
-  product: Iproduct[] = [];
+  product: IProductsList[] = [];
   currentImageSource: any;
   storage_locations: IStorage_location[] = [];
   form: FormGroup;

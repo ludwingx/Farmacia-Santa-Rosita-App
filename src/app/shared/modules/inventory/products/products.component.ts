@@ -17,20 +17,43 @@ export class ProductsComponent implements OnInit {
   constructor(private serviceProduct: ProductsApiService, private router: Router) {}
   products: IProductsList[] = [];
   productToDelete: IProductsList | null = null;
-  productStock: IProductsList | null = null;
+//   export interface IProductsList {
+//     id: number;
+//     image: string;
+//     name: string;
+//     product_code: string;
+//     description: string;
+//     purchase_price: number;
+//     selling_price: number;
+//     current_stock: number;
+//     initial_stock: number;
+//     supplier_id: number;
+//     nutritional_information: string;
+//     notes: string;
+//     create_at: Date;
+//     update_at: Date;
+//     create_by_user_id: number;
+//     last_update_by_user_id: number;
+//     status_id: number;
+//     supplier: ISuplier;
+//     category_id: ICategory;
+//     storage_location: IStorage_location;
+    
+// }
+  productStock: IProductsList[] = [];
 
   ngOnInit(): void {
     this.loadProducts();
     this.serviceProduct.getProduct(1).subscribe((data: IProductsList | null) => {
-      this.productStock = data;
+      this.productStock = data ? [data] : []; 
+      console.log(this.productStock);
     });
   }
-
   loadProducts(): void {
     this.serviceProduct.getListProducts().subscribe(
       (data) => {
         this.products = data;
-        console.log(this.products);
+        console.log(data);
       },
       (error) => {
         console.error('Error al obtener los productos:', error);
@@ -45,41 +68,15 @@ export class ProductsComponent implements OnInit {
   }
   openDeleteConfirmationModal(product: IProductsList) {
     this.productToDelete = product; // Guarda el producto a eliminar
-    // Muestra el modal de confirmación
     this.deleteConfirmationModal.nativeElement.classList.add('show');
     document.body.classList.add('modal-open');
   }
 
   closeDeleteConfirmationModal() {
-    // Oculta el modal de confirmación
     this.deleteConfirmationModal.nativeElement.classList.remove('show');
     document.body.classList.remove('modal-open');
   }
   confirmDelete() {
-    // Lógica para eliminar el producto
-    // ...
-
-    // Cierra el modal después de confirmar la eliminación
     this.closeDeleteConfirmationModal();
-  }
-  
-  openStockAdjustmentModal(product: IProductsList) {
-
-    // Muestra el modal de ajuste de stock  
-    this.productStock = { ...product };
-    
-  }
-
-  increaseStock(productStock: IProductsList) {
-    // Lógica para aumentar el stock
-    productStock.current_stock += 1;
-  }
-
-  decreaseStock(productStock: IProductsList) {
-    // Asegúrate de no disminuir el stock por debajo de cero
-    if (productStock.current_stock > 0) {
-      // Lógica para disminuir el stock
-      productStock.current_stock -= 1;
-    }
   }
 }
