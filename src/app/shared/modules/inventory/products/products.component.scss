@@ -39,4 +39,21 @@
         }
     }
 }
+.accordion-button{
+    width: auto;
 
+}
+.accordion-button:not(.collapsed) {
+    background-color: white;
+    color: var(--first-color)
+}
+/* Cambiar el color del icono del acordeón cuando está colapsado */
+.accordion-button:not(.collapsed)::after {
+    color: green; /* Cambia este color al color deseado */
+  }
+  
+  /* Cambiar el color del icono del acordeón cuando está expandido */
+  .accordion-button.collapsed::after {
+    color: red; /* Cambia este color al color deseado */
+  }
+  

@@ -1,3 +1,4 @@
+import { ILots } from "./lots";
 import { IUsers } from "./users.interface";
 
 // );
@@ -22,7 +23,7 @@ export interface IProductsList {
     supplier: ISuplier;
     category: ICategory;
     storage_location: IStorage_location;
-    
+    lots?: ILots[];
 }
 export interface ICategory{
     id:number;

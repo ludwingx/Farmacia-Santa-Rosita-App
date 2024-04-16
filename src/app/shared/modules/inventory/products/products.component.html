@@ -1,10 +1,10 @@
-<div class="continer">
+<div class="container">
     <div class="row">
         <div class="col-12">
             <h4 class="titleProduct">Listado de productos</h4>
         </div>
     </div>
-    <table class="table table-bordered border border-dark-subtle">
+    <!-- <table class="table table-bordered border border-dark-subtle">
         <thead class="table-green" >
           <tr>
             <th>ID</th>
@@ -21,7 +21,7 @@
         <tbody>
             @for (product of products; track product.id) {
                 <tr >
-                    <td>{{ product.id }}</td>
+                    <td>{{ formatProductId(product.id) }}</td>
                     <td><img class="imgProduct" src="{{ product.image }}" alt="product.name"></td>
                     <td>{{ product.name }}</td><td>{{ product.description }}</td>
                     <td>{{ product.purchase_price | currency : 'Bs.' }}</td> 
@@ -52,8 +52,67 @@
                   </tr>
             }
         </tbody>
-      </table>
+    </table> -->
+   @for (product of products; track product.id) {
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+      <div class="accordion-item">
+        <div class="accordion-header row">
+          <div class="col">
+            <h4>   {{ formatProductId(product.id) }} <img src="{{ product.image }}" class="imgProduct" alt="">{{ product.name }} {{product.selling_price | currency : 'Bs.' }}<span>U: </span> <span class="fw-bold text-end">({{ calculateTotalQuantity(product.lots!) }})</span></h4>
+          </div>
+          <div class="col-4 d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="row">
+                <div class="col">
+                    <!-- Botón de editar -->
+                    <button class="btn btn-primary btn-sm">Editar</button>
+                </div>
+                <div class="col">
+                    <!-- Botón de eliminar -->
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                </div>
+                <div class="col">
+                    <!-- Botón del acordeón -->
+                    <button class="accordion-button collapsed" type="button" [attr.data-bs-toggle]="'collapse'" [attr.data-bs-target]="'#flush-collapse-' + product.id" aria-expanded="false" [attr.aria-controls]="'flush-collapse' + '{{ product.id }}'">
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div id="flush-collapse-{{ product.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+            @if (product.lots && product.lots.length > 0) {
+              <p>Lotes:</p>
+              <ul >
+                @for (lot of product.lots; track lot.id) {
+                  <li>
+                    <a href="">
+                      Lote: {{ lot.id }} - Cantidad: {{ lot.quantity }}/{{lot.initial_quantity}} - Fecha de vencimiento: {{ lot.expiration_date }}
+                      <!-- Botón de editar lote -->
+                      <button class="btn btn-primary btn-sm" >Editar</button>
+                      <!-- Botón de eliminar lote -->
+                      <button class="btn btn-danger btn-sm" >Eliminar</button>
+                    </a>
+                  </li>
+                }
+            </ul>
+            } 
+            @else {
+              <!-- Botón para agregar lotes cuando no hay lotes disponibles -->
+              <p class="text-danger">No hay lotes disponibles!</p>
+              <button class="btn btn-success" >Agregar Lote</button>
+            }
+        </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <hr>
+   }
 </div>
+
 <br>
 <br>
 
