@@ -1,10 +1,10 @@
 <div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h4 class="titleProduct">Listado de productos</h4>
-        </div>
+  <div class="row">
+    <div class="col-12">
+      <h4 class="titleProduct">Listado de productos</h4>
     </div>
-    <!-- <table class="table table-bordered border border-dark-subtle">
+  </div>
+  <!-- <table class="table table-bordered border border-dark-subtle">
         <thead class="table-green" >
           <tr>
             <th>ID</th>
@@ -53,71 +53,107 @@
             }
         </tbody>
     </table> -->
-   @for (product of products; track product.id) {
-    <div class="accordion accordion-flush" id="accordionFlushExample">
-      <div class="accordion-item">
-        <div class="accordion-header row">
-          <div class="col">
-            <h4>   {{ formatProductId(product.id) }} <img src="{{ product.image }}" class="imgProduct" alt="">{{ product.name }} {{product.selling_price | currency : 'Bs.' }}<span>U: </span> <span class="fw-bold text-end">({{ calculateTotalQuantity(product.lots!) }})</span></h4>
-          </div>
-          <div class="col-4 d-grid gap-2 d-md-flex justify-content-md-end">
-            <div class="row">
-                <div class="col">
-                    <!-- Botón de editar -->
-                    <button class="btn btn-primary btn-sm">Editar</button>
-                </div>
-                <div class="col">
-                    <!-- Botón de eliminar -->
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
-                </div>
-                <div class="col">
-                    <!-- Botón del acordeón -->
-                    <button class="accordion-button collapsed" type="button" [attr.data-bs-toggle]="'collapse'" [attr.data-bs-target]="'#flush-collapse-' + product.id" aria-expanded="false" [attr.aria-controls]="'flush-collapse' + '{{ product.id }}'">
-                    </button>
-                </div>
+  <div class="container">
+    <div class="row ">
+      <div class="col-1 fw-bold">ID</div>
+      <div class="col fw-bold">IMAGEN</div>
+      <div class="col fw-bold">NOMBRE</div>
+      <div class="col fw-bold">PRECIO DE VENTA</div>
+      <div class="col fw-bold">UNIDADES DISPONIBLES</div>
+      <div class="col d-grid gap-1 d-md-flex justify-content-md-end fw-bold">OPCIONES</div>
+    </div>
+  </div>
+  @for (product of products; track product.id) {
+  <div class="accordion accordion-flush" id="accordionFlushExample" >
+    <div class="accordion-item" [ngStyle]="getQuantityBackgroundStyle(calculateTotalQuantity(product.lots!))">
+      <div class="accordion-header row">
+        <div class="col">
+          <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-1">
+              {{ formatProductId(product.id) }}
             </div>
+            <div class="col ms-4 ">
+              <img src="{{ product.image }}" class="imgProduct" alt="">
+            </div>
+            <div class="col">
+              {{ product.name }}
+            </div>
+            <div class="col">
+              {{product.selling_price | currency : 'Bs.' }}
+            </div>
+            <div class="col"  >
+              <span class="textLotsTotalQuantity"
+                [ngClass]="getQuantityColorClass(calculateTotalQuantity(product.lots!))">({{
+                calculateTotalQuantity(product.lots!) }})</span>
+            </div>
+          </div>
         </div>
+        <div class="col-2 d-grid gap-1 d-md-flex justify-content-md-end align-items-center">
+          <div class="row btnsOptionsProduct">
+            <div class="col">
+              <!-- Botón de editar -->
+              <button class="btn btn-primary btn-sm btnEditProduct m-1"><i class="fa-solid fa-pen"></i></button>
+            </div>
+            <div class="col">
+              <!-- Botón de eliminar -->
+              <button class="btn btn-danger btn-sm btnDeleteProduct m-1"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div class="col">
+              <!-- Botón del acordeón -->
+              <button class="accordion-button collapsed m-1" type="button"  [attr.data-bs-toggle]="'collapse'"
+                [attr.data-bs-target]="'#flush-collapse-' + product.id" aria-expanded="false"
+                [attr.aria-controls]="'flush-collapse' + '{{ product.id }}'">
+              </button>
+            </div>
+          </div>
         </div>
-
-        <div id="flush-collapse-{{ product.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-          <div class="accordion-body">
-            @if (product.lots && product.lots.length > 0) {
-              <p>Lotes:</p>
-              <ul >
-                @for (lot of product.lots; track lot.id) {
-                  <li>
-                    <a href="">
-                      Lote: {{ lot.id }} - Cantidad: {{ lot.quantity }}/{{lot.initial_quantity}} - Fecha de vencimiento: {{ lot.expiration_date }}
-                      <!-- Botón de editar lote -->
-                      <button class="btn btn-primary btn-sm" >Editar</button>
-                      <!-- Botón de eliminar lote -->
-                      <button class="btn btn-danger btn-sm" >Eliminar</button>
-                    </a>
-                  </li>
-                }
-            </ul>
-            } 
-            @else {
-              <!-- Botón para agregar lotes cuando no hay lotes disponibles -->
-              <p class="text-danger">No hay lotes disponibles!</p>
-              <button class="btn btn-success" >Agregar Lote</button>
+      </div>
+      <div id="flush-collapse-{{ product.id }}" class="accordion-collapse collapse"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">
+          @if (product.lots && product.lots.length > 0) {
+          <ol class="list-group list-group-numbered">
+            <h5 class="fw-bold"><i class="fa-solid fa-box"></i> Lotes:</h5>
+            
+            @for (lot of product.lots; track lot.id) {
+            <li class="list-group-item d-flex justify-content-between align-items-start" [ngStyle]="getExpirationBackgroundStyle(lot.expiration_date)">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold" > Lote: {{ lot.id }} - Cantidad: <span [ngClass]="getQuantityClass(lot.quantity, lot.initial_quantity)">{{ lot.quantity }}/{{lot.initial_quantity}}</span>
+                </div>
+                <div  > Fecha de vencimiento:<span  [ngClass]="isExpirationNear(lot.expiration_date)">{{ lot.expiration_date }}</span> </div>
+              </div>
+             
+              <!-- Botón de editar lote -->
+              <button class="btn btn-primary btn-sm m-2"><i class="fa-solid fa-pen"></i></button>
+              <!-- Botón de eliminar lote -->
+              <button class="btn btn-danger btn-sm m-2"><i class="fa-solid fa-trash"></i></button>
+            </li>
             }
-        </div>
-
+            <button class="btn btn-outline-success btnAddLot m-2 "> <i class="fa-solid fa-plus"></i><span class="fw-bold"> Agregar Lote</span></button>
+          </ol>
+          }
+          @else {
+          <!-- Botón para agregar lotes cuando no hay lotes disponibles -->
+          <p class="text-danger fw-bold">No hay lotes disponibles!</p>
+          <button class="btn btn-success"> <i class="fa-solid fa-plus"></i> Agregar Lote</button>
+          }
         </div>
 
       </div>
 
     </div>
-    <hr>
-   }
+
+  </div>
+  <hr>
+  }
 </div>
 
 <br>
 <br>
 
 <!-- Modal de confirmación -->
-<div class="modal" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+<div class="modal" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -125,7 +161,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ¿Estás seguro de que deseas eliminar  "{{ productToDelete?.name }}"?
+        ¿Estás seguro de que deseas eliminar "{{ productToDelete?.name }}"?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancelar</button>

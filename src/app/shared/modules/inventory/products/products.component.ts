@@ -5,8 +5,6 @@ import { IProductsList } from '../../../../core/interfaces/products.interface';
 import { ProductsApiService } from '../../../../core/services/products/products-api.service';
 import { LotsApiService } from '../../../../core/services/lots/lots-api.service';
 import { ILots } from '../../../../core/interfaces/lots';
-
-
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -65,6 +63,13 @@ export class ProductsComponent implements OnInit {
     // Añadir ceros a la izquierda usando padStart y especificar la longitud total
     return id.toString().padStart(3, '0');
   }
+  getQuantityBackgroundStyle(totalQuantity: number): any {
+    if (totalQuantity === 0) {
+      return { 'color': 'red', 'font-weight': 'bold'}; // Si la cantidad total de lotes es 0, color de fondo rojo claro
+    } else {
+      return {}; // De lo contrario, no aplicar ningún estilo de fondo
+    }
+  }
   calculateTotalQuantity(lots: ILots[]) {
     let totalQuantity = 0;
     if (lots && lots.length > 0) {
@@ -74,10 +79,55 @@ export class ProductsComponent implements OnInit {
     }
     return totalQuantity;
   }
+  getQuantityColorClass(quantity: number): string {
+    if (quantity > 15) {
+      return 'text-success'; // Cambiar a verde si la cantidad es mayor que 100
+    } else if (quantity > 5) {
+      return 'text-warning'; // Cambiar a amarillo si la cantidad está entre 51 y 100
+    } else {
+      return 'text-danger'; // Cambiar a rojo si la cantidad es 50 o menos
+    }
+  }
   editProduct(products: IProductsList){
     this.router.navigate(['inventory/products/edit-product', products.id]).then(() => {
       window.scrollTo(0, 0);
   });
+  }
+  isExpirationNear(expirationDate: Date): string {
+    const expiration = new Date(expirationDate);
+    const today = new Date();
+    const differenceInDays = Math.ceil((expiration.getTime() - today.getTime()) / (1000 * 3600 * 24));
+  
+    if (differenceInDays < 1) {
+      return 'text-danger'; // Si la fecha de vencimiento ya ha pasado, cambia a rojo
+    } else if (differenceInDays <= 7) {
+      return 'text-warning'; // Si faltan 7 días o menos para la fecha de vencimiento, cambia a amarillo
+    } else {
+      return 'text-success'; // Si queda más de una semana para la fecha de vencimiento, cambia a verde
+    }
+  }
+  getQuantityClass(quantity: number, initialQuantity: number): string {
+    const percentage = (quantity / initialQuantity) * 100;
+    if (percentage <= 25) {
+      return 'text-danger'; // Si la cantidad es menor o igual al 25%, cambia a rojo
+    } else if (percentage <= 50) {
+      return 'text-warning'; // Si la cantidad es menor o igual al 50%, cambia a amarillo
+    } else {
+      return 'text-success'; // Si la cantidad es mayor al 50%, cambia a verde
+    }
+  }
+  getExpirationBackgroundStyle(expirationDate: Date): any {
+    const expiration = new Date(expirationDate);
+    const today = new Date();
+    const differenceInDays = Math.ceil((expiration.getTime() - today.getTime()) / (1000 * 3600 * 24));
+    
+    if (differenceInDays < 0) {
+      return { 'background-color': '#FFCCCC' }; // Si la fecha de vencimiento ha pasado, color de fondo rojo claro
+    } else if (differenceInDays <= 7) {
+      return { 'background-color': '#FFFF99' }; // Si faltan 7 días o menos, color de fondo amarillo claro
+    } else {
+      return { 'background-color': '#CCFFCC' }; // Si queda más de una semana, color de fondo verde claro
+    }
   }
   openDeleteConfirmationModal(product: IProductsList) {
     this.productToDelete = product; // Guarda el producto a eliminar

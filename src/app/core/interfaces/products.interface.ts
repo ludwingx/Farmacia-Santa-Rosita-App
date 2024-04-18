@@ -23,6 +23,7 @@ export interface IProductsList {
     supplier: ISuplier;
     category: ICategory;
     storage_location: IStorage_location;
+    expiration_status: number;
     lots?: ILots[];
 }
 export interface ICategory{
