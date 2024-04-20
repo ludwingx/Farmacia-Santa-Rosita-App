@@ -1,7 +1,4 @@
 import { ILots } from "./lots";
-import { IUsers } from "./users.interface";
-
-// );
 export interface IProductsList {
     id: number;
     image: string;

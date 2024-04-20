@@ -15,11 +15,38 @@
             </h3>
         </div>
         <div class="col-12 d-flex justify-content-end">
-            <button class="btn newProduct me-3" (click)="newProduct()" ><i class="fa-solid fa-plus"></i> Nuevo Producto</button>
+            <button class="btn newProduct me-3" (click)="initQuagga()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <i class="fa-solid fa-plus"></i> Nuevo Producto
+            </button>
             <button class="btn btn-danger me-3" (click)="generatePDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
         </div>
 
     </div>
     <app-filters-products/>
     <app-products/>
+</div>
+<div class="modal" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" (shown.bs.modal)="initQuagga()">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Escaneo y edición de código de barras</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    @if (barcodeResult) {
+                        <img #barcodeImage [src]="scannedBarcodeImage"  alt="Código de barras escaneado">
+                        <p>Resultado del escaneo: {{ barcodeResult }}</p>
+                    }@else {
+                        <video #videoElement></video>
+                        <p>Escanea el Código de barras</p>
+                        <img #barcodeImage [src]="scannedBarcodeImage"  alt="Código de barras escaneado">
+                        <p>Resultado del escaneo: {{ barcodeResult }}</p>
+                    }
+                 
+
+                  </div>
+            </div>
+        </div>
+    </div>
 </div>
