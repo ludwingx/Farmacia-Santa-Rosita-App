@@ -47,19 +47,22 @@
                         <i class="fa-solid fa-boxes-stacked"></i>
                         <span class="nav_name">Inventario</span>
                     </a>
-                    <a class="nav_link" routerLink="sales" [ngClass]="{'active': currentRoute === 'sales'}">
+                    <a class="nav_link" routerLink="sales" 
+                        [ngClass]="{'active': currentRoute === 'sales'}">
                         <i class="fa-solid fa-sack-dollar"></i>
                         <span class="nav_name">Ventas</span>
                     </a>
+                    <a href="#" class="nav_link" routerLink="purchases"
+                        [ngClass]="{'active': currentRoute === 'purchases'}">
+                        <i class="fa-solid fa-pills"></i>
+                        <span class="nav_name">Compras</span>
+                    </a>
                     <a href="#" class="nav_link" routerLink="reports"
                         [ngClass]="{'active': currentRoute === 'reports'}">
-                        <i class="fa-solid fa-pills"></i>
-                        <span class="nav_name">Productos</span>
-                    </a>
-                    <a href="#" class="nav_link">
                         <i class="fa-solid fa-file-export"></i>
                         <span class="nav_name">Reportes</span>
                     </a>
+
                     <a class="nav_link" (click)="loadUsers()">
                         <i class="fa-solid fa-users"></i>
                         <span class="nav_name">Usuarios</span>

@@ -4,7 +4,6 @@ import { Observable, catchError, map, of, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { IUsers } from '../../interfaces/users.interface';
 @Injectable({
   providedIn: 'root'
@@ -14,13 +13,9 @@ export class AuthService {
   private myApiUrl: string;
   private authTokenKey = 'token'; // Usar el mismo nombre de clave en localStorage
   private loggedInUserKey = 'loggedInUser';
-  private jwtHelper = new JwtHelperService();
-  private loggedInUser: IUsers []=[];
   constructor(private http: HttpClient,
     @Inject (PLATFORM_ID) private platformId: Object,
     private router: Router,
-
-
     ) {
     this.myAppUrl = environment.endpoint;
     this.myApiUrl = '/api/auth';
@@ -62,7 +57,6 @@ export class AuthService {
     }
     return null;
   }
-
   isAuthenticated(): boolean {
     const authToken = this.getToken();
     console.log('¿Está autenticado?', !!authToken);
@@ -71,23 +65,21 @@ export class AuthService {
 
   checkAuthentication(): void {
     console.log('Verificando autenticación...');
-    if (!this.isAuthenticated()) {
+    if (!this.isAuthenticated() && isPlatformBrowser(this.platformId)) {
       console.log('No está autenticado. Redirigiendo al inicio de sesión.');
-      this.router.navigate(['/login']);
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 0);
     } else {
       console.log('Está autenticado.');
     }
   }
-
   logout(): void {
-
-    console.log('Cerrando sesión...');
-    localStorage.removeItem(this.authTokenKey); // Remove token from localStorage
-    window.location.reload();
-    setTimeout(() => {
-      this.router.navigate(['/login']);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.authTokenKey); // Remove token from localStorage
+      localStorage.removeItem(this.loggedInUserKey); // Remove user data from localStorage
     }
-    ), 3000;
+    this.router.navigate(['/login']);
   }
 
   isLoggedIn(): boolean {
@@ -95,7 +87,7 @@ export class AuthService {
   }
 
   getLoggedInUserData(): Observable<IUsers> {
-    if (typeof localStorage !== 'undefined') {
+    if (isPlatformBrowser(this.platformId)) {
       const userData = localStorage.getItem(this.loggedInUserKey);
       if (userData) {
         const user: IUsers = JSON.parse(userData);
@@ -111,13 +103,18 @@ export class AuthService {
     }
   }
   getUserId(): Observable<number> {
-    const userData = localStorage.getItem(this.loggedInUserKey);
-    if (userData) {
-      const user: IUsers = JSON.parse(userData);
-      return of(user.id);
+    if (isPlatformBrowser(this.platformId)) {
+      const userData = localStorage.getItem(this.loggedInUserKey);
+      if (userData) {
+        const user: IUsers = JSON.parse(userData);
+        return of(user.id);
+      } else {
+        console.error('No se encontraron datos del usuario en el almacenamiento local');
+        return throwError('No se encontraron datos del usuario en el almacenamiento local');
+      }
     } else {
-      console.error('No se encontraron datos del usuario en el almacenamiento local');
-      return throwError('No se encontraron datos del usuario en el almacenamiento local');
+      console.error('El objeto localStorage no está definido en este entorno.');
+      return throwError('El objeto localStorage no está definido en este entorno.');
     }
   }
 }

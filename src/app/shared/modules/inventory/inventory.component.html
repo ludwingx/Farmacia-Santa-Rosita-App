@@ -15,38 +15,236 @@
             </h3>
         </div>
         <div class="col-12 d-flex justify-content-end">
-            <button class="btn newProduct me-3" (click)="initQuagga()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <button class="btn newProduct me-3" (click)="initReader()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <i class="fa-solid fa-plus"></i> Nuevo Producto
             </button>
-            <button class="btn btn-danger me-3" (click)="generatePDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+            <button class="btn btn-danger me-3"><i class="fa-solid fa-file-pdf"></i> PDF</button>
         </div>
 
     </div>
     <app-filters-products/>
     <app-products/>
 </div>
-<div class="modal" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" (shown.bs.modal)="initQuagga()">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Escaneo y edición de código de barras</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Agregar Nuevo Producto</h5>
+          <button type="button" (click)="clearData()" (click)="stopReader() " class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="progress mb-3">
+            <div class="progress-bar" role="progressbar" [style.width]="(currentStep / totalSteps) * 100 + '%'">
+              {{currentStep}}/{{totalSteps}}
             </div>
-            <div class="modal-body">
-                <div>
-                    @if (barcodeResult) {
-                        <img #barcodeImage [src]="scannedBarcodeImage"  alt="Código de barras escaneado">
-                        <p>Resultado del escaneo: {{ barcodeResult }}</p>
-                    }@else {
-                        <video #videoElement></video>
-                        <p>Escanea el Código de barras</p>
-                        <img #barcodeImage [src]="scannedBarcodeImage"  alt="Código de barras escaneado">
-                        <p>Resultado del escaneo: {{ barcodeResult }}</p>
-                    }
-                 
-
+          </div>
+          <form [formGroup]="form" (ngSubmit)="createProduct()">
+            @if(currentStep == 1){
+              <h2>Paso 1: Código de Barra del Producto</h2>
+              <div class="row">
+                @if(code){
+                  <div class="col-12 text-center">
+                    <img #barcode alt="bar code"/>
                   </div>
-            </div>
+                  <div class="col-12">
+                    <button class="btn btn-primary" >Siguiente</button>
+                  </div>
+                }
+                @if(!code){
+                  <div class="col-12 text-center">
+                    <p>Escanea el código de barra del producto</p>
+                  </div>
+                  <div class="col-12">
+                    <div id="interactive" class="viewport">
+                      <!-- QuaggaJS will populate this element -->
+                    </div>
+                  </div>
+                }
+              </div>
+              <button class="btn btn-primary" (click)="nextStep()">Siguiente</button>
+            }
+            @if(currentStep == 2){
+              <div class="row">
+                <h2>Paso 2: Información básica del producto</h2>
+                <div class="mb-2">
+                  <label for="editProductName" class="form-label">Nombre del Producto*</label>
+                  <input type="text" class="form-control" placeholder="Ingrese el nombre" formControlName="name"  >
+                    @if(form.get('name')?.hasError('required')&&form.get('name')?.touched){
+                      <div class="form-error">
+                        <span class="text-danger">Escribe el nombre del producto*</span>
+                      </div>
+                    }
+                </div>
+                <div class="mb-2">
+                  <label for="editProductCode" class="form-label">Código del Producto*</label>
+                  <input type="text" class="form-control" placeholder="Ingrese el Código"  value="{{code}}"  formControlName="product_code" >
+                  @if (form.get('product_code')?.hasError('required') && form.get('product_code')?.touched) {
+                    <div class="form-error">
+                      <span class="text-danger">Escribe el Código del producto*</span>
+                    </div>
+                  }
+                </div>
+                <div class="mb-2">
+                  <label for="" class="form-label">Categoría*</label>
+                  <select class="form-select" formControlName="category_id">
+                    <option value="">Seleccioné una categoría</option>
+                    @for (category of categories; track category.id) {
+                      <option  [value]="category.id">{{ category.name }}</option>
+                    }
+                  </select>
+                  @if (form.get('category_id')?.hasError('required') && form.get('category_id')?.touched) {
+                    <div class="form-error">
+                      <span class="text-danger">Escribe la Categoría*</span>
+                    </div>
+                  }
+                </div>
+                <div class="mb-2">
+                  <label for="editProductDescription" class="form-label">Descripción</label>
+                  <input type="text" class="form-control" placeholder="Ingrese la descripción" formControlName="description">
+                  @if (form.get('description')?.hasError('required') && form.get('description')?.touched) {
+                    <div class="form-error">
+                      <span class="text-danger">Escribe la descripción del Producto*</span>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="row">
+                <div class="col text-start">
+                  <button class="btn btn-primary" (click)="prevStep()">Atrás</button>
+                </div>
+                <div class="col text-end">
+                  <button class="btn btn-primary" (click)="nextStep()">Siguiente</button>
+                </div>
+              </div>
+            }
+            @if(currentStep == 3){
+              <div class="row">
+                <h2>Paso 3: Detalles del producto</h2>
+              </div>
+              <div class="mb-2">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Fecha de vencimiento*</label>
+                <div class="form-check form-switch ">
+                  @if(expirationStatus == true){
+                    <span class="text-success">(Si tiene)</span>
+                  }@else {
+                    <span class="text-danger">(No tiene)</span>
+                  }
+                  <input class="form-check-input" type="checkbox" (change)="toggleExpirationStatus()" id="flexSwitchCheckDefault">
+                </div>
+              </div>
+              <div class="mb-2">
+                <label for="editProductLocation" class="form-label">Ubicación</label>
+                <select class="form-control form-select" formControlName="storage_location" >
+                  <option value="" >Seleccioné una ubicación</option>
+                  @for(storage_location of storage_locations; track storage_location.id){
+                    <option  [value]="storage_location.id">{{ storage_location.location }}</option>
+                  }
+                </select>
+                @if(form.get('location_id')?.hasError('required') && form.get('location_id')?.touched){
+                  <div class="form-error">
+                    <span class="text-danger">Escribe la Ubicación*</span>
+                  </div>
+                }
+              </div>
+              <div class="mb-2">
+                <label for="editProductSupplier" class="form-label">Proveedor</label>
+                <select class="form-control form-select" formControlName="supplier_id" >
+                  <option value="" >Selecione un proveedor</option>
+                  @for(supplier of suppliers; track supplier.id){
+                    <option  [value]="supplier.id">{{ supplier.name }}</option>
+                  }
+                </select>
+                @if(form.get('supplier_id')?.hasError('required') && form.get('supplier_id')?.touched){
+                  <div class="form-error">
+                    <span class="text-danger">Escribe el Proveedor*</span>
+                  </div>
+                }
+              </div>
+              <div class="row">
+                <div class="col text-start">
+                  <button class="btn btn-primary" (click)="prevStep()">Atrás</button>
+                </div>
+                <div class="col text-end">
+                  <button class="btn btn-primary" (click)="nextStep()">Siguiente</button>
+                </div>
+              </div>
+            }
+            @if(currentStep == 4){
+              <div class="row">
+                <h2>Paso 3: Precios del producto</h2>
+                <div class="mb-2">
+                  <label for="editProductPrice" class="form-label">Precio de Compra</label>
+                  <div class="input-group">
+                    <span class="input-group-text">Bs.</span>
+                    <input type="number" class="form-control" placeholder="Ingrese el precio" formControlName="purchase_price" step="0.01">
+                  </div>
+                  @if(form.get('purchase_price')?.hasError('required') && form.get('purchase_price')?.touched){
+                    <div class="form-error">
+                      <span class="text-danger">Escribe el Precio de Compra del Producto*</span>
+                    </div>
+                  }
+                </div>
+                <div class="mb-2">
+                  <label for="editProductPrice" class="form-label">Precio de Venta</label>
+                  <div class="input-group">
+                    <span class="input-group-text">Bs.</span>
+                    <input type="number" class="form-control" placeholder="Ingrese el precio" formControlName="selling_price" step="0.01">
+                  </div>
+                  @if(form.get('selling_price')?.hasError('required') && form.get('selling_price')?.touched){
+                    <div class="form-error">
+                      <span class="text-danger">Escribe el Precio de Venta del Producto*</span>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="row">
+                <div class="col text-start">
+                  <button class="btn btn-primary" (click)="prevStep()">Atrás</button>
+                </div>
+                <div class="col text-end">
+                  <button class="btn btn-primary" (click)="nextStep()">Siguiente</button>
+                </div>
+              </div>
+            }
+            @if(currentStep == 5){
+              <div class="row">
+                <h2>Paso 4: Imagen del Producto</h2>
+                <div class="row">
+                  <label for="editProductImage" class="form-label text-center">Foto de Perfil</label>
+                  <div class="col-12 imagen-container text-center">
+                    <img [src]="previewImage ? previewImage : currentImageSource"
+                    class="rounded-circle profile-picture" alt="Profile Picture"> 
+                  </div>
+                  <div class="col-12 p-2 ">
+                    <input type="file" class="form-control" id="profileImage" name="profileImage" (change)="onImageChange($event)">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col text-start">
+                  <button class="btn btn-primary" (click)="prevStep()">Atrás</button>
+                </div>
+                <div class="col text-end">
+                  <button class="btn btn-primary" (click)="addProduct()">Siguiente</button>
+                </div>
+              </div>
+            }
+            @if (currentStep == 6) {
+              <div class="row">
+                <div class="col text-center">
+                  <h2>Detalles del producto que se agregará</h2>
+                </div>
+                <div class="col">
+                  <p></p>
+                </div>
+              </div>
+            }
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </div>
+
+

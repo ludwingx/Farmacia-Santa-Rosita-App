@@ -1,1 +1,79 @@
-<p>sales works!</p>
+<div>
+    <h2>Gestión de Ventas</h2>
+  
+    <!-- Botón para abrir el formulario de añadir venta -->
+    <button></button>
+  
+    <!-- Formulario de añadir venta -->
+    <div >
+      <form>
+        <label for="customerId">Cliente:</label>
+        <select id="customerId" formControlName="customerId">
+          <option></option> 
+        </select>
+  
+        <label for="date">Fecha:</label>
+        <input id="date" type="date" formControlName="date">
+  
+        <div formArrayName="items">
+          <div>
+            <label for="productId">Producto:</label>
+            <input id="productId" type="text" formControlName="productId">
+  
+            <label for="quantity">Cantidad:</label>
+            <input id="quantity" type="number" formControlName="quantity">
+  
+            <label for="price">Precio:</label>
+            <input id="price" type="number" formControlName="price">
+  
+            <button type="button" >Eliminar</button>
+          </div>
+        </div>
+        <button type="button">Añadir Producto</button>
+  
+        <button type="submit">Guardar Venta</button>
+      </form>
+    </div>
+  
+    <!-- Lista de ventas -->
+    <div>
+      <h3>Lista de Ventas</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Monto Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr >
+            <td>x</td>
+            <td></td>
+            <td>x</td>
+            <td>x</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Inventario actualizado -->
+    <div>
+      <h3>Inventario Actualizado</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr >
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

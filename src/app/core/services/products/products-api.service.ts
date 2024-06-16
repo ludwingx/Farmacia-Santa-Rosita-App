@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import {  Injectable } from '@angular/core';
 import { IProductsList } from '../../interfaces/products.interface';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,15 @@ export class ProductsApiService {
 
     //Estos son métodos de un servicio en Angular que utilizan el módulo HttpClient
     // para hacer solicitudes HTTP a un API., el siguiente metodo es para obtener todos los productos 
-
+    uploadImage(id: number, imageData: FormData): Observable<any> {
+      const uploadUrl = `${this.myAppUrl}${this.myApiUrl}${id}/product-image`; // Usar la ruta correspondiente
+      return this.http.post(uploadUrl, imageData).pipe(
+        catchError((error) => {
+          console.error('Error al subir la imagen:', error);
+          return throwError(() => error);
+        })
+      );
+    }
     getListProducts(): Observable<IProductsList[]> {
      return this.http.get<IProductsList[]>(`${this.myAppUrl}${this.myApiUrl}`);
     }
