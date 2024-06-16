@@ -8,9 +8,6 @@ import { LoginComponent } from './shared/modules/auth/login/login.component';
 import { AuthService } from './core/services/auth/auth.service';
 import { LoadingComponent } from './shared/components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
-
-
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -39,22 +36,6 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    this.authService.getLoggedInUserData().subscribe(
-      user => {
-        // Usuario autenticado correctamente
-        this.loading = false; // Ocultar pantalla de carga
-        
-        // Realizar cualquier otra lógica necesaria después de la autenticación
-        console.log('Datos del usuario autenticado:', user);
-        this.isAuthenticated = true;
-      },
-      error => {
-        console.error('Error al obtener datos del usuario autenticado:', error);
-        this.hideSidebar = false;
-        // Si hay un error al obtener datos del usuario, redirigir al inicio de sesión
-        this.router.navigate(['/login']);
-      }
-    );
     this.checkAuthentication();
   }
 
@@ -63,12 +44,12 @@ export class AppComponent {
     // Verificar el estado de autenticación
     if (this.authService.isAuthenticated()) {
       console.log('Usuario autenticado.');
+      this.isAuthenticated = true;
       this.toast.success('Usuario autenticado', '¡Bienvenido de nuevo!');
       // Redirigir al dashboard si el usuario está autenticado
       this.router.navigate(['/dashboard']);
     } else {
       console.log('Usuario no autenticado.');
-      this.hideSidebar = true;
       // Redirigir al login si el usuario no está autenticado
       this.router.navigate(['/login']);
     }

@@ -13,16 +13,21 @@ import { authGuardGuard } from './core/guards/auth-guard.guard';
 import { LoginComponent } from './shared/modules/auth/login/login.component';
 import { ProfileComponent } from './shared/modules/profile/profile.component';
 import { DeletedUsersListComponent } from './shared/modules/users/deleted-users-list/deleted-users-list.component';
+import { PurchasesComponent } from './shared/modules/purchases/purchases.component';
+
 
 export const routes: Routes = [
 
     {path: 'dashboard', component: DashboardComponent, canActivate: [authGuardGuard]},
+
     {path: 'reports', component: ReportsComponent, canActivate: [authGuardGuard]  },
     {path: 'sales', component: SalesComponent, canActivate: [authGuardGuard]  },
+    {path: 'purchases', component: PurchasesComponent, canActivate: [authGuardGuard]  },
     {path: 'inventory', component: InventoryComponent, canActivate: [authGuardGuard]  },
+    
     {path: 'inventory/products/edit-product/:id', component: EditProductComponent, canActivate: [authGuardGuard]  },
     {path: 'inventory/products/new-product', component: NewProductComponent, canActivate: [authGuardGuard]  },
-
+    
     {path: 'profile', component: ProfileComponent, canActivate: [authGuardGuard]},
     {path: 'users', component: UsersComponent, canActivate: [authGuardGuard]  },
     {path: 'users/new-user', component: NewUserComponent, canActivate: [authGuardGuard]},
