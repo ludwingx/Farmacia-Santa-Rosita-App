@@ -1,10 +1,107 @@
-﻿.cursor-pointer {
-  cursor: pointer;
+$brand-green: #009220;
+$brand-green-dark: #00761a;
+$brand-rosita: #dd2b66;
+$text-dark: #0f172a;
+$border-color: #e2e8f0;
+
+.welcome-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 146, 32, 0.15) !important;
 }
-.hover-card {
+
+.welcome-logo-frame {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  flex-shrink: 0;
+
+  .welcome-logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+}
+
+.badge-role-pill {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: $brand-green-dark;
+  background-color: #ecfdf5;
+  border: 1px solid #d1fae5;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* KPI Cards */
+.kpi-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid $border-color !important;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .kpi-icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .kpi-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #64748b;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .kpi-value {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
 }
-.hover-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12) !important;
+
+.border-start-kpi {
+  border-left-width: 5px !important;
+}
+
+/* Module Action Cards */
+.module-card {
+  cursor: pointer;
+  border: 1px solid $border-color !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .module-icon-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.1) !important;
+    border-color: #cbd5e1 !important;
+
+    .module-icon-wrap {
+      transform: scale(1.1);
+    }
+  }
 }

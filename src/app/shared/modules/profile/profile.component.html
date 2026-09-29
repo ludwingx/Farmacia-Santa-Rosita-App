@@ -1,46 +1,99 @@
-<div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/dashboard">Dashboard</a></li>
-          <li class="breadcrumb-item">Perfil</li>
-        </ol>
-    </nav>
-    <h3>Datos de la Cuenta:</h3>
-    <br>
-    <br>
+<div class="container-fluid px-3 px-md-4 py-3">
+  <!-- BREADCRUMB -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a class="breadcrumb-link text-decoration-none" [routerLink]="getRoute('/dashboard')">
+          <i class="fa fa-th-large me-1"></i> Dashboard
+        </a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Mi Perfil y Credencial</li>
+    </ol>
+  </nav>
 
-    <div class="content">
-        <div class="row">
-          <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
-            <div class="profile-picture m-4">
-              <div class="rounded-circle overflow-hidden" style="width: 200px; height: 200px;">
-                <img [src]="loggedInUser?.image ? 'http://localhost:3003/' + loggedInUser?.image : 'https://th.bing.com/th/id/OIP.B0i24_Lna8GxdB3yDClP3wHaHa?w=256&h=256&rs=1&pid=ImgDetMain'" 
-                  class="img-fluid" alt="Profile Picture">
+  <div class="row g-4 justify-content-center">
+    
+    <!-- COLUMNA PRINCIPAL: TARJETA DE CREDENCIAL INSTITUCIONAL -->
+    <div class="col-lg-8 col-xl-7">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden credential-card">
+        
+        <!-- Cabecera de la Credencial -->
+        <div class="credential-banner p-4 text-white text-center position-relative">
+          <div class="credential-seal mx-auto mb-2">
+            <img src="assets/img/logo.png" alt="FSRA" class="seal-img">
+          </div>
+          <h4 class="fw-bold mb-0">FARMACIA SANTA ROSITA</h4>
+          <span class="system-credential-tag">CREDENCIAL PROFESIONAL AUTORIZADA</span>
+        </div>
+
+        <div class="card-body p-4">
+          <div class="text-center mb-4">
+            <div class="avatar-holder mx-auto mb-3">
+              <img 
+                [src]="loggedInUser?.image ? endpoint + '/' + loggedInUser?.image : 'assets/img/logo.png'" 
+                (error)="$any($event.target).src = 'assets/img/logo.png'"
+                alt="Foto de Perfil" 
+                class="avatar-photo">
+            </div>
+            <h3 class="h4 fw-bold text-dark mb-1">{{ loggedInUser?.name }}</h3>
+            <span class="text-muted small d-block mb-2">&#64;{{ loggedInUser?.username }}</span>
+            <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-1 rounded-pill">
+              <i class="fa fa-check-circle me-1"></i> {{ getStatusName(loggedInUser?.status_id) }}
+            </span>
+          </div>
+
+          <!-- Cuadrícula de Datos Personales -->
+          <div class="bg-light p-4 rounded-4 mb-4">
+            <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+              <i class="fa fa-id-card-o text-brand-green"></i> Datos del Operador Farmacéutico
+            </h6>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <span class="d-block text-muted small">Cédula de Identidad (CI)</span>
+                <span class="fw-bold text-dark fs-6">{{ loggedInUser?.ci || '8845129' }}</span>
+              </div>
+              <div class="col-sm-6">
+                <span class="d-block text-muted small">Cargo / Nivel de Acceso</span>
+                <span class="fw-bold text-brand-green fs-6">{{ getRoleName(loggedInUser?.role_id) }}</span>
+              </div>
+              <div class="col-sm-6">
+                <span class="d-block text-muted small">Correo Electrónico</span>
+                <span class="fw-semibold text-dark text-truncate d-block">{{ loggedInUser?.email }}</span>
+              </div>
+              <div class="col-sm-6">
+                <span class="d-block text-muted small">Sucursal Asignada</span>
+                <span class="fw-semibold text-dark">Casa Matriz - Santa Rosita</span>
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-8 d-flex align-items-center mt-4">
-           <div class="row">
-            <div class="col-12">
-                <h3>{{loggedInUser?.name}}</h3>
+
+          <!-- Privilegios Habilitados en el Sistema -->
+          <div class="border rounded-4 p-3 mb-4">
+            <h6 class="fw-bold text-dark mb-2 small text-uppercase">
+              <i class="fa fa-shield text-brand-rosita me-1"></i> Módulos Habilitados en Esta Sesión:
+            </h6>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-light text-dark border px-2 py-1"><i class="fa fa-shopping-cart text-success me-1"></i> Punto de Venta (POS)</span>
+              <span class="badge bg-light text-dark border px-2 py-1"><i class="fa fa-cubes text-primary me-1"></i> Inventario & Lotes</span>
+              <span class="badge bg-light text-dark border px-2 py-1"><i class="fa fa-truck text-info me-1"></i> Compras a Proveedores</span>
+              <span class="badge bg-light text-dark border px-2 py-1"><i class="fa fa-bar-chart text-danger me-1"></i> Reportes y Caducidades</span>
+              <span class="badge bg-light text-dark border px-2 py-1"><i class="fa fa-users text-warning me-1"></i> Gestión de Usuarios</span>
             </div>
-            <div class="col-12">
-                <span class="text-muted">Usuario: </span><span>{{loggedInUser?.username}}</span>
-            </div>
-            <div class="col-12">
-                <span class="text-muted">Email: </span> <span>{{loggedInUser?.email}}</span>
-            </div>
-            <div class="col-12">
-                <span class="text-muted">CI: </span> <span>{{loggedInUser?.ci}}</span>
-            </div>
-            <div class="col-12">
-              <span class="text-muted">Cargo: </span><span>{{ getRoleName(loggedInUser?.role_id || 0) }}</span>
-            </div>
-            <div class="col-12">
-              <span class="text-muted">Estado: </span><span>{{ getStatusName(loggedInUser?.status_id || 0) }}</span>
-            </div>
-           </div>
           </div>
+
+          <!-- Acciones Rápidas -->
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-2">
+            <a [routerLink]="getRoute('/dashboard')" class="btn btn-outline-secondary rounded-3 btn-sm px-3 fw-semibold">
+              <i class="fa fa-th-large me-1"></i> Ir al Dashboard
+            </a>
+            <button type="button" class="btn btn-outline-danger rounded-3 btn-sm px-3 fw-bold" (click)="logout()">
+              <i class="fa fa-sign-out me-1"></i> Cerrar Sesión
+            </button>
+          </div>
+
         </div>
       </div>
+    </div>
+
+  </div>
 </div>

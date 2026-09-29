@@ -6,7 +6,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { UsersApiService } from '../../../core/services/users/users-api.service';
 import { IUsers } from '../../../core/interfaces/users.interface';
 import { LoadingComponent } from '../loading/loading.component';
-
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-sidebar',
@@ -19,13 +19,21 @@ export class SidebarComponent {
   isAuthenticated = false;
   loggedInUser: IUsers | null = null;
   loading: boolean = true;
-  constructor(private router: Router,
-     @Inject(DOCUMENT) private document: Document,
-     private authService : AuthService,
-     private userService : UsersApiService) {
-    
+  isNavbarShown: boolean = false;
+
+  get endpoint(): string {
+    return environment.endpoint;
   }
+
+  constructor(
+    private router: Router,
+    @Inject(DOCUMENT) private document: Document,
+    private authService: AuthService,
+    private userService: UsersApiService
+  ) {}
+
   currentRoute: string = '';
+
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
     if (this.isAuthenticated) {
@@ -47,7 +55,18 @@ export class SidebarComponent {
       .subscribe(() => {
         this.currentRoute = this.getActiveRoute(this.router.url);
         this.checkActiveLinks();
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+          this.isNavbarShown = false;
+        }
       });
+  }
+
+  toggleNavbar(): void {
+    this.isNavbarShown = !this.isNavbarShown;
+  }
+
+  closeNavbar(): void {
+    this.isNavbarShown = false;
   }
 
   getActiveRoute(url: string): string {
@@ -59,15 +78,52 @@ export class SidebarComponent {
     return this.currentRoute === route;
   }
 
+  get isDemoMode(): boolean {
+    return this.router.url.startsWith('/demo') || this.authService.isDemoActive();
+  }
+
+  get routePrefix(): string {
+    return this.isDemoMode ? '/demo' : '';
+  }
+
+  getDashboardRoute(): string {
+    return this.isDemoMode ? '/demo/dashboard' : '/dashboard';
+  }
+
+  getInventoryRoute(): string {
+    return this.isDemoMode ? '/demo/inventory' : '/inventory';
+  }
+
+  getSalesRoute(): string {
+    return this.isDemoMode ? '/demo/sales' : '/sales';
+  }
+
+  getPurchasesRoute(): string {
+    return this.isDemoMode ? '/demo/purchases' : '/purchases';
+  }
+
+  getReportsRoute(): string {
+    return this.isDemoMode ? '/demo/reports' : '/reports';
+  }
+
+  getUsersRoute(): string {
+    return this.isDemoMode ? '/demo/users' : '/users';
+  }
+
+  getProfileRoute(): string {
+    return this.isDemoMode ? '/demo/profile' : '/profile';
+  }
+
   loadProducts(): void {
-    this.router.navigate(['/inventory']);
+    this.router.navigate([this.getInventoryRoute()]);
   }
 
   loadUsers() {
-    this.router.navigate(['/users']);
+    this.router.navigate([this.getUsersRoute()]);
   }
+
   loadProfile(){
-    this.router.navigate(['/profile']); // Navegar al componente de perfil
+    this.router.navigate([this.getProfileRoute()]);
   }
   checkActiveLinks(): void {
     const links = this.document.querySelectorAll('.nav_link');

@@ -1,9 +1,420 @@
-.textNameUserLogged{
-    color: black;
+$sidebar-collapsed: 72px;
+$sidebar-expanded: 240px;
+$header-height: 64px;
 
-    font-size: 1.2rem;
-    &:hover{
-        color: #dd2b66;
+$brand-green: #009220;
+$brand-green-dark: #00761a;
+$brand-green-deep: #004d10;
+$brand-rosita: #dd2b66;
+$text-dark: #0f172a;
+$text-muted: #64748b;
+$border-color: #e2e8f0;
 
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  position: relative;
+}
+
+/* ==========================================================================
+   HEADER (BARRA SUPERIOR)
+   ========================================================================== */
+.app-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: $sidebar-collapsed;
+  height: $header-height;
+  background-color: #ffffff;
+  border-bottom: 1px solid $border-color;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 1020;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.shifted {
+    left: $sidebar-expanded;
+  }
+}
+
+.btn-toggle-sidebar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid $border-color;
+  background-color: #f8fafc;
+  color: $text-dark;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #e2e8f0;
+    color: $brand-green;
+  }
+}
+
+.header-brand-info {
+  .system-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: $text-dark;
+    letter-spacing: -0.3px;
+
+    .text-rosita {
+      color: $brand-rosita;
     }
+  }
+
+  .system-pill {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    background-color: #ecfdf5;
+    color: $brand-green-dark;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #d1fae5;
+  }
+}
+
+.demo-badge-pill {
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  padding: 4px 10px;
+  border-radius: 20px;
+
+  .badge {
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    background-color: #f59e0b !important;
+    color: #ffffff !important;
+  }
+}
+
+.user-pill-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 4px 10px 4px 4px;
+  border-radius: 30px;
+  background-color: #f8fafc;
+  border: 1px solid $border-color;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+  }
+
+  .user-avatar-frame {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 2px solid $brand-green;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .user-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .user-fullname {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: $text-dark;
+    line-height: 1.2;
+  }
+
+  .user-role-chip {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: $brand-green-dark;
+  }
+}
+
+.btn-header-logout {
+  background-color: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #e11d48;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #e11d48;
+    color: #ffffff;
+    border-color: #e11d48;
+  }
+}
+
+/* ==========================================================================
+   SIDEBAR (BARRA LATERAL)
+   ========================================================================== */
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: $sidebar-collapsed;
+  height: 100vh;
+  background: linear-gradient(180deg, $brand-green-dark 0%, $brand-green-deep 100%);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1030;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
+
+  &.shown {
+    width: $sidebar-expanded;
+
+    .sidebar-brand-text {
+      opacity: 1;
+      visibility: visible;
+      display: flex;
+    }
+
+    .nav-label {
+      opacity: 1;
+      visibility: visible;
+      display: inline-block;
+    }
+
+    .nav-section-label {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.sidebar-brand-wrapper {
+  padding: 1rem 0.75rem;
+  height: $header-height;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  width: 100%;
+}
+
+.sidebar-logo-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  .mini-seal {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+}
+
+.sidebar-brand-text {
+  display: none;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+
+  .brand-line-1 {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.1;
+  }
+
+  .brand-line-2 {
+    font-size: 0.96rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.1;
+
+    .highlight-rosita {
+      color: #ff94ba;
+    }
+  }
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.nav-section-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 0.5rem 0.75rem 0.25rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-item-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+
+  .nav-icon-slot {
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+  }
+
+  .nav-label {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+  }
+
+  &.active {
+    background: #ffffff;
+    color: $brand-green-dark;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+    .nav-icon-slot {
+      color: $brand-green;
+    }
+  }
+}
+
+.sidebar-footer {
+  padding: 0.75rem 0.5rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+  .logout-item {
+    color: rgba(255, 255, 255, 0.65);
+
+    &:hover {
+      background: rgba(225, 29, 72, 0.2);
+      color: #ff94ba;
+    }
+  }
+}
+
+/* ==========================================================================
+   MAIN CONTENT (CONTENIDO DE CADA PÁGINA)
+   ========================================================================== */
+.app-main-content {
+  flex: 1;
+  margin-left: $sidebar-collapsed;
+  padding-top: $header-height;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.shifted {
+    margin-left: $sidebar-expanded;
+  }
+}
+
+.page-content-wrapper {
+  padding: 0.5rem 0.75rem 2rem;
+}
+
+/* ==========================================================================
+   RESPONSIVIDAD (MÓVIL / TABLET)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .app-header {
+    left: 0 !important;
+    padding: 0 1rem;
+  }
+
+  .app-sidebar {
+    transform: translateX(-100%);
+    width: $sidebar-expanded;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.shown {
+      transform: translateX(0);
+
+      .sidebar-brand-text,
+      .nav-label,
+      .nav-section-label {
+        display: inline-block;
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+
+  .app-main-content {
+    margin-left: 0 !important;
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1025;
+    backdrop-filter: blur(2px);
+  }
 }

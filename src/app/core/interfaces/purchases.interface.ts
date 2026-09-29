@@ -1,4 +1,4 @@
-﻿export interface IPurchaseItem {
+export interface IPurchaseItem {
     id?: number;
     purchase_id?: number;
     product_id: number;
@@ -8,7 +8,7 @@
     purchase_price: number;
     subtotal: number;
     product?: {
-        id: number;
+        id?: number;
         name: string;
         product_code?: string;
     };
@@ -24,13 +24,13 @@ export interface IPurchase {
     notes?: string;
     items: IPurchaseItem[];
     supplier?: {
-        id: number;
+        id?: number | string;
         name: string;
         phone_number?: string;
     };
     user?: {
-        id: number;
+        id?: number;
         name: string;
-        username: string;
+        username?: string;
     };
 }

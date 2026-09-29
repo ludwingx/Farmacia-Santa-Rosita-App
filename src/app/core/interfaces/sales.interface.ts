@@ -1,4 +1,4 @@
-﻿export interface ISaleItem {
+export interface ISaleItem {
     id?: number;
     sale_id?: number;
     product_id: number;
@@ -7,7 +7,7 @@
     unit_price: number;
     subtotal: number;
     product?: {
-        id: number;
+        id?: number;
         name: string;
         product_code?: string;
     };
@@ -26,8 +26,8 @@ export interface ISale {
     date?: Date | string;
     items: ISaleItem[];
     user?: {
-        id: number;
+        id?: number;
         name: string;
-        username: string;
+        username?: string;
     };
 }

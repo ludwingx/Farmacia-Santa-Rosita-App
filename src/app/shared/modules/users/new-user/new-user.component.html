@@ -1,107 +1,262 @@
-<div class="container">
-  <!-- BREADCRUM -->
-<nav aria-label="breadcrumb">
-<ol class="breadcrumb">
-  <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/dashboard">Dashboard</a></li>
-  <li class="breadcrumb-item"><a type="button" class="breadcrumb-link" (click)="goToUserList()">Usuarios</a>
-  </li>
-  <li class="breadcrumb-item">Nuevo Usuario</li>
-</ol>
-</nav>
-<h2 class="textEditProduct"><a type="button" (click)="goToUserList()"><i class="fa-solid fa-arrow-left"></i></a>
-Agregar Nuevo Usuario</h2>
-<form [formGroup]="form" (ngSubmit)="createUser()" id="editarProductoForm">
-    <div class="row">
-      <div class="col-lg-6 col-md-12 ">
-        <div class="mb-2">
-          <label for="" class="form-label">Nombre del Usuario</label>
-          <input type="text" class="form-control" placeholder="Ingrese el nombre de Usuario" formControlName="username" >
-            @if(form.get('username')?.hasError('required')&&form.get('username')?.touched){
-              <div class="form-error">
-                <span class="text-danger">Escribe el nombre del producto*</span>
-              </div>
-            }
-          </div>
-          <div class="mb-2">
-            <label for="" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" placeholder="Ingrese la contraseña" formControlName="password" >
-              @if(form.get('password')?.hasError('required')&&form.get('password')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe la contraseña*</span>
-                </div>
-              }
-            </div>
-          <div class="mb-2">
-            <label for="" class="form-label">Confirmar Contraseña</label>
-            <input type="password" class="form-control" placeholder="Confirme la contraseña" formControlName="confirm_password" >
-              @if(form.get('confirm_password')?.hasError('required')&&form.get('confirm_password')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Confirme la contraseña*</span>
-                </div>
-              }
-          </div>
-          
-          <div class="mb-2">
-            <label for="editProductDescription" class="form-label">Rol</label>
-            <select class="form-select" formControlName="role_id" >
-              <option value="" >Selecione un rol</option>
-              @for (role of roles; track role.id) {
-                <option value="{{role.id}}">{{role.name}}</option>
-              }
-            </select>
-            @if(form.get('role_id')?.hasError('required')&&form.get('role_id')?.touched){
-              <div class="form-error">
-                <span class="text-danger">Selecione un rol*</span>
-              </div>
-            }
-          </div>
+<div class="container-fluid px-3 px-md-4 py-3">
+  <!-- BREADCRUMB -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a class="breadcrumb-link text-decoration-none" [routerLink]="getRoute('/dashboard')">
+          <i class="fa fa-th-large me-1"></i> Dashboard
+        </a>
+      </li>
+      <li class="breadcrumb-item">
+        <a type="button" class="breadcrumb-link text-decoration-none" (click)="goToUserList()">Usuarios</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Nuevo Usuario</li>
+    </ol>
+  </nav>
 
-          <div class="mb-2">
-            <label for="editProductDescription" class="form-label">Email</label>
-            <input type="email" class="form-control" placeholder="Ingrese el email" formControlName="email" >
-              @if(form.get('email')?.hasError('required')&&form.get('email')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe el email*</span>
-                </div>
-              }
-          </div>
-          <div class="mb-2">
-            <label for="editProductDescription" class="form-label">Cédula de identidad (CI)</label>
-            <input type="text" class="form-control" placeholder="Ingrese la CI" formControlName="ci" >
-              @if(form.get('ci')?.hasError('required')&&form.get('ci')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe la CI*</span>
-                </div>
-              }
-          </div>
-
-          <div class="mb-2">
-            <label for="editProductDescription" class="form-label">Nombre Completo</label>
-            <input type="text" class="form-control" placeholder="Ingrese el nombre" formControlName="name" >
-              @if(form.get('name')?.hasError('required')&&form.get('name')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe el nombre*</span>
-                </div>
-              }
+  <!-- TARJETA PRINCIPAL DEL FORMULARIO -->
+  <div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white border-bottom p-4">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-3">
+          <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle p-2" (click)="goToUserList()" title="Volver al listado">
+            <i class="fa fa-arrow-left"></i>
+          </button>
+          <div>
+            <h3 class="h4 fw-bold text-dark mb-0">Agregar Nuevo Usuario</h3>
+            <small class="text-muted">Crea una cuenta autorizada para cajeros, farmacéuticos o administradores</small>
           </div>
         </div>
-        <div class="col-lg-6 col-md-12">
-            <div class="row">
-                <label for="editProductImage" class="form-label text-center">Foto de Perfil</label>
-                <div class="col-12 imagen-container text-center">
-                  <img [src]="previewImage ? previewImage : currentImageSource"
-                  class="rounded-circle profile-picture" alt="Profile Picture"> 
-                </div>
-                <div class="col-12 p-2 ">
-                  <input type="file" class="form-control" id="profileImage" name="profileImage" (change)="onImageChange($event)">
-                </div>
-              </div>
-              <button type="submit" class="btn btn-success btn-large btn-block" >
-                <i class="fa-solid fa-floppy-disk"></i> Crear Usuario
-              </button>
-        </div>
-
+        <button type="button" class="btn btn-outline-secondary btn-sm rounded-3 px-3" (click)="goToUserList()">
+          <i class="fa fa-times me-1"></i> Cancelar
+        </button>
       </div>
-      <div>
-        <br><br><br>
     </div>
+
+    <div class="card-body p-4">
+      <form [formGroup]="form" (ngSubmit)="createUser()" id="crearUsuarioForm" autocomplete="off">
+        <div class="row g-4">
+          
+          <!-- COLUMNA IZQUIERDA: DATOS DE CUENTA Y PERSONALES -->
+          <div class="col-lg-7">
+            <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+              <i class="fa fa-user-circle text-brand-green"></i> Datos de Acceso y Perfil
+            </h5>
+
+            <div class="row g-3">
+              <!-- Nombre de Usuario -->
+              <div class="col-md-6">
+                <label for="newUsername" class="form-label fw-semibold small text-dark">
+                  Nombre de Usuario <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="fa fa-user text-muted"></i></span>
+                  <input 
+                    type="text" 
+                    id="newUsername"
+                    class="form-control" 
+                    placeholder="ej. carlos.t" 
+                    formControlName="username">
+                </div>
+                @if (form.get('username')?.hasError('required') && form.get('username')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> El nombre de usuario es obligatorio*
+                  </span>
+                }
+              </div>
+
+              <!-- Rol / Cargo -->
+              <div class="col-md-6">
+                <label for="newUserRole" class="form-label fw-semibold small text-dark">
+                  Rol Asignado <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="fa fa-shield text-muted"></i></span>
+                  <select class="form-select" id="newUserRole" formControlName="role_id">
+                    <option value="" disabled selected>Selecciona un rol</option>
+                    @for (role of roles; track role.id) {
+                      <option [value]="role.id">{{ role.name }}</option>
+                    }
+                  </select>
+                </div>
+                @if (form.get('role_id')?.hasError('required') && form.get('role_id')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> Debes seleccionar un rol*
+                  </span>
+                }
+              </div>
+
+              <!-- Nombre Completo -->
+              <div class="col-md-7">
+                <label for="newFullName" class="form-label fw-semibold small text-dark">
+                  Nombre Completo <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="fa fa-id-badge text-muted"></i></span>
+                  <input 
+                    type="text" 
+                    id="newFullName"
+                    class="form-control" 
+                    placeholder="Nombre y apellidos" 
+                    formControlName="name">
+                </div>
+                @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> El nombre completo es obligatorio*
+                  </span>
+                }
+              </div>
+
+              <!-- CI -->
+              <div class="col-md-5">
+                <label for="newCi" class="form-label fw-semibold small text-dark">
+                  Cédula de Identidad (CI) <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="fa fa-address-card text-muted"></i></span>
+                  <input 
+                    type="number" 
+                    id="newCi"
+                    class="form-control" 
+                    placeholder="ej. 8845129" 
+                    formControlName="ci">
+                </div>
+                @if (form.get('ci')?.hasError('required') && form.get('ci')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> La cédula es obligatoria*
+                  </span>
+                }
+              </div>
+
+              <!-- Correo Electrónico -->
+              <div class="col-12">
+                <label for="newEmail" class="form-label fw-semibold small text-dark">
+                  Correo Electrónico <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="fa fa-envelope text-muted"></i></span>
+                  <input 
+                    type="email" 
+                    id="newEmail"
+                    class="form-control" 
+                    placeholder="ej. usuario@farmaciasantarosita.com" 
+                    formControlName="email">
+                </div>
+                @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> El correo electrónico es obligatorio*
+                  </span>
+                }
+                @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> Ingresa un formato de correo válido*
+                  </span>
+                }
+              </div>
+
+              <!-- Contraseña -->
+              <div class="col-md-6">
+                <label for="newPassword" class="form-label fw-semibold small text-dark">
+                  Contraseña de Acceso <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="fa fa-lock text-muted"></i></span>
+                  <input 
+                    type="password" 
+                    id="newPassword"
+                    class="form-control" 
+                    placeholder="Mínimo 4 caracteres" 
+                    formControlName="password">
+                </div>
+                @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> La contraseña es obligatoria*
+                  </span>
+                }
+              </div>
+
+              <!-- Confirmar Contraseña -->
+              <div class="col-md-6">
+                <label for="confirmPassword" class="form-label fw-semibold small text-dark">
+                  Confirmar Contraseña <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="fa fa-check-circle text-muted"></i></span>
+                  <input 
+                    type="password" 
+                    id="confirmPassword"
+                    class="form-control" 
+                    placeholder="Repite la contraseña" 
+                    formControlName="confirm_password">
+                </div>
+                @if (form.get('confirm_password')?.hasError('required') && form.get('confirm_password')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> Confirma la contraseña*
+                  </span>
+                }
+                @if (form.get('confirm_password')?.hasError('passwordMismatch') && form.get('confirm_password')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-triangle me-1"></i> Las contraseñas no coinciden*
+                  </span>
+                }
+              </div>
+
+            </div>
+          </div>
+
+          <!-- COLUMNA DERECHA: FOTO DE PERFIL Y ACCIONES -->
+          <div class="col-lg-5 border-start-lg ps-lg-4">
+            <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+              <i class="fa fa-camera text-brand-rosita"></i> Fotografía del Personal
+            </h5>
+
+            <div class="card bg-light border-0 rounded-4 p-4 text-center mb-4">
+              <div class="avatar-upload-frame mx-auto mb-3">
+                <img 
+                  [src]="previewImage ? previewImage : currentImageSource" 
+                  alt="Foto del Usuario" 
+                  class="avatar-preview-img">
+              </div>
+
+              <label for="profileImage" class="btn btn-outline-primary btn-sm rounded-3 mb-2 fw-semibold">
+                <i class="fa fa-upload me-1"></i> Seleccionar Fotografía
+              </label>
+              <input 
+                type="file" 
+                class="d-none" 
+                id="profileImage" 
+                accept="image/*" 
+                (change)="onImageChange($event)">
+
+              <small class="text-muted d-block">Formatos aceptados: JPG, PNG, WEBP. Tamaño máx. 3MB</small>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="d-grid gap-2">
+              <button 
+                type="submit" 
+                class="btn btn-brand-green btn-lg fw-bold rounded-3 shadow-sm"
+                [disabled]="isSubmitting">
+                @if (isSubmitting) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  <span>Registrando Usuario...</span>
+                } @else {
+                  <i class="fa fa-check-circle me-2"></i>
+                  <span>Crear y Habilitar Usuario</span>
+                }
+              </button>
+
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary py-2 rounded-3" 
+                (click)="goToUserList()">
+                Cancelar y Regresar
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -158,6 +158,14 @@ export class SalesComponent implements OnInit {
 
   getTotal(): number {
     return this.cart.reduce((acc, item) => acc + item.subtotal, 0);
+  }
+
+  setExactCash(): void {
+    this.cashReceived = this.getTotal();
+  }
+
+  addCash(amount: number): void {
+    this.cashReceived = (Number(this.cashReceived) || 0) + amount;
   }
 
   getChange(): number {

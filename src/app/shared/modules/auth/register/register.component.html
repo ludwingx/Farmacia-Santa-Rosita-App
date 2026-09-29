@@ -1,0 +1,271 @@
+<div class="register-wrapper">
+  <!-- Elementos decorativos de iluminacion ambiental -->
+  <div class="ambient-glow glow-top-left"></div>
+  <div class="ambient-glow glow-bottom-right"></div>
+
+  <div class="register-card-container">
+    <div class="row g-0 register-card">
+      
+      <!-- Columna Izquierda: Banner Institucional Farmaceutico -->
+      <div class="col-lg-5 col-md-5 d-none d-md-flex showcase-col">
+        <div class="showcase-content">
+          <!-- Logo Oficial -->
+          <div class="brand-badge-container">
+            <div class="brand-badge-frame">
+              <img src="assets/img/logo.png" alt="Farmacia Santa Rosita" class="banner-logo">
+            </div>
+          </div>
+          
+          <div class="showcase-text">
+            <span class="badge-system">SISTEMA INTEGRAL DE GESTIÓN</span>
+            <h2 class="showcase-title">
+              Farmacia Santa <span class="highlight-rosita">Rosita</span>
+            </h2>
+            <p class="showcase-tagline">
+              Únete a la plataforma líder para la administración farmacéutica y punto de venta.
+            </p>
+          </div>
+
+          <!-- Beneficios de la cuenta -->
+          <div class="showcase-features">
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fa fa-user-shield"></i></div>
+              <div class="feature-text">
+                <span class="feature-title">Acceso Administrador</span>
+                <span class="feature-desc">Control total sobre inventario, ventas y compras</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fa fa-users"></i></div>
+              <div class="feature-text">
+                <span class="feature-title">Gestión de Roles</span>
+                <span class="feature-desc">Asignación flexible de privilegios operativos</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fa fa-lock"></i></div>
+              <div class="feature-text">
+                <span class="feature-title">Datos Protegidos</span>
+                <span class="feature-desc">Sesiones seguras cifradas con tokens JWT</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pie del Banner -->
+          <div class="showcase-footer">
+            <span class="security-badge">
+              <i class="fa fa-shield"></i> Registro Autorizado • Versión 2.0
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Formulario de Registro -->
+      <div class="col-lg-7 col-md-7 col-12 form-col">
+        <div class="form-wrapper">
+          
+          <!-- Encabezado con Logo y Titulo -->
+          <div class="form-header">
+            <div class="mobile-logo-wrap d-md-none text-center mb-3">
+              <img src="assets/img/logo.png" alt="Farmacia Santa Rosita" class="mobile-logo-img">
+            </div>
+
+            <div class="brand-heading-row">
+              <span class="brand-tag">FARMACIA SANTA <span class="text-rosita-accent">ROSITA</span></span>
+              <span class="badge-app-pill">APP</span>
+            </div>
+            <h1 class="register-title">Crear Cuenta</h1>
+            <p class="register-subtitle">Registra tu usuario para comenzar a administrar el sistema</p>
+          </div>
+
+          <!-- Formulario Reactivo -->
+          <form [formGroup]="form" (ngSubmit)="register()" autocomplete="off" class="auth-form">
+            
+            <div class="row g-2">
+              <!-- Nombre Completo -->
+              <div class="col-md-6 form-group mb-2">
+                <label for="name" class="form-label">
+                  <i class="fa fa-id-card-o me-1 text-primary-brand"></i> Nombre Completo
+                </label>
+                <div class="input-container" [class.input-invalid]="form.get('name')?.invalid && form.get('name')?.touched">
+                  <span class="input-icon-slot">
+                    <i class="fa fa-user"></i>
+                  </span>
+                  <input 
+                    type="text" 
+                    id="name" 
+                    class="custom-form-input" 
+                    formControlName="name" 
+                    placeholder="Ej: Ludwig Ramos">
+                </div>
+                @if(form.get('name')?.hasError('required') && form.get('name')?.touched) {
+                  <div class="field-error-alert">
+                    <i class="fa fa-exclamation-circle me-1"></i> Nombre es requerido*
+                  </div>
+                }
+              </div>
+
+              <!-- C.I. (Documento de Identidad) -->
+              <div class="col-md-6 form-group mb-2">
+                <label for="ci" class="form-label">
+                  <i class="fa fa-hashtag me-1 text-primary-brand"></i> Cédula / C.I.
+                </label>
+                <div class="input-container" [class.input-invalid]="form.get('ci')?.invalid && form.get('ci')?.touched">
+                  <span class="input-icon-slot">
+                    <i class="fa fa-id-badge"></i>
+                  </span>
+                  <input 
+                    type="text" 
+                    id="ci" 
+                    class="custom-form-input" 
+                    formControlName="ci" 
+                    placeholder="Ej: 8945123">
+                </div>
+                @if(form.get('ci')?.invalid && form.get('ci')?.touched) {
+                  <div class="field-error-alert">
+                    <i class="fa fa-exclamation-circle me-1"></i> C.I. numérico requerido*
+                  </div>
+                }
+              </div>
+
+              <!-- Nombre de Usuario -->
+              <div class="col-md-6 form-group mb-2">
+                <label for="reg-username" class="form-label">
+                  <i class="fa fa-at me-1 text-primary-brand"></i> Usuario
+                </label>
+                <div class="input-container" [class.input-invalid]="form.get('username')?.invalid && form.get('username')?.touched">
+                  <span class="input-icon-slot">
+                    <i class="fa fa-user-circle"></i>
+                  </span>
+                  <input 
+                    type="text" 
+                    id="reg-username" 
+                    class="custom-form-input" 
+                    formControlName="username" 
+                    placeholder="Ej: admin_ludwig"
+                    autocomplete="username">
+                </div>
+                @if(form.get('username')?.hasError('required') && form.get('username')?.touched) {
+                  <div class="field-error-alert">
+                    <i class="fa fa-exclamation-circle me-1"></i> Usuario es requerido*
+                  </div>
+                }
+              </div>
+
+              <!-- Correo Electronico -->
+              <div class="col-md-6 form-group mb-2">
+                <label for="email" class="form-label">
+                  <i class="fa fa-envelope-o me-1 text-primary-brand"></i> Correo Electrónico
+                </label>
+                <div class="input-container" [class.input-invalid]="form.get('email')?.invalid && form.get('email')?.touched">
+                  <span class="input-icon-slot">
+                    <i class="fa fa-envelope"></i>
+                  </span>
+                  <input 
+                    type="email" 
+                    id="email" 
+                    class="custom-form-input" 
+                    formControlName="email" 
+                    placeholder="correo@ejemplo.com">
+                </div>
+                @if(form.get('email')?.invalid && form.get('email')?.touched) {
+                  <div class="field-error-alert">
+                    <i class="fa fa-exclamation-circle me-1"></i> Correo válido requerido*
+                  </div>
+                }
+              </div>
+
+              <!-- Contrasena -->
+              <div class="col-md-6 form-group mb-2">
+                <label for="reg-password" class="form-label">
+                  <i class="fa fa-lock me-1 text-primary-brand"></i> Contraseña
+                </label>
+                <div class="input-container" [class.input-invalid]="form.get('password')?.invalid && form.get('password')?.touched">
+                  <span class="input-icon-slot">
+                    <i class="fa fa-key"></i>
+                  </span>
+                  <input 
+                    [type]="hidePassword ? 'password' : 'text'" 
+                    id="reg-password" 
+                    class="custom-form-input" 
+                    formControlName="password" 
+                    placeholder="Mínimo 4 caracteres"
+                    autocomplete="new-password">
+                  <button 
+                    type="button" 
+                    class="btn-toggle-pw" 
+                    (click)="togglePassword()" 
+                    tabindex="-1">
+                    <i class="fa" [ngClass]="hidePassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                  </button>
+                </div>
+                @if(form.get('password')?.invalid && form.get('password')?.touched) {
+                  <div class="field-error-alert">
+                    <i class="fa fa-exclamation-circle me-1"></i> Mínimo 4 caracteres*
+                  </div>
+                }
+              </div>
+
+              <!-- Rol Asignado -->
+              <div class="col-md-6 form-group mb-2">
+                <label for="role_id" class="form-label">
+                  <i class="fa fa-shield me-1 text-primary-brand"></i> Rol en el Sistema
+                </label>
+                <div class="input-container">
+                  <span class="input-icon-slot">
+                    <i class="fa fa-briefcase"></i>
+                  </span>
+                  <select id="role_id" class="custom-form-input custom-select" formControlName="role_id">
+                    @for (r of roles; track r.id) {
+                      <option [value]="r.id">{{ r.name }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Alerta de Error -->
+            @if (errorMessage) {
+              <div class="alert-box-modern my-2" role="alert">
+                <i class="fa fa-info-circle alert-icon"></i>
+                <div class="alert-message">
+                  <span>{{ errorMessage }}</span>
+                </div>
+              </div>
+            }
+
+            <!-- Boton Principal de Registro -->
+            <div class="actions-group mt-3">
+              <button 
+                type="submit" 
+                class="btn-register-primary" 
+                [disabled]="isLoading">
+                @if (isLoading) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  <span>Registrando usuario...</span>
+                } @else {
+                  <span>Crear Cuenta</span>
+                  <i class="fa fa-check-circle ms-2"></i>
+                }
+              </button>
+            </div>
+
+            <!-- Enlace para volver a Iniciar Sesion -->
+            <div class="switch-auth-row text-center mt-3">
+              <span class="text-muted small">¿Ya tienes una cuenta registrada? </span>
+              <a routerLink="/login" class="link-switch-auth">Iniciar Sesión</a>
+            </div>
+
+          </form>
+
+          <!-- Pie de Pagina -->
+          <div class="register-footer-copy">
+            <span>© 2026 Farmacia Santa Rosita • Plataforma de Gestión Farmacéutica</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

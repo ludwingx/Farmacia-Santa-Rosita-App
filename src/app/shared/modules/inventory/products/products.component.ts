@@ -8,6 +8,8 @@ import { LotsApiService } from '../../../../core/services/lots/lots-api.service'
 import { ILots } from '../../../../core/interfaces/lots';
 import jsPDF from 'jspdf';
 
+import { AuthService } from '../../../../core/services/auth/auth.service';
+
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -20,7 +22,8 @@ export class ProductsComponent implements OnInit {
   constructor(
     private serviceProduct: ProductsApiService,
     private router: Router,
-    private serviceLots: LotsApiService
+    private serviceLots: LotsApiService,
+    private authService: AuthService
   ) {}
 
   products: IProductsList[] = [];
@@ -29,6 +32,14 @@ export class ProductsComponent implements OnInit {
   productToDelete: IProductsList | null = null;
   productStock: IProductsList[] = [];
   lots: ILots[] = [];
+
+  get isDemoMode(): boolean {
+    return this.router.url.startsWith('/demo') || this.authService.isDemoActive();
+  }
+
+  getRoute(path: string): string {
+    return this.isDemoMode ? '/demo' + path : path;
+  }
 
   ngOnInit(): void {
     this.loadProducts();
@@ -107,11 +118,11 @@ export class ProductsComponent implements OnInit {
     }
   }
   editProduct(products: IProductsList){
-    this.router.navigate(['inventory/products/edit-product', products.id]).then(() => {
+    this.router.navigate([this.getRoute('/inventory/products/edit-product/' + products.id)]).then(() => {
       window.scrollTo(0, 0);
-  });
+    });
   }
-  isExpirationNear(expirationDate: Date): string {
+  isExpirationNear(expirationDate: Date | string | any): string {
     const expiration = new Date(expirationDate);
     const today = new Date();
     const differenceInDays = Math.ceil((expiration.getTime() - today.getTime()) / (1000 * 3600 * 24));
@@ -134,7 +145,7 @@ export class ProductsComponent implements OnInit {
       return 'text-success'; // Si la cantidad es mayor al 50%, cambia a verde
     }
   }
-  getExpirationBackgroundStyle(expirationDate: Date): any {
+  getExpirationBackgroundStyle(expirationDate: Date | string | any): any {
     const expiration = new Date(expirationDate);
     const today = new Date();
     const differenceInDays = Math.ceil((expiration.getTime() - today.getTime()) / (1000 * 3600 * 24));

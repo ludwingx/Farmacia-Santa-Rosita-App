@@ -1,122 +1,223 @@
-﻿<div class="container-fluid p-4">
-  <!-- Bienvenida -->
-  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 rounded shadow-sm">
-    <div>
-      <h2 class="h3 fw-bold text-dark mb-1">
-        ¡Hola, <span class="text-primary">{{ loggedInUserName }}</span>! 👋
-      </h2>
-      <p class="text-muted mb-0">Bienvenido al sistema de control y mostrador de Farmacia Santa Rosita</p>
-    </div>
-    <div>
-      <a routerLink="/sales" class="btn btn-success btn-lg fw-bold shadow-sm">
-        <i class="fa fa-shopping-cart me-2"></i>Nueva Venta (POS)
-      </a>
+<div class="container-fluid px-3 px-md-4 py-3">
+  
+  <!-- Banner de Bienvenida -->
+  <div class="card border-0 shadow-sm rounded-4 mb-4 welcome-card">
+    <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="welcome-logo-frame d-none d-sm-flex">
+          <img src="assets/img/logo.png" alt="FSRA" class="welcome-logo-img">
+        </div>
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge-role-pill">ADMINISTRACIÓN</span>
+            <span class="text-muted small">• Farmacia Santa Rosita</span>
+          </div>
+          <h1 class="h3 fw-bold text-dark mb-1">
+            ¡Hola, <span class="text-brand-green">{{ loggedInUserName }}</span>! 👋
+          </h1>
+          <p class="text-muted mb-0 small">
+            Bienvenido al panel central de control, punto de venta y gestión farmacéutica.
+          </p>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <a [routerLink]="getRoute('/inventory/products/new-product')" class="btn btn-outline-success fw-bold btn-sm py-2 px-3 rounded-3">
+          <i class="fa fa-plus-circle me-1"></i> Nuevo Medicamento
+        </a>
+        <a [routerLink]="getRoute('/sales')" class="btn btn-brand-green fw-bold shadow-sm py-2 px-3 rounded-3">
+          <i class="fa fa-shopping-cart me-2"></i> Nueva Venta (POS)
+        </a>
+      </div>
     </div>
   </div>
 
-  <!-- Accesos Rápidos -->
-  <h5 class="fw-bold text-dark mb-3">
-    <i class="fa fa-bolt me-2 text-warning"></i>Accesos Rápidos
-  </h5>
+  <!-- Resumen Operativo / KPIs -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+      <i class="fa fa-tachometer text-brand-green"></i> Métricas Operativas Clave
+    </h5>
+    <span class="badge bg-light text-muted border px-2 py-1 small">Actualizado en tiempo real</span>
+  </div>
+
   <div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-      <div class="card h-100 border-0 shadow-sm text-center p-3 cursor-pointer hover-card" (click)="navigateTo('/sales')">
-        <div class="card-body">
-          <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle d-inline-block mb-3">
-            <i class="fa fa-cash-register fa-2x"></i>
-          </div>
-          <h6 class="fw-bold text-dark mb-1">Punto de Venta</h6>
-          <small class="text-muted">Cobrar en mostrador</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <div class="card h-100 border-0 shadow-sm text-center p-3 cursor-pointer hover-card" (click)="navigateTo('/inventory')">
-        <div class="card-body">
-          <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle d-inline-block mb-3">
-            <i class="fa fa-pills fa-2x"></i>
-          </div>
-          <h6 class="fw-bold text-dark mb-1">Inventario</h6>
-          <small class="text-muted">Catálogo de medicamentos</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <div class="card h-100 border-0 shadow-sm text-center p-3 cursor-pointer hover-card" (click)="navigateTo('/purchases')">
-        <div class="card-body">
-          <div class="bg-info bg-opacity-10 text-info p-3 rounded-circle d-inline-block mb-3">
-            <i class="fa fa-truck fa-2x"></i>
-          </div>
-          <h6 class="fw-bold text-dark mb-1">Compras</h6>
-          <small class="text-muted">Recepción de mercadería</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <div class="card h-100 border-0 shadow-sm text-center p-3 cursor-pointer hover-card" (click)="navigateTo('/reports')">
-        <div class="card-body">
-          <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-circle d-inline-block mb-3">
-            <i class="fa fa-clock fa-2x"></i>
-          </div>
-          <h6 class="fw-bold text-dark mb-1">Vencimientos & Reportes</h6>
-          <small class="text-muted">Alertas sanitarias y stock</small>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Resumen del Negocio (KPIs) -->
-  <h5 class="fw-bold text-dark mb-3">
-    <i class="fa fa-chart-pie me-2 text-primary"></i>Resumen Operativo
-  </h5>
-  <div class="row g-3">
     <!-- Ventas Hoy -->
     <div class="col-sm-6 col-xl-3">
-      <div class="card border-0 shadow-sm border-start border-success border-4 h-100">
-        <div class="card-body">
-          <span class="text-muted small fw-semibold text-uppercase">Ventas Hoy</span>
-          <h3 class="fw-bold text-success my-1">
-            Bs. {{ (summary?.todaySalesTotal || 0) | number:'1.2-2' }}
-          </h3>
-          <small class="text-muted">{{ summary?.todaySalesCount || 0 }} tickets generados</small>
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-start-kpi border-success">
+        <div class="card-body p-3 d-flex align-items-center gap-3">
+          <div class="kpi-icon-circle bg-success bg-opacity-10 text-success">
+            <i class="fa fa-money fa-lg"></i>
+          </div>
+          <div class="flex-grow-1">
+            <span class="kpi-label">Ventas de Hoy</span>
+            <h3 class="kpi-value text-success mb-0">
+              Bs. {{ (summary?.todaySalesTotal || 0) | number:'1.2-2' }}
+            </h3>
+            <small class="text-muted">{{ summary?.todaySalesCount || 0 }} transacciones registradas</small>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Catálogo de Medicamentos -->
     <div class="col-sm-6 col-xl-3">
-      <div class="card border-0 shadow-sm border-start border-primary border-4 h-100">
-        <div class="card-body">
-          <span class="text-muted small fw-semibold text-uppercase">Total Medicamentos</span>
-          <h3 class="fw-bold text-primary my-1">{{ summary?.totalProducts || 0 }}</h3>
-          <small class="text-muted">En catálogo activo</small>
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-start-kpi border-primary">
+        <div class="card-body p-3 d-flex align-items-center gap-3">
+          <div class="kpi-icon-circle bg-primary bg-opacity-10 text-primary">
+            <i class="fa fa-medkit fa-lg"></i>
+          </div>
+          <div class="flex-grow-1">
+            <span class="kpi-label">Medicamentos en Stock</span>
+            <h3 class="kpi-value text-primary mb-0">{{ summary?.totalProducts || 0 }}</h3>
+            <small class="text-muted">En catálogo farmacéutico</small>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Próximos a vencer -->
+    <!-- Próximos a Vencer -->
     <div class="col-sm-6 col-xl-3">
-      <div class="card border-0 shadow-sm border-start border-danger border-4 h-100">
-        <div class="card-body">
-          <span class="text-muted small fw-semibold text-uppercase">Vencimiento Próximo (&lt;90d)</span>
-          <h3 class="fw-bold text-danger my-1">{{ summary?.expiringCount || 0 }}</h3>
-          <small class="text-danger fw-semibold">Revisar en Reportes</small>
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-start-kpi border-danger">
+        <div class="card-body p-3 d-flex align-items-center gap-3">
+          <div class="kpi-icon-circle bg-danger bg-opacity-10 text-danger">
+            <i class="fa fa-calendar-times-o fa-lg"></i>
+          </div>
+          <div class="flex-grow-1">
+            <span class="kpi-label">Por Vencer (&lt; 90 días)</span>
+            <h3 class="kpi-value text-danger mb-0">{{ summary?.expiringCount || 0 }}</h3>
+            <a [routerLink]="getRoute('/reports')" class="small text-danger fw-bold text-decoration-none">
+              Ver alertas de caducidad <i class="fa fa-arrow-right"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Stock Crítico -->
     <div class="col-sm-6 col-xl-3">
-      <div class="card border-0 shadow-sm border-start border-warning border-4 h-100">
-        <div class="card-body">
-          <span class="text-muted small fw-semibold text-uppercase">Stock Crítico (&le;10 uds.)</span>
-          <h3 class="fw-bold text-warning my-1">{{ summary?.criticalStockCount || 0 }}</h3>
-          <small class="text-muted">Necesitan reposición</small>
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-start-kpi border-warning">
+        <div class="card-body p-3 d-flex align-items-center gap-3">
+          <div class="kpi-icon-circle bg-warning bg-opacity-10 text-warning">
+            <i class="fa fa-exclamation-triangle fa-lg"></i>
+          </div>
+          <div class="flex-grow-1">
+            <span class="kpi-label">Stock Crítico (&le; 10 uds)</span>
+            <h3 class="kpi-value text-warning mb-0">{{ summary?.criticalStockCount || 0 }}</h3>
+            <a [routerLink]="getRoute('/inventory')" class="small text-warning fw-bold text-decoration-none">
+              Reponer mercadería <i class="fa fa-arrow-right"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Accesos Rápidos a Módulos -->
+  <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+    <i class="fa fa-bolt text-warning"></i> Accesos Rápidos a Módulos
+  </h5>
+
+  <div class="row g-3 mb-4">
+    <!-- Punto de Venta -->
+    <div class="col-12 col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 module-card" (click)="navigateTo('/sales')">
+        <div class="card-body p-4 text-center">
+          <div class="module-icon-wrap bg-success bg-opacity-10 text-success mb-3 mx-auto">
+            <i class="fa fa-shopping-cart fa-2x"></i>
+          </div>
+          <h6 class="fw-bold text-dark mb-1">Punto de Venta (POS)</h6>
+          <p class="text-muted small mb-0">Cobro rápido en mostrador, emisión de tickets y arqueo de caja.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inventario -->
+    <div class="col-12 col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 module-card" (click)="navigateTo('/inventory')">
+        <div class="card-body p-4 text-center">
+          <div class="module-icon-wrap bg-primary bg-opacity-10 text-primary mb-3 mx-auto">
+            <i class="fa fa-cubes fa-2x"></i>
+          </div>
+          <h6 class="fw-bold text-dark mb-1">Inventario & Medicamentos</h6>
+          <p class="text-muted small mb-0">Control de lotes, fechas de vencimiento, precios y códigos de barra.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compras -->
+    <div class="col-12 col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 module-card" (click)="navigateTo('/purchases')">
+        <div class="card-body p-4 text-center">
+          <div class="module-icon-wrap bg-info bg-opacity-10 text-info mb-3 mx-auto">
+            <i class="fa fa-truck fa-2x"></i>
+          </div>
+          <h6 class="fw-bold text-dark mb-1">Compras a Proveedores</h6>
+          <p class="text-muted small mb-0">Registro de facturas, ingreso de nueva mercadería y proveedores.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reportes -->
+    <div class="col-12 col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 module-card" (click)="navigateTo('/reports')">
+        <div class="card-body p-4 text-center">
+          <div class="module-icon-wrap bg-danger bg-opacity-10 text-danger mb-3 mx-auto">
+            <i class="fa fa-bar-chart fa-2x"></i>
+          </div>
+          <h6 class="fw-bold text-dark mb-1">Reportes & Estadísticas</h6>
+          <p class="text-muted small mb-0">Balance de ingresos, productos más vendidos y exportación a PDF.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de Accesos de Gestión y Seguridad -->
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-4 h-100">
+        <div class="card-body p-4">
+          <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+            <i class="fa fa-tasks text-brand-green"></i> Guía Operativa de la Farmacia
+          </h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                <div class="text-success fs-4"><i class="fa fa-check-circle"></i></div>
+                <div>
+                  <span class="fw-bold d-block text-dark small">Cobro Rápido en POS</span>
+                  <span class="text-muted small">Usa el lector de código de barras para añadir productos inmediatamente.</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                <div class="text-primary fs-4"><i class="fa fa-cubes"></i></div>
+                <div>
+                  <span class="fw-bold d-block text-dark small">Control por Lotes</span>
+                  <span class="text-muted small">Garantiza trazabilidad sanitaria registrando el lote y vencimiento.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 h-100">
+        <div class="card-body p-4">
+          <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+            <i class="fa fa-shield text-brand-rosita"></i> Seguridad y Personal
+          </h6>
+          <p class="text-muted small mb-3">
+            Administra el acceso de cajeros, farmacéuticos y administradores del sistema.
+          </p>
+          <a [routerLink]="getRoute('/users')" class="btn btn-outline-secondary w-100 py-2 rounded-3 fw-bold small">
+            <i class="fa fa-users me-2"></i> Administrar Usuarios
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

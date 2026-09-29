@@ -1,166 +1,251 @@
-<div class="container">
-      <!-- BREADCRUM -->
-  <nav aria-label="breadcrumb">
+<div class="container-fluid px-3 px-md-4 py-3">
+  <!-- BREADCRUMB -->
+  <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/inventory">Inventario</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Nuevo Producto</li>
+      <li class="breadcrumb-item">
+        <a class="breadcrumb-link text-decoration-none" [routerLink]="getRoute('/dashboard')">
+          <i class="fa fa-th-large me-1"></i> Dashboard
+        </a>
+      </li>
+      <li class="breadcrumb-item">
+        <a class="breadcrumb-link text-decoration-none" [routerLink]="getRoute('/inventory')">Inventario</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Nuevo Medicamento</li>
     </ol>
   </nav>
-  <h2 class="textEditProduct"><a type="button" (click)="goToProductList()"><i class="fa-solid fa-arrow-left"></i></a>
-    Agregar Nuevo Producto</h2>
-    <form [formGroup]="form" (ngSubmit)="create()" id="editarProductoForm">
-        <div class="row">
-          <h5>Información Básica del Producto:</h5>
-          <div class="col-lg-6 col-md-12 ">
-            <div class="mb-2">
-              <label for="editProductName" class="form-label">Nombre del Producto</label>
-              <input type="text" class="form-control" placeholder="Ingrese el nombre" formControlName="name"  >
-                @if(form.get('name')?.hasError('required')&&form.get('name')?.touched){
-                  <div class="form-error">
-                    <span class="text-danger">Escribe el nombre del producto*</span>
-                  </div>
-                }
-            </div>
-            <div class="mb-2">
-              <label for="editProductCode" class="form-label">Código del Producto</label>
-              <input type="text" class="form-control" placeholder="Ingrese el Código" formControlName="product_code" >
-              @if (form.get('product_code')?.hasError('required') && form.get('product_code')?.touched) {
-                <div class="form-error">
-                  <span class="text-danger">Escribe el Código del producto*</span>
-                </div>
-              }
-            </div>
-        
-            <div class="mb-2">
-              <label for="editProductDescription" class="form-label">Descripción</label>
-              <input type="text" class="form-control" placeholder="Ingrese la descripción" formControlName="description">
-              @if (form.get('description')?.hasError('required') && form.get('description')?.touched) {
-                <div class="form-error">
-                  <span class="text-danger">Escribe la descripción del Producto*</span>
-                </div>
-              }
-            </div>
-            <div class="mb-2">
-              <label for="editProductPrice" class="form-label">Precio</label>
-              <div class="input-group">
-                <span class="input-group-text">Bs.</span>
-                <input type="number" class="form-control" placeholder="Ingrese el precio" formControlName="price" step="0.01">
-              </div>
-              @if(form.get('price')?.hasError('required') && form.get('price')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe el Precio del Producto*</span>
-                </div>
-              }
-            </div>
-            <hr>
-            <h5>Inventario y Seguimiento:</h5>
-            <div class="mb-2">
-              <label for="editProductCurrentStock" class="form-label">Stock Inicial</label>
-              <input type="number" class="form-control" placeholder="Ingrese el stock inicial" formControlName="initial_stock" >
-              @if(form.get('initial_stock')?.hasError('required') && form.get('initial_stock')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe el Stock Inicial*</span>
-                </div>
-              }
-            </div>
-            <div class="mb-2">
-              <label for="editProductExpirationDate" class="form-label">Fecha de Caducidad</label>
-              <input type="date" class="form-control" placeholder="Ingrese la fecha de caducidad" formControlName="expiration_date"  >
-              @if(form.get('expiration_date')?.hasError('required') && form.get('expiration_date')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe la Fecha de Caducidad*</span>
-                </div>
-              }
-            </div>
-            <hr>
-            <h5>Proveedores y Logística:</h5>
-            <div class="mb-2">
-              <label for="editProductSupplier" class="form-label">Proveedor</label>
 
-              <select class="form-control form-select" formControlName="supplier_id" >
-                <option value="" >Selecione un proveedor</option>
-                @for(supplier of suppliers; track supplier.id){
-                  <option  [value]="supplier.id">{{ supplier.name }}</option>
+  <!-- TARJETA PRINCIPAL DEL FORMULARIO -->
+  <div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white border-bottom p-4">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-3">
+          <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle p-2" (click)="goToProductList()" title="Volver al inventario">
+            <i class="fa fa-arrow-left"></i>
+          </button>
+          <div>
+            <h3 class="h4 fw-bold text-dark mb-0">Registrar Nuevo Medicamento</h3>
+            <small class="text-muted">Ingresa las especificaciones clínicas, precio, código y stock inicial</small>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm rounded-3 px-3" (click)="goToProductList()">
+          <i class="fa fa-times me-1"></i> Cancelar
+        </button>
+      </div>
+    </div>
+
+    <div class="card-body p-4">
+      <form [formGroup]="form" (ngSubmit)="create()" id="nuevoMedicamentoForm" autocomplete="off">
+        <div class="row g-4">
+          
+          <!-- COLUMNA IZQUIERDA: DATOS CLÍNICOS Y COMERCIALES -->
+          <div class="col-lg-7">
+            <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+              <i class="fa fa-medkit text-brand-green"></i> Información del Medicamento
+            </h5>
+
+            <div class="row g-3">
+              <!-- Nombre Comercial -->
+              <div class="col-md-8">
+                <label for="newProdName" class="form-label fw-semibold small text-dark">
+                  Nombre Comercial / Genérico <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="newProdName"
+                  class="form-control" 
+                  placeholder="ej. Paracetamol 500 mg x 100 tabletas" 
+                  formControlName="name">
+                @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> El nombre del medicamento es obligatorio*
+                  </span>
+                }
+              </div>
+
+              <!-- Código de Barras / SKU -->
+              <div class="col-md-4">
+                <label for="newProdCode" class="form-label fw-semibold small text-dark">
+                  Código / SKU <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="fa fa-barcode text-muted"></i></span>
+                  <input 
+                    type="text" 
+                    id="newProdCode"
+                    class="form-control" 
+                    placeholder="ej. MED-011" 
+                    formControlName="product_code">
+                </div>
+                @if (form.get('product_code')?.hasError('required') && form.get('product_code')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> El código es obligatorio*
+                  </span>
+                }
+              </div>
+
+              <!-- Descripción -->
+              <div class="col-12">
+                <label for="newProdDesc" class="form-label fw-semibold small text-dark">
+                  Descripción y Presentación Farmacéutica
+                </label>
+                <textarea 
+                  id="newProdDesc"
+                  class="form-control" 
+                  rows="2"
+                  placeholder="ej. Vía oral, blíster x 10 comprimidos, laboratorio..."
+                  formControlName="description"></textarea>
+              </div>
+
+              <!-- Categoría -->
+              <div class="col-md-6">
+                <label for="newProdCategory" class="form-label fw-semibold small text-dark">
+                  Categoría Farmacológica <span class="text-danger">*</span>
+                </label>
+                <select class="form-select" id="newProdCategory" formControlName="category_id">
+                  <option value="" disabled selected>Selecciona una categoría</option>
+                  @for (cat of categories; track cat.id) {
+                    <option [value]="cat.id">{{ cat.name }}</option>
+                  }
+                </select>
+                @if (form.get('category_id')?.hasError('required') && form.get('category_id')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> La categoría es requerida*
+                  </span>
+                }
+              </div>
+
+              <!-- Proveedor -->
+              <div class="col-md-6">
+                <label for="newProdSupplier" class="form-label fw-semibold small text-dark">
+                  Proveedor / Laboratorio <span class="text-danger">*</span>
+                </label>
+                <select class="form-select" id="newProdSupplier" formControlName="supplier_id">
+                  <option value="" disabled selected>Selecciona un laboratorio</option>
+                  @for (sup of suppliers; track sup.id) {
+                    <option [value]="sup.id">{{ sup.name }}</option>
+                  }
+                </select>
+                @if (form.get('supplier_id')?.hasError('required') && form.get('supplier_id')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> El proveedor es requerido*
+                  </span>
+                }
+              </div>
+
+              <div class="col-12"><hr class="my-2"></div>
+
+              <!-- Precios y Stock -->
+              <div class="col-md-6">
+                <label for="newProdPrice" class="form-label fw-semibold small text-dark">
+                  Precio de Venta al Público <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light fw-bold text-success">Bs.</span>
+                  <input 
+                    type="number" 
+                    id="newProdPrice"
+                    step="0.50"
+                    class="form-control" 
+                    placeholder="0.00" 
+                    formControlName="price">
+                </div>
+                @if (form.get('price')?.hasError('required') && form.get('price')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> El precio es requerido*
+                  </span>
+                }
+              </div>
+
+              <div class="col-md-6">
+                <label for="newProdStock" class="form-label fw-semibold small text-dark">
+                  Stock Inicial <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="fa fa-cubes text-muted"></i></span>
+                  <input 
+                    type="number" 
+                    id="newProdStock"
+                    class="form-control" 
+                    placeholder="Cantidad de unidades" 
+                    formControlName="initial_stock">
+                </div>
+                @if (form.get('initial_stock')?.hasError('required') && form.get('initial_stock')?.touched) {
+                  <span class="text-danger small mt-1 d-block">
+                    <i class="fa fa-exclamation-circle me-1"></i> El stock inicial es requerido*
+                  </span>
+                }
+              </div>
+
+            </div>
+          </div>
+
+          <!-- COLUMNA DERECHA: LOTES, UBICACIÓN Y SUBMIT -->
+          <div class="col-lg-5 border-start-lg ps-lg-4">
+            <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+              <i class="fa fa-map-marker text-brand-rosita"></i> Almacenamiento y Lote
+            </h5>
+
+            <!-- Ubicación -->
+            <div class="mb-3">
+              <label for="newProdLocation" class="form-label fw-semibold small text-dark">Ubicación en Farmacia</label>
+              <select class="form-select" id="newProdLocation" formControlName="storage_location_id">
+                <option value="">Selecciona ubicación física (opcional)</option>
+                @for (loc of storage_locations; track loc.id) {
+                  <option [value]="loc.id">{{ loc.location }}</option>
                 }
               </select>
-              @if(form.get('supplier_id')?.hasError('required') && form.get('supplier_id')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe el Proveedor*</span>
-                </div>
-              }
             </div>
-    
-    
-            <div class="mb-2">
-              <label for="editProductLotNumber" class="form-label">Numero de Lote</label>
-              <input type="text" class="form-control" placeholder="Ingrese el numero de lote" formControlName="lot_number"  >
-              @if(form.get('lot_number')?.hasError('required') && form.get('lot_number')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe el Numero de Lote*</span>
-                </div>
-              }
+
+            <!-- Lote y Caducidad Opcionales de apertura -->
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label for="newLot" class="form-label fw-semibold small text-dark">Nº de Lote Inicial</label>
+                <input type="text" id="newLot" class="form-control" placeholder="ej. L-2026-01" formControlName="lot_number">
+              </div>
+              <div class="col-6">
+                <label for="newExp" class="form-label fw-semibold small text-dark">Caducidad</label>
+                <input type="date" id="newExp" class="form-control" formControlName="expiration_date">
+              </div>
+            </div>
+
+            <!-- Notas Adicionales -->
+            <div class="mb-4">
+              <label for="newNotes" class="form-label fw-semibold small text-dark">Notas Farmacéuticas</label>
+              <textarea 
+                id="newNotes" 
+                class="form-control" 
+                rows="2" 
+                placeholder="Contraindicaciones o precauciones de conservación..."
+                formControlName="notes"></textarea>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="d-grid gap-2">
+              <button 
+                type="submit" 
+                class="btn btn-brand-green btn-lg fw-bold rounded-3 shadow-sm"
+                [disabled]="isSubmitting">
+                @if (isSubmitting) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  <span>Registrando Medicamento...</span>
+                } @else {
+                  <i class="fa fa-check-circle me-2"></i>
+                  <span>Guardar en Inventario</span>
+                }
+              </button>
+
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary py-2 rounded-3" 
+                (click)="goToProductList()">
+                Cancelar y Regresar
+              </button>
             </div>
 
           </div>
-  
-          <div class="col-lg-6 col-md-12 imgEdit">
-            <div class="mb-2">
-              <label for="editProductCategory" class="form-label">Categoría</label>
-              <select class="form-select" formControlName="category_id" >
-                <option value="">Seleccione una categoría</option>
-                @for(category of categories; track category.id){
-                  <option  [value]="category.id">{{ category.name }}</option>
-                }
-              </select>
-              @if(form.get('category_id')?.hasError('required') && form.get('category_id')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe la Categoría*</span>
-                </div>
-              }
-            </div>
-            <div class="mb-2">
-              <label for="" class="form-label">Ubicación</label>
-              <select class="form-control form-select" formControlName="storage_location_id">
-                <option value="" >Selecione la Ubicación del Producto</option>
-                @for(storage_location of storage_locations; track storage_location.id){
-                  <option  [value]="storage_location.id">{{ storage_location.location }}</option>
-                }
-              </select>
-              @if(form.get('location_id')?.hasError('required') && form.get('location_id')?.touched){
-                <div class="form-error">
-                  <span class="text-danger">Escribe la Ubicación*</span>
-                </div>
-              }
-            </div>
-            <hr>
-            <div class="row">
-              <label for="editProductImage" class="form-label text-center">Imagen del Producto</label>
-              <div class="col-12 text-center imagen-container">
-                <img [src]="currentImageSource"   class="img-thumbnail">
-              </div>
-              <div class="col-12 p-2 ">
-                <input type="file" class="form-control"  formControlName="image"
-                  (change)="onImageChange($event)">
-              </div>
-            </div>
-            <hr>
-            <h5>Informacion Adicional</h5>
-            <div class="mb-2">
-              <label for="editProductNotes" class="form-label">Notas:</label>
-              <textarea class="form-control" placeholder="Ingrese alguna nota del producto (opcional)" formControlName="notes" ></textarea>
-            </div>
-            <div class="mb-2">
-              <label for="editProductNutritionalInformation" class="form-label">Información Nutrimental</label>
-              <input type="text" class="form-control" placeholder="Ingrese la información nutrimental(opcional)" formControlName="nutritional_information"  >
-            </div>
-            <hr>
-            <div class="mb-2 d-grid">
-              <button type="submit"  class="btn btn-primary btn-lg ">Guardar cambios</button>
-            </div>
-          </div>
-
 
         </div>
       </form>
+    </div>
+  </div>
 </div>

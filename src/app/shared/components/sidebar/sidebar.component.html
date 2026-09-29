@@ -1,79 +1,129 @@
-<div id="body-pd" class="body">
-    <header class="header" id="header">
-        <div class="header_toggle"> <i class="bx bx-menu" id="header-toggle"></i> </div>
-        <div class="usernameloggeduser">
+<div class="app-layout" [class.sidebar-expanded]="isNavbarShown">
+  
+  <!-- BARRA DE NAVEGACIÓN SUPERIOR (HEADER) -->
+  <header class="app-header" [class.shifted]="isNavbarShown">
+    <div class="header-left d-flex align-items-center gap-3">
+      <!-- Botón para colapsar/expandir el sidebar -->
+      <button 
+        type="button" 
+        class="btn-toggle-sidebar" 
+        (click)="toggleNavbar()" 
+        [title]="isNavbarShown ? 'Colapsar menú lateral' : 'Expandir menú lateral'">
+        <i class="fa" [ngClass]="isNavbarShown ? 'fa-angle-double-left' : 'fa-bars'"></i>
+      </button>
 
-        </div>
-        <div class="row">
-            <div class="nameTextUserLogged col mt-2">
-                <a type="button" class="textNameUserLogged" (click)="loadProfile()">{{ loggedInUser?.name ?
-                    getFirstName(loggedInUser?.name!) : '' }}</a>
-            </div>
-            <div class="header_img col mr-2 mt-1">
-                <img
-                    [src]="loggedInUser?.image ? 'http://localhost:3003/' + loggedInUser?.image : 'https://th.bing.com/th/id/OIP.B0i24_Lna8GxdB3yDClP3wHaHa?w=256&h=256&rs=1&pid=ImgDetMain'">
-            </div>
-        </div>
-
-    </header>
-    <div class="l-navbar" id="nav-bar">
-        <nav class="nav">
-            <div>
-                <a routerLink="/dashboard" class="nav_logo">
-                    <i class="fa-solid fa-fan" style="color: white;"></i>
-                    <div class="row">
-                        <div class="col-12">
-                            <span class="nav_logo-name">Farmacia </span>
-
-                        </div>
-                        <div class="col-12">
-                            <span class="nav_logo-name">Santa</span>
-                            <span class="nav_logo-name" style="color: #dd2b66;">Rosita</span>
-                            <span class="nav_logo-name"
-                                style="color: #dd2b66; font-size: 1rem; position: relative; top: -5px; left: 5px;">App</span>
-                        </div>
-
-                    </div>
-
-                </a>
-                <div class="nav_list">
-                    <a class="nav_link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <span class="nav_name">Dashboard</span>
-                    </a>
-                    <a class="nav_link" routerLink="/inventory" routerLinkActive="active">
-                        <i class="fa-solid fa-boxes-stacked"></i>
-                        <span class="nav_name">Inventario</span>
-                    </a>
-                    <a class="nav_link" routerLink="/sales" routerLinkActive="active">
-                        <i class="fa-solid fa-sack-dollar"></i>
-                        <span class="nav_name">Ventas</span>
-                    </a>
-                    <a class="nav_link" routerLink="/purchases" routerLinkActive="active">
-                        <i class="fa-solid fa-pills"></i>
-                        <span class="nav_name">Compras</span>
-                    </a>
-                    <a class="nav_link" routerLink="/reports" routerLinkActive="active">
-                        <i class="fa-solid fa-file-export"></i>
-                        <span class="nav_name">Reportes</span>
-                    </a>
-
-                    <a class="nav_link" routerLink="/users" routerLinkActive="active">
-                        <i class="fa-solid fa-users"></i>
-                        <span class="nav_name">Usuarios</span>
-                    </a>
-                </div>
-            </div>
-            <a class="nav_link cursor-pointer" (click)="logout()">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span class="nav_name">Cerrar Sesión</span>
-            </a>
-        </nav>
+      <!-- Indicador institucional de la farmacia -->
+      <div class="header-brand-info d-flex align-items-center gap-2">
+        <span class="system-title">Farmacia Santa <span class="text-rosita">Rosita</span></span>
+        <span class="system-pill d-none d-sm-inline-block">GESTIÓN FARMACÉUTICA</span>
+      </div>
     </div>
 
-<!--Container Main start-->
-    <div class="height-100 bg-light">
-        <router-outlet></router-outlet>
+    <div class="header-right d-flex align-items-center gap-3">
+      <!-- Indicador de Modo Demo (Portfolio) -->
+      @if (isDemoMode) {
+        <div class="demo-badge-pill d-flex align-items-center gap-2" title="Estás navegando en el Modo Demostración de Farmacia Santa Rosita">
+          <span class="badge bg-warning text-dark fw-bold px-2 py-1 rounded-pill">
+            <i class="fa fa-flask me-1"></i> MODO DEMO
+          </span>
+          <span class="d-none d-lg-inline text-muted small fw-semibold">Portfolio Interactivo</span>
+        </div>
+      }
+
+      <!-- Perfil de usuario -->
+      <div class="user-pill-dropdown" (click)="loadProfile()" title="Ver perfil del usuario">
+        <div class="user-avatar-frame">
+          <img 
+            [src]="loggedInUser?.image ? endpoint + '/' + loggedInUser?.image : 'assets/img/logo.png'" 
+            alt="Usuario" 
+            class="user-avatar-img">
+        </div>
+        <div class="user-meta d-none d-sm-flex flex-column text-end">
+          <span class="user-fullname">{{ loggedInUser?.name ? getFirstName(loggedInUser?.name!) : 'Usuario' }}</span>
+          <span class="user-role-chip">{{ loggedInUser?.role?.name || 'Administrador' }}</span>
+        </div>
+      </div>
+
+      <!-- Botón de Cerrar Sesión -->
+      <button 
+        type="button" 
+        class="btn-header-logout" 
+        (click)="logout()" 
+        title="Cerrar Sesión">
+        <i class="fa fa-sign-out"></i>
+        <span class="d-none d-md-inline ms-1">Salir</span>
+      </button>
     </div>
-<!--Container Main end-->
+  </header>
+
+  <!-- BARRA LATERAL (SIDEBAR) -->
+  <aside class="app-sidebar" [class.shown]="isNavbarShown">
+    <div class="sidebar-brand-wrapper">
+      <a [routerLink]="getDashboardRoute()" class="sidebar-brand-link">
+        <div class="sidebar-logo-circle">
+          <img src="assets/img/logo.png" alt="FSRA" class="mini-seal">
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="brand-line-1">Farmacia</span>
+          <span class="brand-line-2">Santa <span class="highlight-rosita">Rosita</span></span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Menú de Navegación -->
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">MÓDULOS</div>
+      
+      <a class="nav-item-link" [routerLink]="getDashboardRoute()" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" title="Dashboard">
+        <div class="nav-icon-slot"><i class="fa fa-th-large"></i></div>
+        <span class="nav-label">Dashboard</span>
+      </a>
+
+      <a class="nav-item-link" [routerLink]="getInventoryRoute()" routerLinkActive="active" title="Inventario de Medicamentos">
+        <div class="nav-icon-slot"><i class="fa fa-cubes"></i></div>
+        <span class="nav-label">Inventario</span>
+      </a>
+
+      <a class="nav-item-link" [routerLink]="getSalesRoute()" routerLinkActive="active" title="Punto de Venta">
+        <div class="nav-icon-slot"><i class="fa fa-shopping-cart"></i></div>
+        <span class="nav-label">Ventas (POS)</span>
+      </a>
+
+      <a class="nav-item-link" [routerLink]="getPurchasesRoute()" routerLinkActive="active" title="Compras a Proveedores">
+        <div class="nav-icon-slot"><i class="fa fa-truck"></i></div>
+        <span class="nav-label">Compras</span>
+      </a>
+
+      <a class="nav-item-link" [routerLink]="getReportsRoute()" routerLinkActive="active" title="Reportes y Vencimientos">
+        <div class="nav-icon-slot"><i class="fa fa-bar-chart"></i></div>
+        <span class="nav-label">Reportes</span>
+      </a>
+
+      <a class="nav-item-link" [routerLink]="getUsersRoute()" routerLinkActive="active" title="Gestión de Usuarios">
+        <div class="nav-icon-slot"><i class="fa fa-users"></i></div>
+        <span class="nav-label">Usuarios</span>
+      </a>
+    </nav>
+
+    <!-- Footer de Sidebar con Logout -->
+    <div class="sidebar-footer">
+      <a class="nav-item-link logout-item" (click)="logout()" title="Cerrar Sesión">
+        <div class="nav-icon-slot"><i class="fa fa-power-off"></i></div>
+        <span class="nav-label">Cerrar Sesión</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL DE LA PÁGINA (ROUTER-OUTLET) -->
+  <main class="app-main-content" [class.shifted]="isNavbarShown">
+    <div class="page-content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Overlay para móviles cuando el sidebar está abierto -->
+  @if (isNavbarShown) {
+    <div class="sidebar-backdrop d-md-none" (click)="closeNavbar()"></div>
+  }
+
 </div>

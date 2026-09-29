@@ -10,36 +10,38 @@ export interface IProductsList {
     current_stock?: number;
     initial_stock: number;
     supplier_id: number;
-    nutritional_information: string;
-    notes: string;
-    create_at: Date;
-    update_at: Date;
-    create_by_user_id: number;
-    last_update_by_user_id: number;
-    status_id: number;
-    supplier?: ISuplier;
-    category?: ICategory;
-    storage_location?: IStorage_location;
-    expiration_status: number;
+    category_id?: number;
+    nutritional_information?: string;
+    notes?: string;
+    create_at?: Date;
+    update_at?: Date;
+    create_by_user_id?: number;
+    last_update_by_user_id?: number;
+    status_id?: number;
+    supplier?: ISuplier | any;
+    category?: ICategory | any;
+    storage_location?: IStorage_location | any;
+    expiration_status?: number;
     expiration_date?: Date | string;
     lot_number?: string;
     lots?: ILots[];
 }
 export interface ICategory{
-    id:number;
+    id: number | string;
     name: string;
-    status_id: number;
+    description?: string;
+    status_id?: number;
 }
 export interface ISuplier{
-    id: number;
+    id: number | string;
     name: string;
-    address: string;
-    phone_number: string;
-    email: string;
+    address?: string;
+    phone_number?: string;
+    email?: string;
 }
 export interface IStorage_location{
-    id: string;
+    id: number | string;
     location: string;
-    additional_info: string;
-    status_id: number;
+    additional_info?: string;
+    status_id?: number;
 }

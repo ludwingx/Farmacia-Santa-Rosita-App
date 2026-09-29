@@ -1,60 +1,82 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UsersApiService } from '../../../../core/services/users/users-api.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IUsers } from '../../../../core/interfaces/users.interface';
-import { NgClass } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { CommonModule, NgClass } from '@angular/common';
+import { environment } from '../../../../../environments/environment';
+import { AuthService } from '../../../../core/services/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-deleted-users-list',
   standalone: true,
-  imports: [NgClass, RouterLink],
+  imports: [CommonModule, NgClass, RouterLink],
   templateUrl: './deleted-users-list.component.html',
   styleUrl: './deleted-users-list.component.scss'
 })
-export class DeletedUsersListComponent {
-  users : IUsers[] = []
-  selectedUser: IUsers | null = null;
-  constructor(private usersService: UsersApiService,
-    private router: Router,
-    ){
-      
+export class DeletedUsersListComponent implements OnInit {
+  get endpoint(): string {
+    return environment.endpoint;
   }
+
+  users: IUsers[] = [];
+  selectedUser: IUsers | null = null;
+  loading: boolean = true;
+
+  constructor(
+    private usersService: UsersApiService,
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
+
+  get isDemoMode(): boolean {
+    return this.router.url.startsWith('/demo') || this.authService.isDemoActive();
+  }
+
+  getRoute(path: string): string {
+    return this.isDemoMode ? '/demo' + path : path;
+  }
+
   ngOnInit(): void {
     this.loadUsers();
   }
 
-  loadUsers(): void{
-    this.usersService.getListUsers().subscribe(
-      (data: IUsers[]) => {
-        // Filtrar los usuarios por status_id igual a 1 o 2
-        this.users = data.filter(user => user.status_id === 2 );
+  loadUsers(): void {
+    this.loading = true;
+    this.usersService.getListUsers().subscribe({
+      next: (data: IUsers[]) => {
+        // Filtrar los usuarios inactivos
+        this.users = (data || []).filter(user => user.status_id === 2);
+        this.loading = false;
       },
-      error => {
+      error: (error) => {
         console.error('Error al cargar usuarios:', error);
-        // Manejar el error apropiadamente
+        this.loading = false;
       }
-    );
+    });
   }
+
   toggleUserStatus(user: IUsers): void {
-    const newStatusId = user.status.id === 1 ? 2 : 1; // Alternar entre estado activo (1) e inactivo (2)
-    this.usersService.deleteUser(user.id, newStatusId).subscribe(
-      () => {
-        // Actualizar la lista de usuarios o realizar cualquier otra acción necesaria
+    this.usersService.deleteUser(user.id, 1).subscribe({
+      next: () => {
+        this.toastr.success(`La cuenta de ${user.name} ha sido reactivada`, 'Usuario Restaurado');
         this.loadUsers();
-        console.log('Usuario cambiado de estado exitosamente');
       },
-      error => {
-        console.error('Error al cambiar el estado del usuario:', error);
-        // Manejar el error apropiadamente
+      error: (error) => {
+        console.error('Error al reactivar usuario:', error);
+        this.toastr.error('Error al reactivar la cuenta de usuario');
       }
-    );
+    });
   }
-  goToUserList(){
-    this.router.navigate(['users']);
+
+  goToUserList(): void {
+    this.router.navigate([this.getRoute('/users')]).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
-  openUserProfileModal(user: IUsers){
-    this.selectedUser = user; // Guarda el usuario seleccionado
-    // Verifica si verPerfilModal está definido
+
+  openUserProfileModal(user: IUsers): void {
+    this.selectedUser = user;
   }
 }

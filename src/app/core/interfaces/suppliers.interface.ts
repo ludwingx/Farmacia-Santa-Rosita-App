@@ -1,6 +1,7 @@
 export interface ISuppliers{
-    id: string;
+    id: number | string;
     name: string;
-    address: string;
-    phone_number: string;
+    address?: string;
+    phone_number?: string;
+    email?: string;
 }

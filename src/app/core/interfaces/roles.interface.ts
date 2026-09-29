@@ -1,4 +1,4 @@
-export interface IRoles{
-    id: string;
+export interface IRoles {
+    id: number | string;
     name: string;
 }

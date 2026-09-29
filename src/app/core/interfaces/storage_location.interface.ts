@@ -1,5 +1,6 @@
 export interface IStorage_location{
-    id: string; 
+    id: number | string; 
     location: string;
-    additional_info: string;
+    additional_info?: string;
+    status_id?: number;
 }

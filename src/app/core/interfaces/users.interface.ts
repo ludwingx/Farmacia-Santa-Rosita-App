@@ -6,12 +6,13 @@ export interface IUsers{
     email: string,
     password: string;
     image: string;
-    status_id : number;
-    status: {
+    status_id?: number;
+    role_id?: number;
+    status?: {
         id: number;
         name: string;
     };
-    role: Roles;
+    role?: Roles;
 
 }
 export interface Roles{

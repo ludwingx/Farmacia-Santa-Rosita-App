@@ -1,132 +1,188 @@
-<div class="container">
-  <div class="row align-items-center mb-3">
+<div class="container-fluid">
+  <div class="row align-items-center mb-3 g-2">
     <div class="col-md-4">
-      <h4 class="titleProduct mb-0">Listado de medicamentos</h4>
+      <h4 class="titleProduct mb-0 text-dark fw-bold">
+        <i class="fa fa-pills text-brand-green me-1"></i> Listado de Medicamentos
+      </h4>
     </div>
     <div class="col-md-5">
-      <div class="input-group">
-        <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-        <input type="search" class="form-control border-start-0" placeholder="Buscar medicamento o código..." [(ngModel)]="searchTerm" (input)="applyFilter()">
+      <div class="input-group shadow-sm rounded-3">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa fa-search"></i></span>
+        <input 
+          type="search" 
+          class="form-control border-start-0" 
+          placeholder="Buscar medicamento, código o descripción..." 
+          [(ngModel)]="searchTerm" 
+          (input)="applyFilter()">
       </div>
     </div>
     <div class="col-md-3 text-end">
-      <button class="btn btn-outline-danger" (click)="exportPDF()" title="Descargar lista en PDF">
-        <i class="fa-solid fa-file-pdf me-1"></i> Exportar PDF
+      <button class="btn btn-outline-danger fw-semibold btn-sm py-2 px-3 rounded-3" (click)="exportPDF()" title="Descargar inventario en PDF">
+        <i class="fa fa-file-pdf me-1"></i> Exportar PDF
       </button>
     </div>
   </div>
 
-  <div class="container">
-    <div class="row bg-light py-2 rounded mb-2">
-      <div class="col-1 fw-bold">ID</div>
-      <div class="col fw-bold">IMAGEN</div>
-      <div class="col fw-bold">NOMBRE</div>
-      <div class="col fw-bold">PRECIO VENTA</div>
-      <div class="col fw-bold">STOCK TOTAL</div>
-      <div class="col d-grid gap-1 d-md-flex justify-content-md-end fw-bold">ACCIONES</div>
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-3">
+    <div class="row bg-light py-2 px-3 border-bottom text-muted small fw-bold d-none d-md-flex">
+      <div class="col-1">ID</div>
+      <div class="col-2">IMAGEN</div>
+      <div class="col-3">MEDICAMENTO</div>
+      <div class="col-2">PRECIO VENTA</div>
+      <div class="col-2 text-center">STOCK TOTAL</div>
+      <div class="col-2 text-end">ACCIONES</div>
     </div>
   </div>
+
   @for (product of filteredProducts; track product.id) {
-  <div class="accordion accordion-flush mb-2 shadow-sm rounded" id="accordionFlushExample" >
+  <div class="accordion accordion-flush mb-2 shadow-sm rounded-4 overflow-hidden border" id="accordionFlushExample">
     <div class="accordion-item" [ngStyle]="getQuantityBackgroundStyle(calculateTotalQuantity(product.lots!))">
-      <div class="accordion-header row">
-        <div class="col">
-          <div class="row d-flex align-items-center justify-content-center">
-            <div class="col-1">
-              {{ formatProductId(product.id) }}
+      <div class="accordion-header p-3 row g-2 align-items-center m-0">
+        <div class="col-md-10 col-9">
+          <div class="row align-items-center g-2">
+            <div class="col-md-1 col-12 fw-bold text-muted small">
+              #{{ formatProductId(product.id) }}
             </div>
-            <div class="col ms-4 ">
-              <img src="{{ product.image }}" class="imgProduct" alt="">
+            <div class="col-md-2 col-3">
+              <div class="product-thumb-frame">
+                <img 
+                  [src]="product.image || 'assets/img/logo.png'" 
+                  (error)="$any($event.target).src = 'assets/img/logo.png'"
+                  class="imgProduct rounded-3" 
+                  alt="{{ product.name }}">
+              </div>
             </div>
-            <div class="col">
-              {{ product.name }}
+            <div class="col-md-4 col-9">
+              <span class="fw-bold text-dark d-block">{{ product.name }}</span>
+              <small class="text-muted">{{ product.product_code || 'Sin código' }}</small>
             </div>
-            <div class="col">
-              {{product.selling_price | currency : 'Bs.' }}
+            <div class="col-md-2 col-6">
+              <span class="fw-bold text-success fs-6">
+                {{ product.selling_price | currency : 'Bs. ' }}
+              </span>
             </div>
-            <div class="col"  >
-              <span class="textLotsTotalQuantity"
-                [ngClass]="getQuantityColorClass(calculateTotalQuantity(product.lots!))">({{
-                calculateTotalQuantity(product.lots!) }})</span>
+            <div class="col-md-3 col-6 text-md-center">
+              <span class="badge px-3 py-2 rounded-pill fw-bold"
+                [ngClass]="calculateTotalQuantity(product.lots!) > 15 ? 'bg-success' : (calculateTotalQuantity(product.lots!) > 5 ? 'bg-warning text-dark' : 'bg-danger')">
+                <i class="fa fa-cubes me-1"></i> {{ calculateTotalQuantity(product.lots!) }} unidades
+              </span>
             </div>
           </div>
         </div>
-        <div class="col-2 d-grid gap-1 d-md-flex justify-content-md-end align-items-center">
-          <div class="row btnsOptionsProduct">
-            <div class="col">
-              <!-- Botón de editar -->
-              <button class="btn btn-primary btn-sm btnEditProduct m-1" (click)="editProduct(product)" title="Editar Medicamento"><i class="fa-solid fa-pen"></i></button>
-            </div>
-            <div class="col">
-              <!-- Botón de eliminar -->
-              <button class="btn btn-danger btn-sm btnDeleteProduct m-1" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" (click)="openDeleteConfirmationModal(product)" title="Eliminar Medicamento"><i class="fa-solid fa-trash"></i></button>
-            </div>
-            <div class="col">
-              <!-- Botón del acordeón -->
-              <button class="accordion-button collapsed m-1" type="button"  [attr.data-bs-toggle]="'collapse'"
-                [attr.data-bs-target]="'#flush-collapse-' + product.id" aria-expanded="false"
-                [attr.aria-controls]="'flush-collapse' + '{{ product.id }}'">
-              </button>
-            </div>
+        <div class="col-md-2 col-3 text-end">
+          <div class="d-inline-flex align-items-center gap-1">
+            <!-- Botón de editar -->
+            <button 
+              type="button"
+              class="btn btn-outline-primary btn-sm rounded-3 p-2" 
+              (click)="editProduct(product)" 
+              title="Editar Medicamento">
+              <i class="fa fa-pencil"></i>
+            </button>
+
+            <!-- Botón de eliminar -->
+            <button 
+              type="button"
+              class="btn btn-outline-danger btn-sm rounded-3 p-2" 
+              data-bs-toggle="modal" 
+              data-bs-target="#deleteConfirmationModal" 
+              (click)="openDeleteConfirmationModal(product)" 
+              title="Eliminar Medicamento">
+              <i class="fa fa-trash"></i>
+            </button>
+
+            <!-- Botón del acordeón -->
+            <button 
+              class="accordion-button collapsed p-2 w-auto bg-transparent shadow-none" 
+              type="button"  
+              [attr.data-bs-toggle]="'collapse'"
+              [attr.data-bs-target]="'#flush-collapse-' + product.id" 
+              aria-expanded="false"
+              [attr.aria-controls]="'flush-collapse' + product.id"
+              title="Ver lotes">
+            </button>
           </div>
         </div>
       </div>
       <div id="flush-collapse-{{ product.id }}" class="accordion-collapse collapse"
         data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">
+        <div class="accordion-body bg-light border-top p-4">
           @if (product.lots && product.lots.length > 0) {
-          <ol class="list-group list-group-numbered">
-            <h5 class="fw-bold"><i class="fa-solid fa-box"></i> Lotes:</h5>
-            
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold text-dark mb-0">
+              <i class="fa fa-list-alt text-brand-green me-1"></i> Trazabilidad de Lotes Registrados:
+            </h6>
+            <a class="btn btn-sm btn-outline-success rounded-3 fw-bold" [routerLink]="getRoute('/purchases')">
+              <i class="fa fa-plus me-1"></i> Ingresar Nuevo Lote (Compras)
+            </a>
+          </div>
+          
+          <div class="list-group">
             @for (lot of product.lots; track lot.id) {
-            <li class="list-group-item d-flex justify-content-between align-items-start" [ngStyle]="getExpirationBackgroundStyle(lot.expiration_date)">
-              <div class="ms-2 me-auto">
-                <div class="fw-bold" > Lote: {{ lot.id }} - Cantidad: <span [ngClass]="getQuantityClass(lot.quantity, lot.initial_quantity)">{{ lot.quantity }}/{{lot.initial_quantity}}</span>
+            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center rounded-3 mb-2 shadow-sm border"
+              [ngStyle]="getExpirationBackgroundStyle(lot.expiration_date)">
+              <div>
+                <div class="fw-bold text-dark">
+                  <i class="fa fa-tag me-1 text-muted"></i> Lote: <span class="badge bg-white text-dark border">{{ lot.lot_number || lot.id }}</span>
+                  <span class="ms-3">Cantidad: <strong [ngClass]="getQuantityClass(lot.quantity, lot.initial_quantity)">{{ lot.quantity }}/{{lot.initial_quantity}} uds.</strong></span>
                 </div>
-                <div  > Fecha de vencimiento:<span  [ngClass]="isExpirationNear(lot.expiration_date)">{{ lot.expiration_date }}</span> </div>
+                <div class="small text-muted mt-1">
+                  <i class="fa fa-calendar me-1"></i> Vencimiento: <strong [ngClass]="isExpirationNear(lot.expiration_date)">{{ lot.expiration_date }}</strong>
+                </div>
               </div>
              
               <!-- Botón de eliminar lote -->
-              <button class="btn btn-outline-danger btn-sm m-2" (click)="deleteLot(lot.id)" title="Eliminar este lote"><i class="fa-solid fa-trash"></i></button>
-            </li>
+              <button 
+                type="button"
+                class="btn btn-outline-danger btn-sm rounded-circle p-2" 
+                (click)="deleteLot(lot.id)" 
+                title="Eliminar este lote">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
             }
-            <a class="btn btn-outline-success btnAddLot m-2" routerLink="/purchases"> <i class="fa-solid fa-plus"></i><span class="fw-bold"> Ingresar Nuevo Lote (Compras)</span></a>
-          </ol>
-          }
-          @else {
-          <!-- Botón para agregar lotes cuando no hay lotes disponibles -->
-          <p class="text-danger fw-bold">¡No hay lotes disponibles para este medicamento!</p>
-          <a class="btn btn-success" routerLink="/purchases"> <i class="fa-solid fa-plus"></i> Ingresar Lote en Compras</a>
+          </div>
+          } @else {
+          <div class="p-3 text-center bg-white rounded-3 border">
+            <p class="text-danger fw-bold mb-2">
+              <i class="fa fa-exclamation-triangle me-1"></i> ¡No hay lotes disponibles para este medicamento!
+            </p>
+            <a class="btn btn-success btn-sm rounded-3 fw-bold" [routerLink]="getRoute('/purchases')">
+              <i class="fa fa-plus me-1"></i> Ingresar Lote en Compras a Proveedores
+            </a>
+          </div>
           }
         </div>
-
       </div>
-
     </div>
-
   </div>
-  <hr>
+  }
+  @if (filteredProducts.length === 0) {
+    <div class="card border-0 shadow-sm rounded-4 p-5 text-center text-muted">
+      <i class="fa fa-medkit fa-3x mb-3 text-muted opacity-50"></i>
+      <h5 class="fw-bold">No se encontraron medicamentos</h5>
+      <p class="small mb-0">Verifica el término de búsqueda o agrega un nuevo medicamento al inventario.</p>
+    </div>
   }
 </div>
 
-<br>
-<br>
-
-<!-- Modal de confirmación -->
+<!-- Modal de confirmación de eliminación -->
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel"
   aria-hidden="true" #deleteConfirmationModal>
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteConfirmationModalLabel">Eliminar Producto</h5>
-        <button type="button" class="btn-close" (click)="closeDeleteConfirmationModal()" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title fw-bold" id="deleteConfirmationModalLabel">
+          <i class="fa fa-exclamation-circle me-1"></i> Confirmar Eliminación
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeDeleteConfirmationModal()" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        ¿Estás seguro de que deseas eliminar permanentemente "{{ productToDelete?.name }}"?
+      <div class="modal-body p-4">
+        ¿Estás seguro de que deseas eliminar permanentemente el medicamento <strong class="text-dark">"{{ productToDelete?.name }}"</strong>? Esta acción no se puede deshacer.
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeDeleteConfirmationModal()" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-danger" (click)="confirmDelete()">Eliminar</button>
+      <div class="modal-footer bg-light border-0">
+        <button type="button" class="btn btn-outline-secondary rounded-3" (click)="closeDeleteConfirmationModal()" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger rounded-3 fw-bold" (click)="confirmDelete()">Sí, Eliminar</button>
       </div>
     </div>
   </div>

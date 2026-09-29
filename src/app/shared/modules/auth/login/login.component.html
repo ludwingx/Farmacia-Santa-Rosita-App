@@ -1,55 +1,232 @@
-<div class="container mt-5">
-    <div class="window">
-        <div class="row">
-            <!-- Columna para la imagen -->
-            <div class="col-md-6 d-flex justify-content-center align-items-center">
-                <img class="img-fluid" src="https://elglobal.es/wp-content/uploads/2020/02/GettyImages-1096306446-2048x1365.jpg" alt="">
-            </div>
-            <div class="col-md-6">
-               <div class="logo text-center">
-                <div class="row nav_logo_texts">
-                    <div class="col-12">
-                        <span class="nav_logo-name" style="position: relative; top: 15px;">Farmacia  </span> 
-                        
-                    </div>
-                    <div class="col-12">
-                        <span class="nav_logo-name">Santa</span>
-                        <span class="nav_logo-name"  style="color: #dd2b66;">Rosita</span>
-                        <span class="nav_logo-name"  style="color: #dd2b66; font-size: 1rem; position: relative; top: -5px; left: 5px;">App</span>
-                    </div>
+<div class="login-wrapper">
+  <!-- Acceso Rapido Superior Ver Demo -->
+  <div class="top-demo-nav">
+    <button type="button" class="btn-top-demo-pill" (click)="enterDemoMode()" title="Entrar directamente a la Demo">
+      <span class="pulse-dot"></span>
+      <i class="fa fa-play-circle text-success me-1"></i>
+      <span>Ver Demo</span>
+      <span class="badge bg-white text-dark border ms-1 fw-bold">/demo</span>
+    </button>
+  </div>
 
-                </div>
-               </div>
-                <div class="formLogin">
-                    <h3 class="text-center" style="padding-top: 20px;">Iniciar Sesión</h3>
-                    <form [formGroup]="form" (ngSubmit)="login()" autocomplete="off">
-                        <div class="mb-3">
-                            <label for="username" class="form-label"><i class="fa fa-user"></i> Nombre de Usuario:</label>
-                            <input type="username" name="username" class="form-control input" id="username"
-                            formControlName="username" autocomplete="off" placeholder="Escriba su nombre de usuario">
-                            @if(form.get('username')?.hasError('required')&&form.get('username')?.touched){
-                                <div class="form-error">
-                                    <span class="text-danger">username es requerido*</span>
-                                </div>
-                            }
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label"><i class="fa fa-lock"></i> Contraseña:</label>
-                            <input type="password" name="password" class="form-control input" id="password"
-                             formControlName="password" placeholder="Escriba su contraseña">
-                            @if(form.get('password')?.hasError('required')&&form.get('password')?.touched){
-                                <div class="form-error">
-                                    <span class="text-danger">Contraseña es requerida*</span>
-                                </div>
-                            }
-                        
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary w-100 mt-3 btnLogin">Iniciar Sesión</button>
-                        </div>
-                    </form>
-                </div>
+  <!-- Elementos decorativos de fondo con iluminacion ambiental -->
+  <div class="ambient-glow glow-top-left"></div>
+  <div class="ambient-glow glow-bottom-right"></div>
+
+  <div class="login-card-container">
+    <div class="row g-0 login-card">
+      
+      <!-- Columna Izquierda: Banner Visual Institucional Farmaceutico -->
+      <div class="col-lg-5 col-md-5 d-none d-md-flex showcase-col">
+        <div class="showcase-content">
+          <!-- Logo Oficial con Sello Farmaceutico -->
+          <div class="brand-badge-container">
+            <div class="brand-badge-frame">
+              <img src="assets/img/logo.png" alt="Farmacia Santa Rosita" class="banner-logo">
             </div>
+          </div>
+          
+          <div class="showcase-text">
+            <span class="badge-system">SISTEMA INTEGRAL DE GESTIÓN</span>
+            <h2 class="showcase-title">
+              Farmacia Santa <span class="highlight-rosita">Rosita</span>
+            </h2>
+            <p class="showcase-tagline">
+              Plataforma para el control inteligente de medicamentos, ventas ágiles y compras.
+            </p>
+          </div>
+
+          <!-- Puntos Clave del Sistema -->
+          <div class="showcase-features">
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fa fa-medkit"></i></div>
+              <div class="feature-text">
+                <span class="feature-title">Medicamentos y Lotes</span>
+                <span class="feature-desc">Control de stock, caducidades y alertas</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fa fa-shopping-cart"></i></div>
+              <div class="feature-text">
+                <span class="feature-title">Punto de Venta Ágil</span>
+                <span class="feature-desc">Facturación rápida y cobro eficiente</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fa fa-bar-chart"></i></div>
+              <div class="feature-text">
+                <span class="feature-title">Reportes en Tiempo Real</span>
+                <span class="feature-desc">Análisis de ingresos, compras y rotación</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pie del Banner con Boton Ver Demo y Sello -->
+          <div class="showcase-footer d-flex flex-column gap-2">
+            <button type="button" class="btn-showcase-demo" (click)="enterDemoMode()">
+              <i class="fa fa-eye me-2"></i> Ver Demo en Vivo (/demo)
+            </button>
+            <span class="security-badge text-center">
+              <i class="fa fa-shield"></i> Acceso Seguro • Versión 2.0
+            </span>
+          </div>
         </div>
+      </div>
+
+      <!-- Columna Derecha: Formulario de Autenticacion y Acceso -->
+      <div class="col-lg-7 col-md-7 col-12 form-col">
+        <div class="form-wrapper">
+          
+          <!-- Encabezado con Logo y Titulo -->
+          <div class="form-header">
+            <div class="mobile-logo-wrap d-md-none text-center mb-3">
+              <img src="assets/img/logo.png" alt="Farmacia Santa Rosita" class="mobile-logo-img">
+            </div>
+
+            <div class="brand-heading-row">
+              <span class="brand-tag">FARMACIA SANTA <span class="text-rosita-accent">ROSITA</span></span>
+              <span class="badge-app-pill">APP</span>
+            </div>
+            <h1 class="login-title">Iniciar Sesión</h1>
+            <p class="login-subtitle">Ingresa tus credenciales autorizadas para acceder al sistema</p>
+
+            <!-- Tarjeta Destacada de Invitacion a Ver Demo -->
+            <div class="demo-invitation-card mb-3" (click)="enterDemoMode()" role="button" tabindex="0">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="demo-card-icon">
+                    <i class="fa fa-flask"></i>
+                  </div>
+                  <div>
+                    <div class="demo-card-title">¿Solo quieres ver el sistema?</div>
+                    <div class="demo-card-sub">Explora la versión interactiva sin registrarte</div>
+                  </div>
+                </div>
+                <button type="button" class="btn-demo-action" (click)="enterDemoMode(); $event.stopPropagation()">
+                  <i class="fa fa-arrow-right me-1"></i> Ver Demo
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulario Reactivo -->
+          <form [formGroup]="form" (ngSubmit)="login()" autocomplete="off" class="auth-form">
+            
+            <!-- Campo Usuario -->
+            <div class="form-group mb-3">
+              <label for="username" class="form-label">
+                <i class="fa fa-user me-1 text-primary-brand"></i> Nombre de Usuario
+              </label>
+              <div class="input-container" [class.input-invalid]="form.get('username')?.invalid && form.get('username')?.touched">
+                <span class="input-icon-slot">
+                  <i class="fa fa-user"></i>
+                </span>
+                <input 
+                  type="text" 
+                  id="username" 
+                  name="username" 
+                  class="custom-form-input" 
+                  formControlName="username" 
+                  placeholder="Escribe tu usuario"
+                  autocomplete="username">
+              </div>
+              @if(form.get('username')?.hasError('required') && form.get('username')?.touched) {
+                <div class="field-error-alert">
+                  <i class="fa fa-exclamation-circle me-1"></i> El nombre de usuario es requerido*
+                </div>
+              }
+            </div>
+
+            <!-- Campo Contrasena -->
+            <div class="form-group mb-3">
+              <label for="password" class="form-label">
+                <i class="fa fa-lock me-1 text-primary-brand"></i> Contraseña
+              </label>
+              <div class="input-container" [class.input-invalid]="form.get('password')?.invalid && form.get('password')?.touched">
+                <span class="input-icon-slot">
+                  <i class="fa fa-lock"></i>
+                </span>
+                <input 
+                  [type]="hidePassword ? 'password' : 'text'" 
+                  id="password" 
+                  name="password" 
+                  class="custom-form-input" 
+                  formControlName="password" 
+                  placeholder="Escribe tu contraseña"
+                  autocomplete="current-password">
+                <button 
+                  type="button" 
+                  class="btn-toggle-pw" 
+                  (click)="togglePassword()" 
+                  [title]="hidePassword ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+                  tabindex="-1">
+                  <i class="fa" [ngClass]="hidePassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                </button>
+              </div>
+              @if(form.get('password')?.hasError('required') && form.get('password')?.touched) {
+                <div class="field-error-alert">
+                  <i class="fa fa-exclamation-circle me-1"></i> La contraseña es requerida*
+                </div>
+              }
+            </div>
+
+            <!-- Mensaje de Error de Autenticacion / Conexion -->
+            @if (errorMessage) {
+              <div class="alert-box-modern mb-3" role="alert">
+                <i class="fa fa-info-circle alert-icon"></i>
+                <div class="alert-message">
+                  <span>{{ errorMessage }}</span>
+                </div>
+              </div>
+            }
+
+            <!-- Boton Principal de Acceso -->
+            <div class="actions-group">
+              <button 
+                type="submit" 
+                class="btn-login-primary" 
+                [disabled]="isLoading">
+                @if (isLoading) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  <span>Iniciando sesión...</span>
+                } @else {
+                  <span>Iniciar Sesión</span>
+                  <i class="fa fa-arrow-right ms-2"></i>
+                }
+              </button>
+            </div>
+
+            <!-- Separador elegante y Acceso a Modo Demo -->
+            <div class="demo-access-divider my-3 d-flex align-items-center">
+              <span class="divider-line flex-grow-1"></span>
+              <span class="divider-text px-2 text-muted small">o explora sin credenciales</span>
+              <span class="divider-line flex-grow-1"></span>
+            </div>
+
+            <button 
+              type="button" 
+              class="btn-ver-demo-full w-100" 
+              (click)="enterDemoMode()"
+              title="Explorar el sistema completo en modo demostración interactivo para portafolio">
+              <i class="fa fa-play-circle me-2 text-warning"></i>
+              <span>Ver Demo Interactiva <strong>(/demo)</strong></span>
+            </button>
+
+            <!-- Enlace para ir a Registro -->
+            <div class="switch-auth-row text-center mt-3">
+              <span class="text-muted small">¿No tienes una cuenta aún? </span>
+              <a routerLink="/register" class="link-switch-auth">Crear cuenta</a>
+            </div>
+          </form>
+
+          <!-- Pie de Pagina Institucional -->
+          <div class="login-footer-copy">
+            <span>© 2026 Farmacia Santa Rosita • Plataforma de Gestión Farmacéutica</span>
+          </div>
+
+        </div>
+      </div>
+
     </div>
+  </div>
 </div>

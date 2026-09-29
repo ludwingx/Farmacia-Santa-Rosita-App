@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
@@ -43,7 +43,15 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  get isDemoMode(): boolean {
+    return this.router.url.startsWith('/demo') || this.authService.isDemoActive();
+  }
+
+  getRoute(path: string): string {
+    return this.isDemoMode ? '/demo' + path : path;
+  }
+
   navigateTo(path: string): void {
-    this.router.navigate([path]);
+    this.router.navigate([this.getRoute(path)]);
   }
 }
