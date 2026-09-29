@@ -7,7 +7,7 @@ export interface IProductsList {
     description: string;
     purchase_price: number;
     selling_price: number;
-    current_stock: number;
+    current_stock?: number;
     initial_stock: number;
     supplier_id: number;
     nutritional_information: string;
@@ -17,10 +17,12 @@ export interface IProductsList {
     create_by_user_id: number;
     last_update_by_user_id: number;
     status_id: number;
-    supplier: ISuplier;
-    category: ICategory;
-    storage_location: IStorage_location;
+    supplier?: ISuplier;
+    category?: ICategory;
+    storage_location?: IStorage_location;
     expiration_status: number;
+    expiration_date?: Date | string;
+    lot_number?: string;
     lots?: ILots[];
 }
 export interface ICategory{

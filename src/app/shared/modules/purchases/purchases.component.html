@@ -1,1 +1,296 @@
-<p>purchases works!</p>
+﻿<div class="container-fluid p-4">
+  <!-- Header del Módulo -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h2 class="h3 mb-1 text-primary fw-bold">
+        <i class="fa fa-truck me-2"></i>Compras y Proveedores
+      </h2>
+      <p class="text-muted mb-0">Recepción de mercadería, abastecimiento y control de lotes</p>
+    </div>
+    <div class="btn-group">
+      <button 
+        type="button" 
+        class="btn btn-outline-primary" 
+        [class.active]="activeTab === 'new'"
+        (click)="activeTab = 'new'">
+        <i class="fa fa-plus-circle me-1"></i> Nueva Compra
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-outline-primary" 
+        [class.active]="activeTab === 'history'"
+        (click)="activeTab = 'history'">
+        <i class="fa fa-history me-1"></i> Historial de Compras
+      </button>
+    </div>
+  </div>
+
+  <!-- TAB 1: NUEVA COMPRA -->
+  <div *ngIf="activeTab === 'new'" class="row g-3">
+    <!-- Formulario de Cabecera y Detalle -->
+    <div class="col-lg-5">
+      <div class="card shadow-sm border-0 mb-3">
+        <div class="card-header bg-white py-3">
+          <h5 class="mb-0 fw-bold text-dark">
+            <i class="fa fa-file-invoice me-2 text-primary"></i>Datos de la Factura / Proveedor
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Proveedor / Droguería *</label>
+            <select class="form-select" [(ngModel)]="supplierId">
+              <option [ngValue]="null">-- Seleccionar Proveedor --</option>
+              <option *ngFor="let s of suppliers" [ngValue]="s.id">
+                {{ s.name }} {{ s.phone_number ? '(' + s.phone_number + ')' : '' }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Número de Factura o Remisión</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="invoiceNumber" 
+              placeholder="Ej. FAC-2026-0042" />
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label fw-semibold">Notas / Observaciones</label>
+            <textarea 
+              class="form-control" 
+              rows="2" 
+              [(ngModel)]="notes" 
+              placeholder="Detalles sobre entrega o crédito..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agregar Medicamento al Detalle -->
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-light py-3">
+          <h6 class="mb-0 fw-bold text-dark">
+            <i class="fa fa-plus me-2 text-success"></i>Agregar Medicamento Recibido
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-2">
+            <label class="form-label small text-muted mb-1">Medicamento *</label>
+            <select class="form-select form-select-sm" [(ngModel)]="selectedProductId" (change)="onProductSelect()">
+              <option [ngValue]="null">-- Seleccionar Medicamento --</option>
+              <option *ngFor="let p of products" [ngValue]="p.id">
+                {{ p.name }} (Stock actual: {{ p.current_stock || 0 }})
+              </option>
+            </select>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="form-label small text-muted mb-1">Nº de Lote</label>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="itemLot" placeholder="Ej. L-2026A" />
+            </div>
+            <div class="col-6">
+              <label class="form-label small text-muted mb-1">Vencimiento</label>
+              <input type="date" class="form-control form-control-sm" [(ngModel)]="itemExpiration" />
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label small text-muted mb-1">Cantidad Comprada</label>
+              <input type="number" min="1" class="form-control form-control-sm" [(ngModel)]="itemQuantity" />
+            </div>
+            <div class="col-6">
+              <label class="form-label small text-muted mb-1">Costo Unitario (Bs.)</label>
+              <input type="number" step="0.50" min="0" class="form-control form-control-sm" [(ngModel)]="itemPrice" />
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-outline-success btn-sm w-100 fw-bold" (click)="addItem()">
+            <i class="fa fa-plus me-1"></i> Añadir a la Lista
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna Derecha: Resumen de Ítems a Guardar -->
+    <div class="col-lg-7">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <h5 class="mb-0 fw-bold text-dark">
+            <i class="fa fa-list me-2 text-primary"></i>Detalle de la Orden de Compra
+          </h5>
+          <span class="badge bg-primary fs-6">
+            {{ items.length }} medicamento(s)
+          </span>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive" style="min-height: 250px;">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Producto</th>
+                  <th>Lote</th>
+                  <th>Vencimiento</th>
+                  <th class="text-center">Cant.</th>
+                  <th class="text-end">Costo Unit.</th>
+                  <th class="text-end">Subtotal</th>
+                  <th class="text-center">Quitar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of items; let i = index">
+                  <td class="fw-bold">{{ item.product?.name }}</td>
+                  <td><span class="badge bg-light text-dark border">{{ item.lot_number || '-' }}</span></td>
+                  <td>
+                    <span *ngIf="item.expiration_date">{{ item.expiration_date | date:'dd/MM/yyyy' }}</span>
+                    <span *ngIf="!item.expiration_date" class="text-muted">-</span>
+                  </td>
+                  <td class="text-center fw-bold">{{ item.quantity }}</td>
+                  <td class="text-end">Bs. {{ item.purchase_price | number:'1.2-2' }}</td>
+                  <td class="text-end fw-bold text-primary">Bs. {{ item.subtotal | number:'1.2-2' }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-sm btn-link text-danger p-0" (click)="removeItem(i)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="items.length === 0">
+                  <td colspan="7" class="text-center py-5 text-muted">
+                    <i class="fa fa-box-open fa-2x mb-2 d-block"></i>
+                    No ha agregado medicamentos a la orden de compra.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer bg-light py-3 d-flex justify-content-between align-items-center">
+          <div>
+            <span class="text-muted me-2">Total Compra:</span>
+            <span class="h4 mb-0 fw-bold text-primary">Bs. {{ getTotal() | number:'1.2-2' }}</span>
+          </div>
+          <button 
+            class="btn btn-primary btn-lg fw-bold shadow-sm"
+            [disabled]="items.length === 0 || !supplierId || isSubmitting"
+            (click)="savePurchase()">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!isSubmitting" class="fa fa-save me-2"></i>
+            {{ isSubmitting ? 'Guardando Compra...' : 'Confirmar e Ingresar a Stock' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: HISTORIAL DE COMPRAS -->
+  <div *ngIf="activeTab === 'history'" class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+      <h5 class="mb-0 fw-bold text-dark">Historial de Compras Realizadas</h5>
+      <button class="btn btn-sm btn-outline-secondary" (click)="loadPurchases()">
+        <i class="fa fa-sync-alt me-1"></i> Actualizar
+      </button>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Proveedor</th>
+              <th>Nº Factura</th>
+              <th>Registrado Por</th>
+              <th class="text-end">Total Compra</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of purchasesList">
+              <td class="fw-bold">#{{ p.id }}</td>
+              <td>{{ p.date | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="fw-semibold text-dark">{{ p.supplier?.name || '-' }}</td>
+              <td><span class="badge bg-light text-dark border">{{ p.invoice_number || 'S/N' }}</span></td>
+              <td>{{ p.user?.name || p.user?.username || '-' }}</td>
+              <td class="text-end fw-bold text-primary">Bs. {{ p.total_amount | number:'1.2-2' }}</td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-outline-primary" (click)="viewDetail(p)">
+                  <i class="fa fa-eye me-1"></i> Ver Detalle
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="purchasesList.length === 0">
+              <td colspan="7" class="text-center py-5 text-muted">
+                No hay compras registradas en el sistema.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DETALLE DE COMPRA -->
+  <div *ngIf="selectedPurchase" class="modal-backdrop fade show"></div>
+  <div *ngIf="selectedPurchase" class="modal d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title fw-bold">
+            <i class="fa fa-file-invoice me-2"></i>Compra #{{ selectedPurchase.id }}
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeDetailModal()"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-3 mb-3 border-bottom pb-3">
+            <div class="col-sm-4">
+              <small class="text-muted d-block">Proveedor</small>
+              <strong class="text-dark">{{ selectedPurchase.supplier?.name }}</strong>
+            </div>
+            <div class="col-sm-4">
+              <small class="text-muted d-block">Factura / Remisión</small>
+              <strong>{{ selectedPurchase.invoice_number || 'S/N' }}</strong>
+            </div>
+            <div class="col-sm-4">
+              <small class="text-muted d-block">Fecha</small>
+              <strong>{{ selectedPurchase.date | date:'dd/MM/yyyy HH:mm' }}</strong>
+            </div>
+          </div>
+
+          <h6 class="fw-bold text-dark mb-2">Medicamentos Ingresados:</h6>
+          <table class="table table-sm table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Medicamento</th>
+                <th>Lote</th>
+                <th>Vencimiento</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-end">Costo Unit.</th>
+                <th class="text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of selectedPurchase.items">
+                <td>{{ item.product?.name }}</td>
+                <td>{{ item.lot_number || '-' }}</td>
+                <td>{{ item.expiration_date ? (item.expiration_date | date:'dd/MM/yyyy') : '-' }}</td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-end">Bs. {{ item.purchase_price | number:'1.2-2' }}</td>
+                <td class="text-end fw-bold">Bs. {{ item.subtotal | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="text-end mt-3">
+            <span class="h5 fw-bold text-primary">
+              Total Compra: Bs. {{ selectedPurchase.total_amount | number:'1.2-2' }}
+            </span>
+          </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" (click)="closeDetailModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

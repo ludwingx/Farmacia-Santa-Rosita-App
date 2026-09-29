@@ -3,12 +3,11 @@
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item"><a type="button" class="breadcrumb-link" (click)="goToUserList()">Usuarios</a>
-            </li> 
-            <li class="breadcrumb-item">Usuarios Eliminados</li>
-          </ol>
-      </nav>
+            <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/users">Usuarios</a></li> 
+            <li class="breadcrumb-item active" aria-current="page">Usuarios Eliminados</li>
+        </ol>
+    </nav>
     <div class="row">
         <div class="col -12">
             <h3 class="titleInventory">
@@ -44,7 +43,7 @@
                         <td> <button class="btn btn-{{ user.status.id === 1 ? 'success' : 'danger' }}" (click)="toggleUserStatus(user)">
                           {{ user.status.id === 1 ? 'Activo' : 'Inactivo' }}
                         </button></td>
-                        <td><Button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#verPerfilModal" (click)="openUserProfileModal(user)"><i class="fa-solid fa-eye"></i> Ver</Button></td>
+                        <td><button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#verPerfilModal" (click)="openUserProfileModal(user)"><i class="fa-solid fa-eye"></i> Ver</button></td>
                       </tr>
                 }
             </tbody>

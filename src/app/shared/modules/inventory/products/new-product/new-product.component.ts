@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProductsApiService } from '../../../../../core/services/products/products-api.service';
 import { CategoriesService } from '../../../../../core/services/categories/categories.service';
 import { SuppliersService } from '../../../../../core/services/suppliers/suppliers.service';
@@ -15,7 +15,7 @@ import { AuthService } from '../../../../../core/services/auth/auth.service';
 @Component({
   selector: 'app-new-product',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './new-product.component.html',
   styleUrl: './new-product.component.scss'
 })
@@ -43,15 +43,15 @@ export class NewProductComponent {
       image: [''],
       name: ['', Validators.required],
       product_code: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [''],
       price: ['', Validators.required],
       initial_stock: ['', Validators.required],
-      expiration_date: ['', Validators.required],
+      expiration_date: [''],
       supplier_id: ['', Validators.required],
-      lot_number: ['', Validators.required],
+      lot_number: [''],
       storage_location_id: ['', Validators.required],
-      nutritional_information: ['', Validators.required],
-      notes: ['', Validators.required],
+      nutritional_information: [''],
+      notes: [''],
       category_id: ['', Validators.required],
       current_stock: [''],
       created_at: [new Date()],
@@ -122,26 +122,27 @@ export class NewProductComponent {
   create() {
     console.log('create() ejecutado');
     if (this.form && this.form.valid) {
-      const initialStockValue = this.form.get('initial_stock')?.value; // Agrega '?' para evitar errores de acceso a propiedad de null
-      
-      if (initialStockValue !== null && initialStockValue !== undefined) {
-        // Asigna el valor de initial_stock a current_stock
-        this.form.patchValue({
-          current_stock: initialStockValue
-        });
-        
-        // Guarda el producto con los valores actualizados
-        this.productService.saveProduct(this.form.value).subscribe({
-          next: () => {
-            this.router.navigate(['inventory']);
-          },
-          error: (error) => {
-            console.error('Error al crear el producto:', error);
-          }
-        });
-      } else {
-        console.error('Valor de initial_stock es null o undefined');
+      const formVal = { ...this.form.value };
+      const initialStockValue = Number(formVal.initial_stock) || 0;
+      formVal.initial_stock = initialStockValue;
+      formVal.current_stock = initialStockValue;
+      formVal.selling_price = Number(formVal.price) || 0;
+      formVal.purchase_price = (formVal.selling_price * 0.7).toFixed(2);
+      if (this.userId) {
+        formVal.user_id = this.userId;
+        formVal.create_by_user_id = this.userId;
       }
+
+      this.productService.saveProduct(formVal).subscribe({
+        next: () => {
+          this.router.navigate(['inventory']);
+        },
+        error: (error) => {
+          console.error('Error al crear el producto:', error);
+        }
+      });
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 }

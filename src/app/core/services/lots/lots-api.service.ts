@@ -17,35 +17,23 @@ export class LotsApiService {
     this.myApiUrl = '/api/lots/';
   }
     getListLots(): Observable<ILots[]> {
-     return this.http.get<ILots[]>(`${this.myAppUrl}${this.myApiUrl}`);
+      return this.http.get<ILots[]>(`${this.myAppUrl}${this.myApiUrl}`);
     }
-    updateUser(id: number, user: ILots): Observable<void> {
-      return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}`, user);
-      
+
+    getLot(id: number): Observable<ILots> {
+      return this.http.get<ILots>(`${this.myAppUrl}${this.myApiUrl}${id}`);
     }
-    uploadImage(id: number, imageData: FormData): Observable<any> {
-      const uploadUrl = `${this.myAppUrl}${this.myApiUrl}${id}/profile-image`; // Usar la ruta correspondiente
-      return this.http.post(uploadUrl, imageData).pipe(
-        catchError((error) => {
-          console.error('Error al subir la imagen:', error);
-          return throwError(() => error);
-        })
-      );
+
+    saveLot(lot: Partial<ILots>): Observable<any> {
+      return this.http.post<any>(`${this.myAppUrl}${this.myApiUrl}`, lot);
     }
-    updateUserImage(userId: number,  user: ILots, imageFile: File): Observable<any> {
-      const formData = new FormData();
-      formData.append('data', JSON.stringify(user)); // Datos del usuario en formato JSON
-  
-      if (imageFile) {
-        formData.append('image', imageFile); // Agregar imagen al FormData si está presente
-      }
-      return this.http.put<any>(`${this.myApiUrl}/uploads/profile${userId}`, formData).pipe(
-        catchError((error) => {
-          console.error('Error al actualizar la imagen del usuario:', error);
-          return throwError(() => error);
-        })
-      )
-       
+
+    updateLot(id: number, lot: Partial<ILots>): Observable<void> {
+      return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}`, lot);
+    }
+
+    deleteLot(id: number): Observable<void> {
+      return this.http.delete<void>(`${this.myAppUrl}${this.myApiUrl}${id}`);
     }
 
 }

@@ -1,6 +1,6 @@
 import { Component, Inject} from '@angular/core';
 import { DOCUMENT, NgClass } from '@angular/common';
-import {  NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import {  NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UsersApiService } from '../../../core/services/users/users-api.service';
@@ -11,7 +11,7 @@ import { LoadingComponent } from '../loading/loading.component';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [NgClass, RouterLink, RouterOutlet, LoadingComponent],
+  imports: [NgClass, RouterLink, RouterLinkActive, RouterOutlet, LoadingComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })

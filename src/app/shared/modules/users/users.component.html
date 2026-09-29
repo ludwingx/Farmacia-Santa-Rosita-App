@@ -3,7 +3,7 @@
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a class="breadcrumb-link" href="dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/dashboard">Dashboard</a></li>
           <li class="breadcrumb-item"><a>Usuarios</a></li>
 
         </ol>
@@ -43,11 +43,11 @@
                         <td>{{ user.id }}</td>   
                         <td>{{ user.username }}</td>               
                         <td>{{ user.name }}</td>
-                        <td>{{ user.role.name}}</td>
-                        <td> <button class="btn btn-{{ user.status.id === 1 ? 'success' : 'danger' }}" (click)="toggleUserStatus(user)">
-                          {{ user.status.id === 1 ? 'Activo' : 'Inactivo' }}
+                        <td>{{ user.role.name }}</td>
+                        <td> <button class="btn btn-{{ (user.status.id === 1) ? 'success' : 'danger' }}" (click)="toggleUserStatus(user)">
+                          {{ (user.status.id === 1) ? 'Activo' : 'Inactivo' }}
                         </button></td>
-                        <td><Button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#verPerfilModal" (click)="openUserProfileModal(user)"><i class="fa-solid fa-eye"></i> Ver</Button></td>
+                        <td><button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#verPerfilModal" (click)="openUserProfileModal(user)"><i class="fa-solid fa-eye"></i> Ver</button></td>
                         <td> 
                           <button class="btn  btn-primary btn-sm me-3" (click)="editUser(user)"  type="button">
                             <i class="fa-solid fa-pen"></i> Editar 

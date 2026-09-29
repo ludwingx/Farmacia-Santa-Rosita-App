@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild  } from '@angular/core';
 import { UsersApiService } from '../../../core/services/users/users-api.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IUsers } from '../../../core/interfaces/users.interface';
 import { NgClass } from '@angular/common';
 import jsPDF from 'jspdf';
@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, RouterLink],
   templateUrl:'./users.component.html',
   styleUrl: './users.component.scss'
 })

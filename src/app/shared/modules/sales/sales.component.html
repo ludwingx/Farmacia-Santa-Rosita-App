@@ -1,79 +1,375 @@
-<div>
-    <h2>Gestión de Ventas</h2>
-  
-    <!-- Botón para abrir el formulario de añadir venta -->
-    <button></button>
-  
-    <!-- Formulario de añadir venta -->
-    <div >
-      <form>
-        <label for="customerId">Cliente:</label>
-        <select id="customerId" formControlName="customerId">
-          <option></option> 
-        </select>
-  
-        <label for="date">Fecha:</label>
-        <input id="date" type="date" formControlName="date">
-  
-        <div formArrayName="items">
-          <div>
-            <label for="productId">Producto:</label>
-            <input id="productId" type="text" formControlName="productId">
-  
-            <label for="quantity">Cantidad:</label>
-            <input id="quantity" type="number" formControlName="quantity">
-  
-            <label for="price">Precio:</label>
-            <input id="price" type="number" formControlName="price">
-  
-            <button type="button" >Eliminar</button>
-          </div>
-        </div>
-        <button type="button">Añadir Producto</button>
-  
-        <button type="submit">Guardar Venta</button>
-      </form>
-    </div>
-  
-    <!-- Lista de ventas -->
+﻿<div class="container-fluid p-4">
+  <!-- Header de Módulo -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-      <h3>Lista de Ventas</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Fecha</th>
-            <th>Monto Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr >
-            <td>x</td>
-            <td></td>
-            <td>x</td>
-            <td>x</td>
-          </tr>
-        </tbody>
-      </table>
+      <h2 class="h3 mb-1 text-primary fw-bold">
+        <i class="fa fa-shopping-basket me-2"></i>Punto de Venta (POS)
+      </h2>
+      <p class="text-muted mb-0">Gestión de mostrador, cobros rápidos e historial de ventas</p>
     </div>
-  
-    <!-- Inventario actualizado -->
-    <div>
-      <h3>Inventario Actualizado</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr >
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="btn-group">
+      <button 
+        type="button" 
+        class="btn btn-outline-primary" 
+        [class.active]="activeTab === 'pos'"
+        (click)="activeTab = 'pos'">
+        <i class="fa fa-desktop me-1"></i> Mostrador
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-outline-primary" 
+        [class.active]="activeTab === 'history'"
+        (click)="activeTab = 'history'">
+        <i class="fa fa-list-alt me-1"></i> Historial de Ventas
+      </button>
     </div>
   </div>
+
+  <!-- TAB 1: MOSTRADOR / POS -->
+  <div *ngIf="activeTab === 'pos'" class="row g-3">
+    <!-- Columna Izquierda: Catálogo y Búsqueda -->
+    <div class="col-lg-7">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header bg-white py-3">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="fa fa-search text-muted"></i>
+            </span>
+            <input 
+              type="text" 
+              class="form-control border-start-0 bg-light" 
+              placeholder="Buscar medicamento por nombre, código o descripción..."
+              [(ngModel)]="searchTerm" 
+              (input)="filterProducts()" />
+            <button class="btn btn-outline-secondary" type="button" (click)="searchTerm = ''; filterProducts()">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light sticky-top">
+                <tr>
+                  <th>Código</th>
+                  <th>Medicamento</th>
+                  <th class="text-center">Stock</th>
+                  <th class="text-end">Precio</th>
+                  <th class="text-center">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of filteredProducts">
+                  <td class="fw-semibold text-muted small">{{ p.product_code || '-' }}</td>
+                  <td>
+                    <div class="fw-bold text-dark">{{ p.name }}</div>
+                    <small class="text-muted d-block text-truncate" style="max-width: 250px;">
+                      {{ p.description || 'Sin descripción' }}
+                    </small>
+                  </td>
+                  <td class="text-center">
+                    <span 
+                      class="badge" 
+                      [ngClass]="{
+                        'bg-danger': (p.current_stock || 0) <= 0,
+                        'bg-warning text-dark': (p.current_stock || 0) > 0 && (p.current_stock || 0) <= 10,
+                        'bg-success': (p.current_stock || 0) > 10
+                      }">
+                      {{ p.current_stock ?? 0 }} uds.
+                    </span>
+                  </td>
+                  <td class="text-end fw-bold text-primary">
+                    Bs. {{ p.selling_price | number:'1.2-2' }}
+                  </td>
+                  <td class="text-center">
+                    <button 
+                      class="btn btn-sm btn-primary rounded-pill px-3"
+                      [disabled]="(p.current_stock || 0) <= 0"
+                      (click)="addToCart(p)">
+                      <i class="fa fa-cart-plus me-1"></i> Añadir
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredProducts.length === 0">
+                  <td colspan="5" class="text-center py-5 text-muted">
+                    <i class="fa fa-box-open fa-2x mb-2 d-block"></i>
+                    No se encontraron medicamentos disponibles
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna Derecha: Carrito y Cobro -->
+    <div class="col-lg-5">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+          <h5 class="mb-0 fw-bold">
+            <i class="fa fa-cash-register me-2"></i>Ticket de Venta
+          </h5>
+          <button 
+            class="btn btn-sm btn-outline-light" 
+            [disabled]="cart.length === 0" 
+            (click)="clearCart()">
+            <i class="fa fa-trash me-1"></i> Vaciar
+          </button>
+        </div>
+
+        <div class="card-body">
+          <!-- Datos de Cliente -->
+          <div class="row g-2 mb-3">
+            <div class="col-sm-7">
+              <label class="form-label small text-muted mb-1">Nombre del Cliente</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [(ngModel)]="customerName" 
+                placeholder="Cliente General" />
+            </div>
+            <div class="col-sm-5">
+              <label class="form-label small text-muted mb-1">NIT / CI</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [(ngModel)]="customerNit" 
+                placeholder="Opcional" />
+            </div>
+          </div>
+
+          <hr class="my-2" />
+
+          <!-- Lista de Ítems en Carrito -->
+          <div class="cart-items-container mb-3" style="max-height: 250px; overflow-y: auto;">
+            <div *ngIf="cart.length === 0" class="text-center py-4 text-muted">
+              <i class="fa fa-shopping-cart fa-2x mb-2 text-black-50"></i>
+              <p class="mb-0 small">Seleccione productos del catálogo para agregarlos al ticket.</p>
+            </div>
+
+            <div *ngFor="let item of cart" class="d-flex justify-content-between align-items-center py-2 border-bottom">
+              <div class="me-2" style="flex: 1;">
+                <div class="fw-bold text-truncate" style="max-width: 170px;">{{ item.product.name }}</div>
+                <small class="text-muted">Bs. {{ item.unit_price | number:'1.2-2' }} c/u</small>
+              </div>
+
+              <!-- Controles de Cantidad -->
+              <div class="input-group input-group-sm me-2" style="width: 110px;">
+                <button class="btn btn-outline-secondary" type="button" (click)="updateQuantity(item, -1)">-</button>
+                <input 
+                  type="text" 
+                  class="form-control text-center p-0" 
+                  readonly 
+                  [value]="item.quantity" />
+                <button class="btn btn-outline-secondary" type="button" (click)="updateQuantity(item, 1)">+</button>
+              </div>
+
+              <!-- Subtotal -->
+              <div class="text-end fw-bold text-dark me-2" style="width: 70px;">
+                Bs. {{ item.subtotal | number:'1.2-2' }}
+              </div>
+
+              <!-- Eliminar -->
+              <button class="btn btn-sm btn-link text-danger p-0" (click)="removeFromCart(item)">
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Métodos de Pago y Totales -->
+          <div class="bg-light p-3 rounded mb-3">
+            <div class="mb-2">
+              <label class="form-label small text-muted mb-1">Método de Pago</label>
+              <div class="btn-group w-100" role="group">
+                <button 
+                  type="button" 
+                  class="btn btn-sm" 
+                  [ngClass]="paymentMethod === 'Efectivo' ? 'btn-success' : 'btn-outline-secondary'"
+                  (click)="paymentMethod = 'Efectivo'">
+                  <i class="fa fa-money-bill-wave me-1"></i> Efectivo
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-sm" 
+                  [ngClass]="paymentMethod === 'QR' ? 'btn-success' : 'btn-outline-secondary'"
+                  (click)="paymentMethod = 'QR'">
+                  <i class="fa fa-qrcode me-1"></i> Pago QR
+                </button>
+              </div>
+            </div>
+
+            <!-- Entrada de Efectivo y Vuelto -->
+            <div *ngIf="paymentMethod === 'Efectivo'" class="row g-2 mb-2">
+              <div class="col-6">
+                <label class="form-label small text-muted mb-1">Efectivo Recibido</label>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text">Bs.</span>
+                  <input 
+                    type="number" 
+                    step="0.50" 
+                    class="form-control" 
+                    [(ngModel)]="cashReceived" />
+                </div>
+              </div>
+              <div class="col-6">
+                <label class="form-label small text-muted mb-1">Cambio / Vuelto</label>
+                <div class="form-control form-control-sm bg-white fw-bold text-success">
+                  Bs. {{ getChange() | number:'1.2-2' }}
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+              <span class="h5 mb-0 fw-bold text-dark">Total:</span>
+              <span class="h3 mb-0 fw-bold text-primary">
+                Bs. {{ getTotal() | number:'1.2-2' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Botón de Confirmación -->
+          <button 
+            class="btn btn-success btn-lg w-100 fw-bold shadow-sm"
+            [disabled]="cart.length === 0 || isProcessing"
+            (click)="processSale()">
+            <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!isProcessing" class="fa fa-check-circle me-2"></i>
+            {{ isProcessing ? 'Procesando Venta...' : 'Completar Venta' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: HISTORIAL DE VENTAS -->
+  <div *ngIf="activeTab === 'history'" class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+      <h5 class="mb-0 fw-bold text-dark">Registro Histórico de Ventas</h5>
+      <button class="btn btn-sm btn-outline-secondary" (click)="loadHistory()">
+        <i class="fa fa-sync-alt me-1"></i> Actualizar
+      </button>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Ticket #</th>
+              <th>Fecha y Hora</th>
+              <th>Cliente</th>
+              <th>Método</th>
+              <th>Vendedor</th>
+              <th class="text-end">Monto Total</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of salesHistory">
+              <td class="fw-bold">#{{ s.id }}</td>
+              <td>{{ s.date | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ s.customer_name }}</td>
+              <td>
+                <span class="badge bg-light text-dark border">
+                  {{ s.payment_method }}
+                </span>
+              </td>
+              <td>{{ s.user?.name || s.user?.username || '-' }}</td>
+              <td class="text-end fw-bold text-primary">
+                Bs. {{ s.total_amount | number:'1.2-2' }}
+              </td>
+              <td class="text-center">
+                <span 
+                  class="badge" 
+                  [ngClass]="s.status === 'Anulada' ? 'bg-danger' : 'bg-success'">
+                  {{ s.status || 'Completada' }}
+                </span>
+              </td>
+              <td class="text-center">
+                <button 
+                  class="btn btn-sm btn-outline-primary me-1" 
+                  title="Ver Ticket"
+                  (click)="viewSaleDetail(s)">
+                  <i class="fa fa-receipt"></i>
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-danger" 
+                  title="Anular Venta"
+                  *ngIf="s.status !== 'Anulada'"
+                  (click)="cancelSale(s.id)">
+                  <i class="fa fa-ban"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="salesHistory.length === 0">
+              <td colspan="8" class="text-center py-5 text-muted">
+                No hay ventas registradas aún
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL / RECUADRO DE COMPROBANTE TICKET -->
+  <div *ngIf="selectedSale" class="modal-backdrop fade show"></div>
+  <div *ngIf="selectedSale" class="modal d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-body p-4" id="printable-ticket">
+          <div class="text-center mb-3">
+            <h4 class="fw-bold mb-0">FARMACIA SANTA ROSITA</h4>
+            <small class="text-muted d-block">Salud y Calidad para tu Familia</small>
+            <small class="text-muted d-block">Ticket #{{ selectedSale.id }}</small>
+            <small class="text-muted d-block">{{ selectedSale.date | date:'dd/MM/yyyy HH:mm' }}</small>
+          </div>
+
+          <div class="border-top border-bottom py-2 mb-3 small">
+            <div><strong>Cliente:</strong> {{ selectedSale.customer_name }}</div>
+            <div *ngIf="selectedSale.customer_nit"><strong>NIT/CI:</strong> {{ selectedSale.customer_nit }}</div>
+            <div><strong>Pago:</strong> {{ selectedSale.payment_method }}</div>
+          </div>
+
+          <table class="table table-sm table-borderless mb-3 small">
+            <thead>
+              <tr class="border-bottom">
+                <th>Cant.</th>
+                <th>Producto</th>
+                <th class="text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of selectedSale.items">
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product?.name || 'Medicamento' }}</td>
+                <td class="text-end">Bs. {{ item.subtotal | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="border-top pt-2 text-end">
+            <div class="h5 fw-bold mb-0">Total: Bs. {{ selectedSale.total_amount | number:'1.2-2' }}</div>
+            <div *ngIf="selectedSale.payment_method === 'Efectivo'" class="small text-muted">
+              Recibido: Bs. {{ (selectedSale.cash_received || selectedSale.total_amount) | number:'1.2-2' }} | 
+              Cambio: Bs. {{ (selectedSale.cash_change || 0) | number:'1.2-2' }}
+            </div>
+          </div>
+
+          <div class="text-center mt-4 small text-muted">
+            <p class="mb-0">¡Gracias por su compra!</p>
+            <p class="mb-0">Revise sus medicamentos antes de retirarse.</p>
+          </div>
+        </div>
+
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" (click)="closeReceiptModal()">Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="printReceipt()">
+            <i class="fa fa-print me-1"></i> Imprimir Ticket
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

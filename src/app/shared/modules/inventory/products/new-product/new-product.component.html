@@ -2,10 +2,9 @@
       <!-- BREADCRUM -->
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a class="breadcrumb-link" href="dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a type="button" class="breadcrumb-link" (click)="goToProductList()">Inventario</a>
-      </li>
-      <li class="breadcrumb-item">Nuevo Producto</li>
+      <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/inventory">Inventario</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Nuevo Producto</li>
     </ol>
   </nav>
   <h2 class="textEditProduct"><a type="button" (click)="goToProductList()"><i class="fa-solid fa-arrow-left"></i></a>

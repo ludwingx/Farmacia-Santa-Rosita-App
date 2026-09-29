@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RolesService } from '../../../../core/services/roles/roles.service';
 import { IRoles } from '../../../../core/interfaces/roles.interface';
 import { UsersApiService } from '../../../../core/services/users/users-api.service';
@@ -10,7 +10,7 @@ import { IUsers } from '../../../../core/interfaces/users.interface';
 @Component({
   selector: 'app-new-user',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './new-user.component.html',
   styleUrl: './new-user.component.scss'
 })

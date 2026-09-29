@@ -1,63 +1,81 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { IProductsList } from '../../../../core/interfaces/products.interface';
 import { ProductsApiService } from '../../../../core/services/products/products-api.service';
 import { LotsApiService } from '../../../../core/services/lots/lots-api.service';
 import { ILots } from '../../../../core/interfaces/lots';
+import jsPDF from 'jspdf';
+
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss'
 })
 export class ProductsComponent implements OnInit {
   @ViewChild('deleteConfirmationModal') deleteConfirmationModal!: ElementRef;
-  constructor(private serviceProduct: ProductsApiService,
-     private router: Router,
-     private serviceLots: LotsApiService) {}
+  constructor(
+    private serviceProduct: ProductsApiService,
+    private router: Router,
+    private serviceLots: LotsApiService
+  ) {}
+
   products: IProductsList[] = [];
+  filteredProducts: IProductsList[] = [];
+  searchTerm: string = '';
   productToDelete: IProductsList | null = null;
   productStock: IProductsList[] = [];
-  lots: ILots[]=[];
+  lots: ILots[] = [];
+
   ngOnInit(): void {
     this.loadProducts();
-    this.serviceProduct.getProduct(1).subscribe((data: IProductsList | null) => {
-      this.productStock = data ? [data] : []; 
-      console.log(this.productStock);
-    });
     this.loadLots();
   }
+
   loadProducts(): void {
-    this.serviceProduct.getListProducts().subscribe(
-      (data) => {
+    this.serviceProduct.getListProducts().subscribe({
+      next: (data) => {
         this.products = data;
-        console.log(data);
-        // Asociar los lotes con los productos correspondientes
         this.products.forEach(product => {
           product.lots = this.lots.filter(lot => lot.product_id === product.id);
         });
+        this.applyFilter();
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al obtener los productos:', error);
       }
-    );
+    });
   }
+
   loadLots(): void {
-    this.serviceLots.getListLots().subscribe(
-      (data) => {
+    this.serviceLots.getListLots().subscribe({
+      next: (data) => {
         this.lots = data;
-        console.log(data);
-        // Asociar los lotes con los productos correspondientes
         this.products.forEach(product => {
           product.lots = this.lots.filter(lot => lot.product_id === product.id);
         });
+        this.applyFilter();
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al obtener los lotes:', error);
       }
-    );
+    });
+  }
+
+  applyFilter(): void {
+    if (!this.searchTerm || this.searchTerm.trim() === '') {
+      this.filteredProducts = [...this.products];
+    } else {
+      const term = this.searchTerm.toLowerCase().trim();
+      this.filteredProducts = this.products.filter(p =>
+        p.name.toLowerCase().includes(term) ||
+        (p.product_code && p.product_code.toLowerCase().includes(term)) ||
+        (p.description && p.description.toLowerCase().includes(term))
+      );
+    }
   }
   formatProductId(id: number): string {
     // Añadir ceros a la izquierda usando padStart y especificar la longitud total
@@ -130,16 +148,84 @@ export class ProductsComponent implements OnInit {
     }
   }
   openDeleteConfirmationModal(product: IProductsList) {
-    this.productToDelete = product; // Guarda el producto a eliminar
-    this.deleteConfirmationModal.nativeElement.classList.add('show');
+    this.productToDelete = product;
+    if (this.deleteConfirmationModal?.nativeElement) {
+      this.deleteConfirmationModal.nativeElement.classList.add('show');
+      this.deleteConfirmationModal.nativeElement.style.display = 'block';
+    }
     document.body.classList.add('modal-open');
   }
 
   closeDeleteConfirmationModal() {
-    this.deleteConfirmationModal.nativeElement.classList.remove('show');
+    if (this.deleteConfirmationModal?.nativeElement) {
+      this.deleteConfirmationModal.nativeElement.classList.remove('show');
+      this.deleteConfirmationModal.nativeElement.style.display = 'none';
+    }
     document.body.classList.remove('modal-open');
+    this.productToDelete = null;
   }
+
   confirmDelete() {
-    this.closeDeleteConfirmationModal();
+    if (this.productToDelete) {
+      this.serviceProduct.deleteProduct(this.productToDelete.id).subscribe({
+        next: () => {
+          this.loadProducts();
+          this.closeDeleteConfirmationModal();
+        },
+        error: (err) => {
+          console.error('Error al eliminar el producto:', err);
+          this.closeDeleteConfirmationModal();
+        }
+      });
+    } else {
+      this.closeDeleteConfirmationModal();
+    }
+  }
+
+  deleteLot(id: number): void {
+    if (confirm('¿Está seguro de que desea eliminar este lote?')) {
+      this.serviceLots.deleteLot(id).subscribe({
+        next: () => {
+          this.loadLots();
+        },
+        error: (err) => console.error('Error al eliminar el lote:', err)
+      });
+    }
+  }
+
+  exportPDF(): void {
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text('Farmacia Santa Rosita - Lista de Medicamentos', 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Fecha: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 14, 22);
+
+    let y = 32;
+    doc.setFont('helvetica', 'bold');
+    doc.text('ID', 14, y);
+    doc.text('Nombre', 30, y);
+    doc.text('Código', 90, y);
+    doc.text('Precio Venta', 130, y);
+    doc.text('Stock Total', 170, y);
+    y += 4;
+    doc.line(14, y, 196, y);
+    y += 6;
+
+    doc.setFont('helvetica', 'normal');
+    for (const p of this.products) {
+      if (y > 280) {
+        doc.addPage();
+        y = 20;
+      }
+      const totalQty = this.calculateTotalQuantity(p.lots || []);
+      doc.text(this.formatProductId(p.id), 14, y);
+      doc.text((p.name || '').substring(0, 28), 30, y);
+      doc.text((p.product_code || '-').substring(0, 18), 90, y);
+      doc.text(`Bs. ${(Number(p.selling_price) || 0).toFixed(2)}`, 130, y);
+      doc.text(`${totalQty} uds.`, 170, y);
+      y += 7;
+    }
+
+    doc.save('inventario-medicamentos.pdf');
   }
 }

@@ -19,7 +19,7 @@
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
             <div>
-                <a href="#" class="nav_logo">
+                <a routerLink="/dashboard" class="nav_logo">
                     <i class="fa-solid fa-fan" style="color: white;"></i>
                     <div class="row">
                         <div class="col-12">
@@ -37,41 +37,36 @@
 
                 </a>
                 <div class="nav_list">
-                    <a href="#" class="nav_link" routerLink="dashboard"
-                        [ngClass]="{'active': currentRoute === 'dashboard'}">
+                    <a class="nav_link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                         <i class="fa-solid fa-chart-line"></i>
                         <span class="nav_name">Dashboard</span>
                     </a>
-                    <a class="nav_link" type="button" (click)="loadProducts()"
-                        [ngClass]="{'active': currentRoute === 'inventory'}">
+                    <a class="nav_link" routerLink="/inventory" routerLinkActive="active">
                         <i class="fa-solid fa-boxes-stacked"></i>
                         <span class="nav_name">Inventario</span>
                     </a>
-                    <a class="nav_link" routerLink="sales" 
-                        [ngClass]="{'active': currentRoute === 'sales'}">
+                    <a class="nav_link" routerLink="/sales" routerLinkActive="active">
                         <i class="fa-solid fa-sack-dollar"></i>
                         <span class="nav_name">Ventas</span>
                     </a>
-                    <a href="#" class="nav_link" routerLink="purchases"
-                        [ngClass]="{'active': currentRoute === 'purchases'}">
+                    <a class="nav_link" routerLink="/purchases" routerLinkActive="active">
                         <i class="fa-solid fa-pills"></i>
                         <span class="nav_name">Compras</span>
                     </a>
-                    <a href="#" class="nav_link" routerLink="reports"
-                        [ngClass]="{'active': currentRoute === 'reports'}">
+                    <a class="nav_link" routerLink="/reports" routerLinkActive="active">
                         <i class="fa-solid fa-file-export"></i>
                         <span class="nav_name">Reportes</span>
                     </a>
 
-                    <a class="nav_link" (click)="loadUsers()">
+                    <a class="nav_link" routerLink="/users" routerLinkActive="active">
                         <i class="fa-solid fa-users"></i>
                         <span class="nav_name">Usuarios</span>
                     </a>
                 </div>
             </div>
-            <a class="nav_link" (click)="logout()">
+            <a class="nav_link cursor-pointer" (click)="logout()">
                 <i class="fa-solid fa-right-from-bracket"></i>
-                <span class="nav_name">SignOut</span>
+                <span class="nav_name">Cerrar Sesión</span>
             </a>
         </nav>
     </div>

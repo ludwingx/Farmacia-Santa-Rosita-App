@@ -3,11 +3,12 @@ import { UsersApiService } from '../../../../core/services/users/users-api.servi
 import { Router } from '@angular/router';
 import { IUsers } from '../../../../core/interfaces/users.interface';
 import { NgClass } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-deleted-users-list',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, RouterLink],
   templateUrl: './deleted-users-list.component.html',
   styleUrl: './deleted-users-list.component.scss'
 })

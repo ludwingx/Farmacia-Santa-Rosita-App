@@ -1,39 +1,122 @@
-<div class="container">
-    <!-- BREADCRUM -->
-
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a>Dashboard </a></li>
-          <li class="breadcrumb-item " aria-current="page"><a href=""></a></li>
-        </ol>
-    </nav>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-              <div class="card">
-                <div class="card-body">
-                  <i class="fa-solid fa-dollar-sign text-suscess"></i>
-                  <h5 class="card-title">Vender</h5> 
-                </div>
-              </div>   
-            </div>
-            <div class="col-2">
-              <div class="card">
-                <div class="card-body">
-                  <i class="fa-solid fa-pills"></i>
-                  <h5 class="card-title">Registrar</h5> 
-                </div>
-              </div>
-            </div>
-            <div class="col-2">
-              <div class="card">
-                <div class="card-body">
-                  <i class="fa-solid fa-users"></i>
-                  <h5 class="card-title">Usuarios</h5> 
-                </div>
-              </div>
-            </div>
-        </div>
+﻿<div class="container-fluid p-4">
+  <!-- Bienvenida -->
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 rounded shadow-sm">
+    <div>
+      <h2 class="h3 fw-bold text-dark mb-1">
+        ¡Hola, <span class="text-primary">{{ loggedInUserName }}</span>! 👋
+      </h2>
+      <p class="text-muted mb-0">Bienvenido al sistema de control y mostrador de Farmacia Santa Rosita</p>
     </div>
+    <div>
+      <a routerLink="/sales" class="btn btn-success btn-lg fw-bold shadow-sm">
+        <i class="fa fa-shopping-cart me-2"></i>Nueva Venta (POS)
+      </a>
+    </div>
+  </div>
+
+  <!-- Accesos Rápidos -->
+  <h5 class="fw-bold text-dark mb-3">
+    <i class="fa fa-bolt me-2 text-warning"></i>Accesos Rápidos
+  </h5>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="card h-100 border-0 shadow-sm text-center p-3 cursor-pointer hover-card" (click)="navigateTo('/sales')">
+        <div class="card-body">
+          <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle d-inline-block mb-3">
+            <i class="fa fa-cash-register fa-2x"></i>
+          </div>
+          <h6 class="fw-bold text-dark mb-1">Punto de Venta</h6>
+          <small class="text-muted">Cobrar en mostrador</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="card h-100 border-0 shadow-sm text-center p-3 cursor-pointer hover-card" (click)="navigateTo('/inventory')">
+        <div class="card-body">
+          <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle d-inline-block mb-3">
+            <i class="fa fa-pills fa-2x"></i>
+          </div>
+          <h6 class="fw-bold text-dark mb-1">Inventario</h6>
+          <small class="text-muted">Catálogo de medicamentos</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="card h-100 border-0 shadow-sm text-center p-3 cursor-pointer hover-card" (click)="navigateTo('/purchases')">
+        <div class="card-body">
+          <div class="bg-info bg-opacity-10 text-info p-3 rounded-circle d-inline-block mb-3">
+            <i class="fa fa-truck fa-2x"></i>
+          </div>
+          <h6 class="fw-bold text-dark mb-1">Compras</h6>
+          <small class="text-muted">Recepción de mercadería</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="card h-100 border-0 shadow-sm text-center p-3 cursor-pointer hover-card" (click)="navigateTo('/reports')">
+        <div class="card-body">
+          <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-circle d-inline-block mb-3">
+            <i class="fa fa-clock fa-2x"></i>
+          </div>
+          <h6 class="fw-bold text-dark mb-1">Vencimientos & Reportes</h6>
+          <small class="text-muted">Alertas sanitarias y stock</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen del Negocio (KPIs) -->
+  <h5 class="fw-bold text-dark mb-3">
+    <i class="fa fa-chart-pie me-2 text-primary"></i>Resumen Operativo
+  </h5>
+  <div class="row g-3">
+    <!-- Ventas Hoy -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm border-start border-success border-4 h-100">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold text-uppercase">Ventas Hoy</span>
+          <h3 class="fw-bold text-success my-1">
+            Bs. {{ (summary?.todaySalesTotal || 0) | number:'1.2-2' }}
+          </h3>
+          <small class="text-muted">{{ summary?.todaySalesCount || 0 }} tickets generados</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Catálogo de Medicamentos -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm border-start border-primary border-4 h-100">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold text-uppercase">Total Medicamentos</span>
+          <h3 class="fw-bold text-primary my-1">{{ summary?.totalProducts || 0 }}</h3>
+          <small class="text-muted">En catálogo activo</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Próximos a vencer -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm border-start border-danger border-4 h-100">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold text-uppercase">Vencimiento Próximo (&lt;90d)</span>
+          <h3 class="fw-bold text-danger my-1">{{ summary?.expiringCount || 0 }}</h3>
+          <small class="text-danger fw-semibold">Revisar en Reportes</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stock Crítico -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm border-start border-warning border-4 h-100">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold text-uppercase">Stock Crítico (&le;10 uds.)</span>
+          <h3 class="fw-bold text-warning my-1">{{ summary?.criticalStockCount || 0 }}</h3>
+          <small class="text-muted">Necesitan reposición</small>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

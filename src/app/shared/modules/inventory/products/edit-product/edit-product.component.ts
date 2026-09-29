@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IProductsList } from '../../../../../core/interfaces/products.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductsApiService } from '../../../../../core/services/products/products-api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SuppliersService } from '../../../../../core/services/suppliers/suppliers.service';
@@ -11,7 +11,7 @@ import { ICategories } from '../../../../../core/interfaces/categories.interface
 @Component({
   selector: 'app-edit-product',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.scss'
 })
@@ -41,7 +41,7 @@ export class EditProductComponent implements OnInit{
       this.productService.getProduct(this.productId).subscribe((product) => {
         this.product = product;
         this.currentImageSource = this.sanitizer.bypassSecurityTrustUrl(product.image);
-        this.currentCategory = product.category.toString();
+        this.currentCategory = product.category ? product.category.toString() : '';
 
         console.log('Current Category:', this.currentCategory);
       });
@@ -97,7 +97,7 @@ export class EditProductComponent implements OnInit{
     this.productService.getProduct(this.productId).subscribe(
       (data) => {
         this.product = data;
-        this.currentCategory = data.category.toString(); // Asignar la categoría actual
+        this.currentCategory = data.category ? data.category.toString() : ''; // Asignar la categoría actual
       },
       (error) => {
         console.error('Error al obtener el producto:', error);

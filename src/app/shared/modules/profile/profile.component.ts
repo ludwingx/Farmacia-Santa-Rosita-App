@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RolesService } from '../../../core/services/roles/roles.service';
 import { IRoles } from '../../../core/interfaces/roles.interface';
 import { IStatuses } from '../../../core/interfaces/statuses';
@@ -9,7 +9,7 @@ import { StatusesService } from '../../../core/services/statuses/statuses.servic
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -42,12 +42,19 @@ export class ProfileComponent {
     this.router.navigate(['/dashboard']);
   }
 
-  getRoleName(roleId: string): string {
-    const role = this.roles.find(role => role.id === roleId);
-    return role ? role.name : 'Rol desconocido';
+  getRoleName(roleId: any): string {
+    if (this.loggedInUser?.role?.name) {
+      return this.loggedInUser.role.name;
+    }
+    const role = this.roles.find(r => r.id == roleId);
+    return role ? role.name : 'Personal Farmacia';
   }
-  getStatusName(statusId: number): string {
-    const status = this.statuses.find(status => status.id === statusId);
-    return status ? status.name : 'Status desconocido';
+
+  getStatusName(statusId: any): string {
+    if (this.loggedInUser?.status?.name) {
+      return this.loggedInUser.status.name;
+    }
+    const status = this.statuses.find(s => s.id == statusId);
+    return status ? status.name : 'Activo';
   }
 }

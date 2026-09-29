@@ -1,70 +1,33 @@
 <div class="container">
-  <div class="row">
-    <div class="col-12">
-      <h4 class="titleProduct">Listado de productos</h4>
+  <div class="row align-items-center mb-3">
+    <div class="col-md-4">
+      <h4 class="titleProduct mb-0">Listado de medicamentos</h4>
+    </div>
+    <div class="col-md-5">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+        <input type="search" class="form-control border-start-0" placeholder="Buscar medicamento o código..." [(ngModel)]="searchTerm" (input)="applyFilter()">
+      </div>
+    </div>
+    <div class="col-md-3 text-end">
+      <button class="btn btn-outline-danger" (click)="exportPDF()" title="Descargar lista en PDF">
+        <i class="fa-solid fa-file-pdf me-1"></i> Exportar PDF
+      </button>
     </div>
   </div>
-  <!-- <table class="table table-bordered border border-dark-subtle">
-        <thead class="table-green" >
-          <tr>
-            <th>ID</th>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio de compra</th>
-            <th>Precio de venta</th>
-            <th>Stock Actual</th>
-            <th>Proovedor</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-            @for (product of products; track product.id) {
-                <tr >
-                    <td>{{ formatProductId(product.id) }}</td>
-                    <td><img class="imgProduct" src="{{ product.image }}" alt="product.name"></td>
-                    <td>{{ product.name }}</td><td>{{ product.description }}</td>
-                    <td>{{ product.purchase_price | currency : 'Bs.' }}</td> 
-                    <td>{{ product.selling_price | currency : 'Bs.' }}</td> 
-                    <td>{{ product.current_stock}}</td>
-                    <td>{{ product.supplier.name }}</td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Configuraciones
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" (click)="editProduct(product)">
-                                        Editar 
-                                        <i class="fa-solid fa-pen"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" (click)="openDeleteConfirmationModal(product)">
-                                        Eliminar 
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>   
-                                </li>
-                            </ul>
-                          </div>
-                    </td>
-                  </tr>
-            }
-        </tbody>
-    </table> -->
+
   <div class="container">
-    <div class="row ">
+    <div class="row bg-light py-2 rounded mb-2">
       <div class="col-1 fw-bold">ID</div>
       <div class="col fw-bold">IMAGEN</div>
       <div class="col fw-bold">NOMBRE</div>
-      <div class="col fw-bold">PRECIO DE VENTA</div>
-      <div class="col fw-bold">UNIDADES DISPONIBLES</div>
-      <div class="col d-grid gap-1 d-md-flex justify-content-md-end fw-bold">OPCIONES</div>
+      <div class="col fw-bold">PRECIO VENTA</div>
+      <div class="col fw-bold">STOCK TOTAL</div>
+      <div class="col d-grid gap-1 d-md-flex justify-content-md-end fw-bold">ACCIONES</div>
     </div>
   </div>
-  @for (product of products; track product.id) {
-  <div class="accordion accordion-flush" id="accordionFlushExample" >
+  @for (product of filteredProducts; track product.id) {
+  <div class="accordion accordion-flush mb-2 shadow-sm rounded" id="accordionFlushExample" >
     <div class="accordion-item" [ngStyle]="getQuantityBackgroundStyle(calculateTotalQuantity(product.lots!))">
       <div class="accordion-header row">
         <div class="col">
@@ -92,11 +55,11 @@
           <div class="row btnsOptionsProduct">
             <div class="col">
               <!-- Botón de editar -->
-              <button class="btn btn-primary btn-sm btnEditProduct m-1"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn btn-primary btn-sm btnEditProduct m-1" (click)="editProduct(product)" title="Editar Medicamento"><i class="fa-solid fa-pen"></i></button>
             </div>
             <div class="col">
               <!-- Botón de eliminar -->
-              <button class="btn btn-danger btn-sm btnDeleteProduct m-1"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn btn-danger btn-sm btnDeleteProduct m-1" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" (click)="openDeleteConfirmationModal(product)" title="Eliminar Medicamento"><i class="fa-solid fa-trash"></i></button>
             </div>
             <div class="col">
               <!-- Botón del acordeón -->
@@ -123,19 +86,17 @@
                 <div  > Fecha de vencimiento:<span  [ngClass]="isExpirationNear(lot.expiration_date)">{{ lot.expiration_date }}</span> </div>
               </div>
              
-              <!-- Botón de editar lote -->
-              <button class="btn btn-primary btn-sm m-2"><i class="fa-solid fa-pen"></i></button>
               <!-- Botón de eliminar lote -->
-              <button class="btn btn-danger btn-sm m-2"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn btn-outline-danger btn-sm m-2" (click)="deleteLot(lot.id)" title="Eliminar este lote"><i class="fa-solid fa-trash"></i></button>
             </li>
             }
-            <button class="btn btn-outline-success btnAddLot m-2 "> <i class="fa-solid fa-plus"></i><span class="fw-bold"> Agregar Lote</span></button>
+            <a class="btn btn-outline-success btnAddLot m-2" routerLink="/purchases"> <i class="fa-solid fa-plus"></i><span class="fw-bold"> Ingresar Nuevo Lote (Compras)</span></a>
           </ol>
           }
           @else {
           <!-- Botón para agregar lotes cuando no hay lotes disponibles -->
-          <p class="text-danger fw-bold">No hay lotes disponibles!</p>
-          <button class="btn btn-success"> <i class="fa-solid fa-plus"></i> Agregar Lote</button>
+          <p class="text-danger fw-bold">¡No hay lotes disponibles para este medicamento!</p>
+          <a class="btn btn-success" routerLink="/purchases"> <i class="fa-solid fa-plus"></i> Ingresar Lote en Compras</a>
           }
         </div>
 
@@ -152,19 +113,19 @@
 <br>
 
 <!-- Modal de confirmación -->
-<div class="modal" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel"
+  aria-hidden="true" #deleteConfirmationModal>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="deleteConfirmationModalLabel">Eliminar Producto</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" (click)="closeDeleteConfirmationModal()" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ¿Estás seguro de que deseas eliminar "{{ productToDelete?.name }}"?
+        ¿Estás seguro de que deseas eliminar permanentemente "{{ productToDelete?.name }}"?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteConfirmationModal()" data-bs-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-danger" (click)="confirmDelete()">Eliminar</button>
       </div>
     </div>
